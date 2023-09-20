@@ -2,6 +2,7 @@
 plugins {
     alias(libs.plugins.com.android.library)
     alias(libs.plugins.org.jetbrains.kotlin.android)
+    alias(libs.plugins.com.google.ksp)
 }
 
 android {
@@ -58,6 +59,11 @@ dependencies {
     implementation(libs.ui.tooling.preview)
     implementation(libs.material3)
     implementation(libs.androidx.icons.extended)
+
+    //hilt
+    implementation(libs.google.hilt.android)
+    ksp(libs.google.hilt.compiler)
+    implementation(libs.androidx.hilt.navigation)
 
     //coil
     implementation(libs.coil)

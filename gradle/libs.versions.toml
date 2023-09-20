@@ -16,17 +16,11 @@ androidx-data-store = "1.1.0-alpha05"
 retrofit = "2.9.0"
 interceptor = "5.0.0-alpha.1"
 hilt = "2.47"
-google-firebase-bom = "32.3.0"
-google-services = "20.7.0"
-google-gms = "4.4.0"
-facebook-sdk = "latest.release"
 kotlin-coroutines = "1.6.4"
 accompanist-permission = "0.28.0"
 ksp = "1.9.10-1.0.13"
 coil = "2.4.0"
 sgp = "2.0.1"
-appcompat = "1.6.1"
-material = "1.9.0"
 
 [libraries]
 core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "core-ktx" }
@@ -58,26 +52,17 @@ kotlinx-coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-cor
 google-accompanist = { group = "com.google.accompanist", name = "accompanist-permissions", version.ref = "accompanist-permission" }
 google-hilt-android = { group = "com.google.dagger", name = "hilt-android", version.ref = "hilt" }
 google-hilt-compiler = { group = "com.google.dagger", name = "hilt-android-compiler", version.ref = "hilt" }
-google-firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version.ref = "google-firebase-bom" }
-google-firebase-analytics-ktx = { group = "com.google.firebase", name = "firebase-analytics-ktx" }
-google-firebase-auth-ktx = { group = "com.google.firebase", name = "firebase-auth-ktx" }
-google-services-plugin-auth = { group = "com.google.android.gms", name = "play-services-auth", version.ref = "google-services" }
-google-services = { group = "com.google.gms", name = "google-services", version.ref = "google-gms" }
-facebook-android = { group = "com.facebook.android", name = "facebook-android-sdk", version.ref = "facebook-sdk" }
 squareup-retrofit = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = "retrofit" }
 squareup-converter-gson = { group = "com.squareup.retrofit2", name = "converter-gson", version.ref = "retrofit" }
 squareup-okhttp-interceptor = { group = "com.squareup.okhttp3", name = "logging-interceptor", version.ref = "interceptor" }
 kotlin-bom = { group = "org.jetbrains.kotlin", name = "kotlin-bom", version.ref = "org-jetbrains-kotlin-android" }
 coil = { group = "io.coil-kt", name = "coil-compose", version.ref = "coil" }
-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
-material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 
 [plugins]
 com-android-application = { id = "com.android.application", version.ref = "agp" }
 org-jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "org-jetbrains-kotlin-android" }
 com-android-library = { id = "com.android.library", version.ref = "agp" }
 org-jetbrains-kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "org-jetbrains-kotlin-android" }
-com-google-services = { id = "com.google.gms.google-services", version.ref = "google-gms" }
 com-google-hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
 com-google-ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 com-google-sgp = { id = "com.google.android.libraries.mapsplatform.secrets-gradle-plugin", version.ref = "sgp" }

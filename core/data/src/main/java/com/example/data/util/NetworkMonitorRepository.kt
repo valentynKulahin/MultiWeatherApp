@@ -18,28 +18,26 @@ class NetworkMonitorRepository @Inject constructor(
     @ApplicationContext val context: Context
 ) : NetworkMonitor {
 
-    override val isOnline: Flow<Boolean> = callbackFlow {
-        val networkManager =
-            context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+    override val networkStatus: Flow<NetworkStatus> = callbackFlow<NetworkStatus> {
+        val networkManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
 
         val callback = object : NetworkCallback() {
-            private val networks = mutableSetOf<Network>()
-
             override fun onAvailable(network: Network) {
-                networks += network
-                channel.trySend(true)
+                channel.trySend(NetworkStatus.Connected)
             }
 
             override fun onLost(network: Network) {
-                networks -= network
-                channel.trySend(false)
+                channel.trySend(NetworkStatus.Disconnected)
             }
         }
 
-        val request = Builder().addCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET).build()
-        networkManager.registerNetworkCallback(request, callback)
+        val request = Builder()
+            .addCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
+            .addTransportType(NetworkCapabilities.TRANSPORT_WIFI)
+            .addTransportType(NetworkCapabilities.TRANSPORT_CELLULAR)
+            .build()
 
-        channel.trySend(networkManager.isCurrentlyConnected())
+        networkManager.registerNetworkCallback(request, callback)
 
         awaitClose {
             networkManager.unregisterNetworkCallback(callback)

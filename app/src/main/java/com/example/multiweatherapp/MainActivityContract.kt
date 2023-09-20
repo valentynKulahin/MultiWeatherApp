@@ -1,11 +1,7 @@
 package com.example.multiweatherapp
 
-import kotlinx.coroutines.flow.Flow
+import com.example.data.util.NetworkStatus
 
 data class MainActivityContract(
-    val isConnected: Flow<Boolean>? = null
+    val networkStatus: NetworkStatus = NetworkStatus.Unknown
 )
-
-sealed interface MainActivityState {
-    data object CheckConnection : MainActivityState
-}

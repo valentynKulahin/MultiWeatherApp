@@ -46,17 +46,6 @@ dependencies {
     implementation(libs.google.hilt.android)
     ksp(libs.google.hilt.compiler)
 
-    //firebase
-    implementation(platform(libs.google.firebase.bom))
-    implementation(libs.google.firebase.analytics.ktx)
-    implementation(libs.google.firebase.auth.ktx)
-
-    implementation(libs.facebook.android)
-
-    //gms
-    implementation(libs.google.services.plugin.auth)
-    implementation(libs.google.services)
-
     //tests
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.test.ext.junit)

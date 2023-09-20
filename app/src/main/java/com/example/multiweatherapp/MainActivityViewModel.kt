@@ -2,32 +2,29 @@ package com.example.multiweatherapp
 
 import androidx.lifecycle.ViewModel
 import com.example.data.util.NetworkMonitor
+import com.example.data.util.NetworkStatus
+import com.example.designsystem.navigation.AppNavigator
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.stateIn
 import javax.inject.Inject
 
 @HiltViewModel
 class MainActivityViewModel @Inject constructor(
-    private val networkMonitor: NetworkMonitor
+    private val networkMonitor: NetworkMonitor,
+    private val appNavigator: AppNavigator
 ) : ViewModel() {
 
-    private val _uiState = MutableStateFlow(MainActivityContract())
-    val uiState = _uiState.asStateFlow()
+    val networkStatus: StateFlow<NetworkStatus> =
+        networkMonitor.networkStatus.stateIn(
+            scope = CoroutineScope(context = Dispatchers.IO),
+            started = SharingStarted.WhileSubscribed(5_000),
+            initialValue = NetworkStatus.Unknown
+        )
 
-    init {
-        reducer(MainActivityState.CheckConnection)
-    }
-
-    fun reducer(intent: MainActivityState) {
-        when (intent) {
-            is MainActivityState.CheckConnection -> {
-                _uiState.update {
-                    it.copy(isConnected = networkMonitor.isOnline)
-                }
-            }
-        }
-    }
+    val navigatorChannel = appNavigator.navigationChannel
 
 }

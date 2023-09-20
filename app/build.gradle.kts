@@ -58,7 +58,7 @@ dependencies {
     implementation(project(":feature:splash"))
     implementation(project(":feature:home"))
     implementation(project(":feature:detail"))
-    implementation(project(":feature:mylocation"))
+    implementation(project(":feature:location"))
     implementation(project(":feature:news"))
     implementation(project(":feature:search"))
     implementation(project(":feature:settings"))
