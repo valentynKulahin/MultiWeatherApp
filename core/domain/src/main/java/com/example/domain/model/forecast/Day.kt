@@ -1,8 +1,10 @@
 package com.example.domain.model.forecast
 
 import com.example.domain.model.common.Condition
+import com.example.domain.model.current.AirQuality
 
 data class Day(
+    val air_quality: AirQuality? = null,
     val avghumidity: Double? = null,
     val avgtemp_c: Double? = null,
     val avgtemp_f: Double? = null,

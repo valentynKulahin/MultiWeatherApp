@@ -1,8 +1,10 @@
 package com.example.domain.model.forecast
 
 import com.example.domain.model.common.Condition
+import com.example.domain.model.current.AirQuality
 
 data class Hour(
+    val air_quality: AirQuality? = null,
     val chance_of_rain: Int? = 0,
     val chance_of_snow: Int? = 0,
     val cloud: Int? = 0,
