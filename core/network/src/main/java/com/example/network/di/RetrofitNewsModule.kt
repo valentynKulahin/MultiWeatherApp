@@ -16,13 +16,13 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-object RetrofitModule {
+object RetrofitNewsModule {
 
-    private const val BASE_URL = "https://api.weatherapi.com/v1"
+    private const val BASE_URL = "https://newsapi.org/v2"
 
     @Singleton
     @Provides
-    fun provideGson(): Gson {
+    fun provideNewsGson(): Gson {
         return GsonBuilder()
             .setLenient()
             .create()
@@ -30,7 +30,7 @@ object RetrofitModule {
 
     @Singleton
     @Provides
-    fun provideRetrofit(): Retrofit {
+    fun provideNewsRetrofit(): Retrofit {
         val interceptor = HttpLoggingInterceptor().apply {
             if (BuildConfig.DEBUG) {
                 setLevel(HttpLoggingInterceptor.Level.BODY)
@@ -42,7 +42,7 @@ object RetrofitModule {
             .build()
 
         return Retrofit.Builder()
-            .addConverterFactory(GsonConverterFactory.create(provideGson()))
+            .addConverterFactory(GsonConverterFactory.create(provideNewsGson()))
             .baseUrl(BASE_URL)
             .client(client)
             .build()
@@ -50,7 +50,7 @@ object RetrofitModule {
 
     @Singleton
     @Provides
-    fun provideWeatherApiService(retrofit: Retrofit): RealTimeApi =
+    fun provideNewsApiService(retrofit: Retrofit): RealTimeApi =
         retrofit.create(RealTimeApi::class.java)
 
 }
