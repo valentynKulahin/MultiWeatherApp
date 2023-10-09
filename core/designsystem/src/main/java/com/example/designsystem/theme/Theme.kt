@@ -1,15 +1,20 @@
 package com.example.compose
 
+import android.app.Activity
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.SideEffect
+import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.platform.LocalView
+import androidx.core.view.WindowCompat
 import com.example.designsystem.theme.Typography
 
 
-private val LightColors = lightColorScheme(
+private val lightColors = lightColorScheme(
     primary = md_theme_light_primary,
     onPrimary = md_theme_light_onPrimary,
     primaryContainer = md_theme_light_primaryContainer,
@@ -42,7 +47,7 @@ private val LightColors = lightColorScheme(
 )
 
 
-private val DarkColors = darkColorScheme(
+private val darkColors = darkColorScheme(
     primary = md_theme_dark_primary,
     onPrimary = md_theme_dark_onPrimary,
     primaryContainer = md_theme_dark_primaryContainer,
@@ -79,15 +84,26 @@ fun MultiWeatherApp(
     useDarkTheme: Boolean = isSystemInDarkTheme(),
     content: @Composable() () -> Unit
 ) {
-    val colors = if (!useDarkTheme) {
-        LightColors
-    } else {
-        DarkColors
+    val colorScheme = when {
+        useDarkTheme -> darkColors
+        else -> lightColors
+    }
+
+    val view = LocalView.current
+    if (!view.isInEditMode) {
+        val currentWindow = (view.context as? Activity)?.window
+            ?: throw Exception("Not in an activity - unable to get Window reference")
+
+        SideEffect {
+            (view.context as Activity).window.statusBarColor = colorScheme.background.toArgb()
+            (view.context as Activity).window.navigationBarColor = colorScheme.primary.toArgb()
+            WindowCompat.getInsetsController(currentWindow, view).isAppearanceLightStatusBars = false
+        }
     }
 
     CompositionLocalProvider {
         MaterialTheme(
-            colorScheme = colors,
+            colorScheme = colorScheme,
             typography = Typography,
             content = content
         )

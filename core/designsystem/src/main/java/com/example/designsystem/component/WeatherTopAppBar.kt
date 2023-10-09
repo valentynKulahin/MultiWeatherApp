@@ -1,18 +1,24 @@
 package com.example.designsystem.component
 
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.navigation.NavHostController
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -20,13 +26,10 @@ import kotlinx.coroutines.launch
 fun WeatherTopAppBar(
     navController: NavHostController,
     drawerState: DrawerState,
-    scope: CoroutineScope
+    scope: CoroutineScope = rememberCoroutineScope()
 ) {
-    LaunchedEffect(key1 = true) {
-
-    }
-
     CenterAlignedTopAppBar(
+        modifier = Modifier.fillMaxWidth(),
         title = {
             Text(
                 text = navController.currentBackStackEntry?.destination?.route ?: "",
@@ -37,7 +40,7 @@ fun WeatherTopAppBar(
         navigationIcon = {
             IconButton(
                 onClick = {
-                    scope.launch {
+                    scope.launch(context = Dispatchers.IO) {
                         if (drawerState.isClosed) drawerState.open() else drawerState.close()
                     }
                 }
@@ -46,6 +49,12 @@ fun WeatherTopAppBar(
                     imageVector = Icons.Default.Menu,
                     contentDescription = null
                 )
+            }
+        },
+        colors = TopAppBarDefaults.topAppBarColors(containerColor = MaterialTheme.colorScheme.background),
+        actions = {
+            IconButton(onClick = { /*TODO*/ }) {
+                Icon(imageVector = Icons.Default.Search, contentDescription = null)
             }
         }
     )
