@@ -7,7 +7,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class GetTopNews @Inject constructor() {
+class GetNewsUseCase @Inject constructor() {
 
     operator fun invoke(): NewsResult {
         return NewsResult(

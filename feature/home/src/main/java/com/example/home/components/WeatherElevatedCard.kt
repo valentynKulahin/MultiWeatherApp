@@ -24,20 +24,20 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavController
+import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import com.example.designsystem.component.WeatherLocationText
 import com.example.domain.model.current.CurrentWeather
 import com.example.home.R
 
 @Composable
-fun WeatherElevatedCard(navController: NavController, currentWeather: CurrentWeather) {
+fun WeatherElevatedCard(navController: NavHostController, currentWeather: CurrentWeather) {
     HomeScreen_WeatherCard(navController = navController, currentWeather = currentWeather)
 }
 
 @Composable
 private fun HomeScreen_WeatherCard(
-    navController: NavController,
+    navController: NavHostController,
     currentWeather: CurrentWeather
 ) {
     ElevatedCard(

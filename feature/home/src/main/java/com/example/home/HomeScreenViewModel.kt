@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import com.example.designsystem.navigation.AppNavigator
 import com.example.domain.usecase.GetCurrentWeatherUseCase
 import com.example.domain.usecase.GetForecastWeatherUseCase
+import com.example.domain.usecase.GetNewsUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -14,7 +15,8 @@ import javax.inject.Inject
 class HomeScreenViewModel @Inject constructor(
     private val appNavigator: AppNavigator,
     private val getCurrentWeatherUseCase: GetCurrentWeatherUseCase,
-    private val getForecastWeatherUseCase: GetForecastWeatherUseCase
+    private val getForecastWeatherUseCase: GetForecastWeatherUseCase,
+    private val getNewsUseCase: GetNewsUseCase
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(HomeScreenContract())
@@ -23,6 +25,7 @@ class HomeScreenViewModel @Inject constructor(
     init {
         reducer(intent = HomeScreenIntent.UpdateCurrentWeather)
         reducer(intent = HomeScreenIntent.UpdateForecastWeather)
+        reducer(intent = HomeScreenIntent.UpdateNews)
     }
 
     fun reducer(intent: HomeScreenIntent) {
@@ -36,6 +39,12 @@ class HomeScreenViewModel @Inject constructor(
             is HomeScreenIntent.UpdateForecastWeather -> {
                 _uiState.update {
                     it.copy(forecastWeather = getForecastWeatherUseCase.invoke())
+                }
+            }
+
+            is HomeScreenIntent.UpdateNews -> {
+                _uiState.update {
+                    it.copy(news = getNewsUseCase.invoke())
                 }
             }
         }

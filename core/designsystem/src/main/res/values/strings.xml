@@ -4,5 +4,6 @@
     <string name="drawer_sheet_current_location">Current location</string>
     <string name="drawer_sheet_settings">Settings</string>
     <string name="drawer_sheet_add_location">Add location</string>
+    <string name="news_header">News</string>
 
 </resources>
