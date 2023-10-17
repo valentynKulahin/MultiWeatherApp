@@ -14,6 +14,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import com.example.designsystem.component.WeatherBackground
 import com.example.domain.model.current.CurrentWeather
+import com.example.domain.model.forecast.ForecastWeather
 import com.example.domain.model.news.NewsResult
 import com.example.home.components.CalendarElevatedCard
 import com.example.home.components.ForecastElevatedCard
@@ -42,7 +43,11 @@ fun HomeScreen(
             Spacer(modifier = Modifier.height(10.dp))
             HomeScreen_NewsCard(navController = navController, news = news.value)
             Spacer(modifier = Modifier.height(10.dp))
-            HomeScreen_ForecastCard(navController = navController)
+            HomeScreen_ForecastCard(
+                navController = navController,
+                currentWeather = currentWeather.value,
+                forecastWeather = forecastWeather.value
+            )
             Spacer(modifier = Modifier.height(10.dp))
             HomeScreen_SunCondition(navController = navController)
             Spacer(modifier = Modifier.height(10.dp))
@@ -72,8 +77,16 @@ private fun HomeScreen_NewsCard(navController: NavHostController, news: NewsResu
 }
 
 @Composable
-private fun HomeScreen_ForecastCard(navController: NavHostController) {
-    ForecastElevatedCard(navController = navController)
+private fun HomeScreen_ForecastCard(
+    navController: NavHostController,
+    currentWeather: CurrentWeather,
+    forecastWeather: ForecastWeather
+) {
+    ForecastElevatedCard(
+        navController = navController,
+        currentWeather = currentWeather,
+        forecastWeather = forecastWeather
+    )
 }
 
 @Composable
