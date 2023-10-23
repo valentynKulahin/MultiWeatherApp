@@ -1,6 +1,6 @@
-package com.example.domain.model.common
+package com.example.domain.model.weather
 
-data class Condition(
+data class ConditionDomainModel(
     val code: Int? = null,
     val icon: String? = null,
     val text: String? = null

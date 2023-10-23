@@ -6,11 +6,15 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class CurrentWeatherRepoImpl @Inject constructor(
+class WeatherRepoImpl @Inject constructor(
 
-) : CurrentWeatherRepo {
+) : WeatherRepo {
 
     override suspend fun getCurrentWeather(key: KeyModel): ApiResult {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun getForecastWeather(key: KeyModel): ApiResult {
         TODO("Not yet implemented")
     }
 

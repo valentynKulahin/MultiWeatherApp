@@ -1,6 +1,6 @@
-package com.example.domain.model.current
+package com.example.domain.model.weather
 
-data class Location(
+data class LocationDomainModel(
     val country: String? = null,
     val lat: Double? = null,
     val localtime: String? = null,

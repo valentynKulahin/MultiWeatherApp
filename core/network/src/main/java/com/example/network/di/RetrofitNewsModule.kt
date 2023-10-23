@@ -1,7 +1,6 @@
 package com.example.network.di
 
-import com.example.network.BuildConfig
-import com.example.network.api.RealTimeApi
+import com.example.network.api.NewsApi
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import dagger.Module
@@ -32,9 +31,9 @@ object RetrofitNewsModule {
     @Provides
     fun provideNewsRetrofit(): Retrofit {
         val interceptor = HttpLoggingInterceptor().apply {
-            if (BuildConfig.DEBUG) {
+//            if (BuildConfig.DEBUG) {
                 setLevel(HttpLoggingInterceptor.Level.BODY)
-            }
+//            }
         }
         val client = OkHttpClient
             .Builder()
@@ -50,7 +49,7 @@ object RetrofitNewsModule {
 
     @Singleton
     @Provides
-    fun provideNewsApiService(retrofit: Retrofit): RealTimeApi =
-        retrofit.create(RealTimeApi::class.java)
+    fun provideNewsApiService(retrofit: Retrofit): NewsApi =
+        retrofit.create(NewsApi::class.java)
 
 }

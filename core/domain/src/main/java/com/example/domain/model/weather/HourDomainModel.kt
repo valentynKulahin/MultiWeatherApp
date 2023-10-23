@@ -1,14 +1,10 @@
-package com.example.domain.model.forecast
+package com.example.domain.model.weather
 
-import com.example.domain.model.common.Condition
-import com.example.domain.model.current.AirQuality
-
-data class Hour(
-    val air_quality: AirQuality? = AirQuality(),
+data class HourDomainModel(
     val chance_of_rain: Int? = 0,
     val chance_of_snow: Int? = 0,
     val cloud: Int? = 0,
-    val condition: Condition? = Condition(),
+    val condition: ConditionDomainModel? = ConditionDomainModel(),
     val dewpoint_c: Double? = 0.0,
     val dewpoint_f: Double? = 0.0,
     val feelslike_c: Double? = 0.0,

@@ -1,6 +1,6 @@
 package com.example.domain.model.news
 
-data class Source(
-    val id: Any? = null,
+data class SourceDomainModel(
+    val id: String? = null,
     val name: String? = null
 )

@@ -1,6 +1,6 @@
-package com.example.domain.model.common
+package com.example.domain.model.weather
 
-data class Astro(
+data class AstroDomainModel(
     val is_moon_up: Int? = null,
     val is_sun_up: Int? = null,
     val moon_illumination: String? = null,

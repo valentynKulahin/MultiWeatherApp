@@ -1,6 +1,5 @@
 package com.example.network.di
 
-import com.example.network.BuildConfig
 import com.example.network.api.RealTimeApi
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
@@ -32,9 +31,9 @@ object RetrofitModule {
     @Provides
     fun provideRetrofit(): Retrofit {
         val interceptor = HttpLoggingInterceptor().apply {
-            if (BuildConfig.DEBUG) {
+//            if (BuildConfig.DEBUG) {
                 setLevel(HttpLoggingInterceptor.Level.BODY)
-            }
+//            }
         }
         val client = OkHttpClient
             .Builder()

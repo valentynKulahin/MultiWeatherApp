@@ -26,19 +26,26 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
+import com.example.common.convert.convertStringToLink
 import com.example.designsystem.component.WeatherLocationText
-import com.example.domain.model.current.CurrentWeather
+import com.example.domain.model.weather.CurrentDomainModel
+import com.example.domain.model.weather.LocationDomainModel
 import com.example.home.R
 
 @Composable
-fun WeatherElevatedCard(navController: NavHostController, currentWeather: CurrentWeather) {
-    HomeScreen_WeatherCard(navController = navController, currentWeather = currentWeather)
+fun WeatherElevatedCard(navController: NavHostController, currentWeather: CurrentDomainModel, locationDomainModel: LocationDomainModel) {
+    HomeScreen_WeatherCard(
+        navController = navController,
+        currentWeather = currentWeather,
+        locationDomainModel = locationDomainModel
+    )
 }
 
 @Composable
 private fun HomeScreen_WeatherCard(
     navController: NavHostController,
-    currentWeather: CurrentWeather
+    currentWeather: CurrentDomainModel,
+    locationDomainModel: LocationDomainModel
 ) {
     ElevatedCard(
         modifier = Modifier
@@ -55,7 +62,7 @@ private fun HomeScreen_WeatherCard(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                HomeScreen_WeatherCard_Left(currentWeather = currentWeather)
+                HomeScreen_WeatherCard_Left(currentWeather = currentWeather, locationDomainModel = locationDomainModel)
                 HomeScreen_WeatherCard_Right(currentWeather = currentWeather)
             }
             Spacer(modifier = Modifier.height(15.dp))
@@ -66,7 +73,8 @@ private fun HomeScreen_WeatherCard(
 
 @Composable
 private fun HomeScreen_WeatherCard_Left(
-    currentWeather: CurrentWeather
+    currentWeather: CurrentDomainModel,
+    locationDomainModel: LocationDomainModel
 ) {
     Column(
         horizontalAlignment = Alignment.Start,
@@ -83,7 +91,7 @@ private fun HomeScreen_WeatherCard_Left(
         }
         Spacer(modifier = Modifier.height(5.dp))
         Text(
-            text = currentWeather.current?.condition?.text.toString(),
+            text = currentWeather.condition?.text.toString(),
             fontSize = 24.sp,
             fontWeight = FontWeight.Bold
         )
@@ -91,7 +99,7 @@ private fun HomeScreen_WeatherCard_Left(
         Row {
             WeatherLocationText(
                 imageVector = Icons.Default.LocationOn,
-                text = "${currentWeather.location?.country.toString()}, ${currentWeather.location?.name.toString()}",
+                text = "${locationDomainModel.country.toString()}, ${locationDomainModel.name.toString()}",
                 spacer = 6
             )
         }
@@ -100,9 +108,9 @@ private fun HomeScreen_WeatherCard_Left(
 
 @Composable
 private fun HomeScreen_WeatherCard_Right(
-    currentWeather: CurrentWeather
+    currentWeather: CurrentDomainModel
 ) {
-    val iconURL = "https:" + currentWeather.current?.condition?.icon.toString().replace("//", "")
+    val iconURL = convertStringToLink(currentWeather.condition?.icon.toString())
     AsyncImage(
         model = iconURL,
         contentDescription = "weather",
@@ -111,7 +119,7 @@ private fun HomeScreen_WeatherCard_Right(
 }
 
 @Composable
-private fun HomeScreen_WeatherCard_Bottom(currentWeather: CurrentWeather) {
+private fun HomeScreen_WeatherCard_Bottom(currentWeather: CurrentDomainModel) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -119,10 +127,10 @@ private fun HomeScreen_WeatherCard_Bottom(currentWeather: CurrentWeather) {
         verticalAlignment = Alignment.Bottom,
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
-        HomeScreen_WeatherCard_Bottom_Degrees(temperature = currentWeather.current?.temp_c.toString())
+        HomeScreen_WeatherCard_Bottom_Degrees(temperature = currentWeather.temp_c.toString())
         HomeScreen_WeatherCard_Bottom_ChanceOfRain(chanceOfRain = "10%")
         HomeScreen_WeatherCard_Bottom_Sunny(sunny = "10%")
-        HomeScreen_WeatherCard_Bottom_Wind(wind = currentWeather.current?.wind_mph.toString())
+        HomeScreen_WeatherCard_Bottom_Wind(wind = currentWeather.wind_mph.toString())
     }
 }
 

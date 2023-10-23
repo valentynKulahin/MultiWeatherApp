@@ -1,6 +1,6 @@
-package com.example.domain.model.current
+package com.example.domain.model.weather
 
-data class AirQuality(
+data class AirQualityDomainModel(
     val co: Double? = null,
     val gb_defra_index: Int? = null,
     val no2: Double? = null,

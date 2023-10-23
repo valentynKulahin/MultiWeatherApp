@@ -2,8 +2,8 @@ package com.example.network.di
 
 import com.example.network.repos.news.NewsRepo
 import com.example.network.repos.news.NewsRepoImpl
-import com.example.network.repos.weather.CurrentWeatherRepo
-import com.example.network.repos.weather.CurrentWeatherRepoImpl
+import com.example.network.repos.weather.WeatherRepo
+import com.example.network.repos.weather.WeatherRepoImpl
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -16,15 +16,15 @@ class NetworkModule() {
 
     @Provides
     @Singleton
-    fun CurrentWeatherRepo(
+    fun provideWeatherRepo(
 
-    ): CurrentWeatherRepo {
-        return CurrentWeatherRepoImpl()
+    ): WeatherRepo {
+        return WeatherRepoImpl()
     }
 
     @Provides
     @Singleton
-    fun NewsRepo(
+    fun provideNewsRepo(
 
     ): NewsRepo {
         return NewsRepoImpl()

@@ -1,11 +1,9 @@
-package com.example.domain.model.current
+package com.example.domain.model.weather
 
-import com.example.domain.model.common.Condition
-
-data class Current(
-    val air_quality: AirQuality? = null,
+data class CurrentDomainModel(
+    val air_quality: AirQualityDomainModel? = null,
     val cloud: Int? = null,
-    val condition: Condition? = null,
+    val condition: ConditionDomainModel? = null,
     val feelslike_c: Double? = null,
     val feelslike_f: Double? = null,
     val gust_kph: Double? = null,

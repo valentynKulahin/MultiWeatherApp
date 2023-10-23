@@ -2,8 +2,10 @@ package com.example.home
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -13,9 +15,11 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import com.example.designsystem.component.WeatherBackground
-import com.example.domain.model.current.CurrentWeather
-import com.example.domain.model.forecast.ForecastWeather
-import com.example.domain.model.news.NewsResult
+import com.example.domain.model.news.NewsDomainModel
+import com.example.domain.model.weather.CurrentDomainModel
+import com.example.domain.model.weather.ForecastDomainModel
+import com.example.domain.model.weather.LocationDomainModel
+import com.example.domain.model.weather.WeatherDomainModel
 import com.example.home.components.CalendarElevatedCard
 import com.example.home.components.ForecastElevatedCard
 import com.example.home.components.NewsElevatedCard
@@ -30,23 +34,30 @@ fun HomeScreen(
 ) {
 
     val uiState = homeVM.uiState.collectAsStateWithLifecycle()
-    val currentWeather = remember { mutableStateOf(uiState.value.currentWeather) }
     val news = remember { mutableStateOf(uiState.value.news) }
-    val forecastWeather = remember { mutableStateOf(uiState.value.forecastWeather) }
+    val weather = remember { mutableStateOf(uiState.value.weather) }
+    val verticalScrollState = rememberScrollState()
 
-    WeatherBackground(modifier = Modifier.fillMaxSize()) {
-        Column(modifier = Modifier.fillMaxSize()) {
+    WeatherBackground(modifier = Modifier.wrapContentHeight()) {
+        Column(
+            modifier = Modifier
+                .wrapContentHeight()
+                .verticalScroll(
+                    state = verticalScrollState,
+                    enabled = true
+                )
+        ) {
             HomeScreen_WeatherCard(
                 navController = navController,
-                currentWeather = currentWeather.value
+                weatherDomainModel = weather.value
             )
             Spacer(modifier = Modifier.height(10.dp))
             HomeScreen_NewsCard(navController = navController, news = news.value)
             Spacer(modifier = Modifier.height(10.dp))
             HomeScreen_ForecastCard(
                 navController = navController,
-                currentWeather = currentWeather.value,
-                forecastWeather = forecastWeather.value
+                currentWeather = weather.value.current ?: CurrentDomainModel(),
+                forecastWeather = weather.value.forecast ?: ForecastDomainModel()
             )
             Spacer(modifier = Modifier.height(10.dp))
             HomeScreen_SunCondition(navController = navController)
@@ -63,24 +74,25 @@ fun HomeScreen(
 @Composable
 private fun HomeScreen_WeatherCard(
     navController: NavHostController,
-    currentWeather: CurrentWeather
+    weatherDomainModel: WeatherDomainModel
 ) {
     WeatherElevatedCard(
         navController = navController,
-        currentWeather = currentWeather
+        currentWeather = weatherDomainModel.current ?: CurrentDomainModel(),
+        locationDomainModel = weatherDomainModel.location ?: LocationDomainModel()
     )
 }
 
 @Composable
-private fun HomeScreen_NewsCard(navController: NavHostController, news: NewsResult) {
+private fun HomeScreen_NewsCard(navController: NavHostController, news: NewsDomainModel) {
     NewsElevatedCard(navController = navController, news = news)
 }
 
 @Composable
 private fun HomeScreen_ForecastCard(
     navController: NavHostController,
-    currentWeather: CurrentWeather,
-    forecastWeather: ForecastWeather
+    currentWeather: CurrentDomainModel,
+    forecastWeather: ForecastDomainModel
 ) {
     ForecastElevatedCard(
         navController = navController,

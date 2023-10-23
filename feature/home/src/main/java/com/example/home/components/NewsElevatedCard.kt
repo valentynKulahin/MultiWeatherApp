@@ -31,15 +31,15 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import com.example.designsystem.R
-import com.example.domain.model.news.Article
-import com.example.domain.model.news.NewsResult
+import com.example.domain.model.news.ArticleDomainModel
+import com.example.domain.model.news.NewsDomainModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
 @Composable
 fun NewsElevatedCard(
     navController: NavHostController,
-    news: NewsResult,
+    news: NewsDomainModel,
     scope: CoroutineScope = rememberCoroutineScope()
 ) {
 
@@ -61,7 +61,7 @@ private fun News_Header() {
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun News_Cards(
-    news: List<Article?>?,
+    news: List<ArticleDomainModel?>?,
     scope: CoroutineScope
 ) {
     val pagerState = rememberPagerState(pageCount = { news?.size ?: 0 })
@@ -72,7 +72,7 @@ private fun News_Cards(
             horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            News_Card(article = news?.get(it) ?: Article())
+            News_Card(article = news?.get(it) ?: ArticleDomainModel())
         }
     }
     Row(
@@ -103,7 +103,7 @@ private fun News_Cards(
 }
 
 @Composable
-private fun News_Card(article: Article?) {
+private fun News_Card(article: ArticleDomainModel?) {
     ElevatedCard(
         modifier = Modifier
             .fillMaxWidth()
