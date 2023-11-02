@@ -6,10 +6,16 @@ import retrofit2.http.GET
 import retrofit2.http.Headers
 import retrofit2.http.Query
 
-interface RealTimeApi {
+interface WeatherApi {
 
     @Headers("Content-Type: application/json")
     @GET(value = "/current.json")
-    fun getForecastWeather(@Query("key") key: String): Call<WeatherNetworkModel>
+    fun getForecastWeather(
+        @Query("key") apiKey: String,
+        @Query("country") country: String,
+        @Query("days") days: Int,
+        @Query("aqi") aqi: String,
+        @Query("alerts") alerts: String
+    ): Call<WeatherNetworkModel>
 
 }

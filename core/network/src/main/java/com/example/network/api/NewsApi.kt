@@ -12,7 +12,7 @@ interface NewsApi {
     @GET(value = "/top-headlines")
     fun getTopHeadlineNews(
         @Query("country") country: String,
-        @Query("apiKey") key: String
+        @Query("apiKey") apiKey: String
     ): Call<NewsNetworkModel>
 
 }

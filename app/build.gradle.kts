@@ -4,6 +4,7 @@ plugins {
     alias(libs.plugins.org.jetbrains.kotlin.android)
     alias(libs.plugins.com.google.hilt)
     alias(libs.plugins.com.google.ksp)
+    alias(libs.plugins.com.google.sgp)
 }
 
 android {
@@ -70,7 +71,6 @@ dependencies {
     implementation(project(":core:designsystem"))
     implementation(project(":core:domain"))
     implementation(project(":core:network"))
-    implementation(project(":core:presentation"))
 
     //core
     implementation(platform(libs.kotlin.bom))

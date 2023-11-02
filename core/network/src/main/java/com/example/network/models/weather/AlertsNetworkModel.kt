@@ -7,5 +7,5 @@ import com.google.gson.annotations.Expose
 data class AlertsNetworkModel(
     @SerializedName("alerts")
     @Expose
-    val alerts: AlertNetworkModel? = AlertNetworkModel()
+    val alerts: List<AlertNetworkModel?>? = null
 )

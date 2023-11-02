@@ -6,7 +6,7 @@ import android.net.ConnectivityManager.NetworkCallback
 import android.net.Network
 import android.net.NetworkCapabilities
 import android.net.NetworkRequest.Builder
-import android.os.Build
+import androidx.core.content.getSystemService
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
@@ -18,40 +18,56 @@ class NetworkMonitorRepository @Inject constructor(
     @ApplicationContext val context: Context
 ) : NetworkMonitor {
 
-    override val networkStatus: Flow<NetworkStatus> = callbackFlow<NetworkStatus> {
-        val networkManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+    override val networkStatus: Flow<NetworkStatus> = callbackFlow {
+        val networkManager = context.getSystemService<ConnectivityManager>()
+        if (networkManager == null) {
+            channel.trySend(NetworkStatus.Disconnected)
+            channel.close()
+        } else {
 
-        val callback = object : NetworkCallback() {
-            override fun onAvailable(network: Network) {
+            val connected = isInternetConnected(context = context)
+            if (connected) {
                 channel.trySend(NetworkStatus.Connected)
-            }
-
-            override fun onLost(network: Network) {
+            } else {
                 channel.trySend(NetworkStatus.Disconnected)
             }
-        }
 
-        val request = Builder()
-            .addCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
-            .addTransportType(NetworkCapabilities.TRANSPORT_WIFI)
-            .addTransportType(NetworkCapabilities.TRANSPORT_CELLULAR)
-            .build()
+            val callback = object : NetworkCallback() {
+                override fun onAvailable(network: Network) {
+                    channel.trySend(NetworkStatus.Connected)
+                }
 
-        networkManager.registerNetworkCallback(request, callback)
+                override fun onUnavailable() {
+                    channel.trySend(NetworkStatus.Disconnected)
+                }
 
-        awaitClose {
-            networkManager.unregisterNetworkCallback(callback)
+                override fun onLost(network: Network) {
+                    channel.trySend(NetworkStatus.Disconnected)
+                }
+            }
+
+            val request = Builder()
+                .addCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
+                .addTransportType(NetworkCapabilities.TRANSPORT_WIFI)
+                .addTransportType(NetworkCapabilities.TRANSPORT_CELLULAR)
+                .build()
+
+            networkManager.registerNetworkCallback(request, callback)
+
+            awaitClose {
+                networkManager.unregisterNetworkCallback(callback)
+            }
         }
     }.conflate()
 
-    @Suppress("DEPRECATION")
-    private fun ConnectivityManager.isCurrentlyConnected() = when {
-        Build.VERSION.SDK_INT >= Build.VERSION_CODES.M ->
-            activeNetwork
-                ?.let(::getNetworkCapabilities)
-                ?.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
+}
 
-        else -> activeNetworkInfo?.isConnected
-    } ?: false
+fun isInternetConnected(context: Context): Boolean {
+    val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
 
+    val network = connectivityManager.activeNetwork
+    val networkCapabilities = connectivityManager.getNetworkCapabilities(network)
+
+    // Check if the device has internet connectivity
+    return networkCapabilities?.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET) == true
 }

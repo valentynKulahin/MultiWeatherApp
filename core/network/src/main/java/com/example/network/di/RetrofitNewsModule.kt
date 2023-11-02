@@ -17,7 +17,7 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 object RetrofitNewsModule {
 
-    private const val BASE_URL = "https://newsapi.org/v2"
+    private const val BASE_URL = "https://newsapi.org/v2/"
 
     @Singleton
     @Provides
@@ -27,12 +27,13 @@ object RetrofitNewsModule {
             .create()
     }
 
+    @NewsRetrofit
     @Singleton
     @Provides
     fun provideNewsRetrofit(): Retrofit {
         val interceptor = HttpLoggingInterceptor().apply {
 //            if (BuildConfig.DEBUG) {
-                setLevel(HttpLoggingInterceptor.Level.BODY)
+            setLevel(HttpLoggingInterceptor.Level.BODY)
 //            }
         }
         val client = OkHttpClient
@@ -49,7 +50,7 @@ object RetrofitNewsModule {
 
     @Singleton
     @Provides
-    fun provideNewsApiService(retrofit: Retrofit): NewsApi =
-        retrofit.create(NewsApi::class.java)
+    fun provideNewsApiService(@NewsRetrofit newsRetrofit: Retrofit): NewsApi =
+        newsRetrofit.create(NewsApi::class.java)
 
 }

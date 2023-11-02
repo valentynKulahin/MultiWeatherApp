@@ -1,6 +1,6 @@
 package com.example.network.di
 
-import com.example.network.api.RealTimeApi
+import com.example.network.api.WeatherApi
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import dagger.Module
@@ -15,24 +15,25 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-object RetrofitModule {
+object RetrofitWeatherModule {
 
-    private const val BASE_URL = "https://api.weatherapi.com/v1"
+    private const val BASE_URL = "https://api.weatherapi.com/v1/"
 
     @Singleton
     @Provides
-    fun provideGson(): Gson {
+    fun provideWeatherGson(): Gson {
         return GsonBuilder()
             .setLenient()
             .create()
     }
 
+    @WeatherRetrofit
     @Singleton
     @Provides
-    fun provideRetrofit(): Retrofit {
+    fun provideWeatherRetrofit(): Retrofit {
         val interceptor = HttpLoggingInterceptor().apply {
 //            if (BuildConfig.DEBUG) {
-                setLevel(HttpLoggingInterceptor.Level.BODY)
+            setLevel(HttpLoggingInterceptor.Level.BODY)
 //            }
         }
         val client = OkHttpClient
@@ -41,7 +42,7 @@ object RetrofitModule {
             .build()
 
         return Retrofit.Builder()
-            .addConverterFactory(GsonConverterFactory.create(provideGson()))
+            .addConverterFactory(GsonConverterFactory.create(provideWeatherGson()))
             .baseUrl(BASE_URL)
             .client(client)
             .build()
@@ -49,7 +50,7 @@ object RetrofitModule {
 
     @Singleton
     @Provides
-    fun provideWeatherApiService(retrofit: Retrofit): RealTimeApi =
-        retrofit.create(RealTimeApi::class.java)
+    fun provideWeatherApiService(@WeatherRetrofit weatherRetrofit: Retrofit): WeatherApi =
+        weatherRetrofit.create(WeatherApi::class.java)
 
 }
