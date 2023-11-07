@@ -1,5 +1,6 @@
 package com.example.network.di
 
+import com.example.datastore.repo.DataStoreRepo
 import com.example.network.api.NewsApi
 import com.example.network.api.WeatherApi
 import com.example.network.repos.news.NewsNetworkRepo
@@ -20,17 +21,25 @@ class NetworkModule {
     @Singleton
     @Provides
     fun provideWeatherNetworkRepo(
-        weatherApi: WeatherApi
+        weatherApi: WeatherApi,
+        dataStoreRepo: DataStoreRepo
     ): WeatherNetworkRepo {
-        return WeatherNetworkRepoImpl(weatherApi = weatherApi)
+        return WeatherNetworkRepoImpl(
+            weatherApi = weatherApi,
+            dataStoreRepo = dataStoreRepo
+        )
     }
 
     @Singleton
     @Provides
     fun provideNewsNetworkRepo(
-        newsApi: NewsApi
+        newsApi: NewsApi,
+        dataStoreRepo: DataStoreRepo
     ): NewsNetworkRepo {
-        return NewsNetworkRepoImpl(newsApi = newsApi)
+        return NewsNetworkRepoImpl(
+            newsApi = newsApi,
+            dataStoreRepo = dataStoreRepo
+        )
     }
 
 }

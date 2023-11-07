@@ -116,7 +116,7 @@ private fun News_Card(article: ArticleDomainModel?) {
             NewsCard_Header(headerText = article?.title ?: "")
             NewsCard_Bottom(
                 publishedTime = article?.publishedAt ?: "",
-                nameSource = article?.source?.name ?: ""
+                nameSource = article?.author ?: article?.source?.name.toString()
             )
         }
     }

@@ -11,7 +11,7 @@ class NewsDataRemoteRepoImpl @Inject constructor(
 ) : NewsDataRemoteRepo {
 
     override suspend fun getTopNews(): ApiResult {
-        return newsNetworkRepo.getTopNews("de", "")
+        return newsNetworkRepo.getTopNews("de")
     }
 
 }

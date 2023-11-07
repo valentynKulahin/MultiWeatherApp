@@ -7,8 +7,6 @@ import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -34,8 +32,8 @@ fun HomeScreen(
 ) {
 
     val uiState = homeVM.uiState.collectAsStateWithLifecycle()
-    val news = remember { mutableStateOf(uiState.value.news) }
-    val weather = remember { mutableStateOf(uiState.value.weather) }
+//    val news = remember { mutableStateOf(uiState.value.newsDomainModel) }
+//    val weather = remember { mutableStateOf(uiState.value.weatherDomainModel) }
     val verticalScrollState = rememberScrollState()
 
     WeatherBackground(modifier = Modifier.wrapContentHeight()) {
@@ -49,15 +47,15 @@ fun HomeScreen(
         ) {
             HomeScreen_WeatherCard(
                 navController = navController,
-                weatherDomainModel = weather.value
+                weatherDomainModel = uiState.value.weatherDomainModel
             )
             Spacer(modifier = Modifier.height(10.dp))
-            HomeScreen_NewsCard(navController = navController, news = news.value)
+            HomeScreen_NewsCard(navController = navController, news = uiState.value.newsDomainModel)
             Spacer(modifier = Modifier.height(10.dp))
             HomeScreen_ForecastCard(
                 navController = navController,
-                currentWeather = weather.value.current ?: CurrentDomainModel(),
-                forecastWeather = weather.value.forecast ?: ForecastDomainModel()
+                currentWeather = uiState.value.weatherDomainModel.current ?: CurrentDomainModel(),
+                forecastWeather = uiState.value.weatherDomainModel.forecast ?: ForecastDomainModel()
             )
             Spacer(modifier = Modifier.height(10.dp))
             HomeScreen_SunCondition(navController = navController)

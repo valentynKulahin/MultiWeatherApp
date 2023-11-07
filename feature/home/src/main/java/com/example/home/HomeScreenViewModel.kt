@@ -1,5 +1,6 @@
 package com.example.home
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.domain.usecase.GetWeatherUseCase
@@ -31,16 +32,18 @@ class HomeScreenViewModel @Inject constructor(
             is HomeScreenIntent.UpdateWeather -> {
                 viewModelScope.launch(context = Dispatchers.IO) {
                     _uiState.update {
-                        it.copy(weather = getWeatherUseCase.invoke())
+                        it.copy(weatherDomainModel = getWeatherUseCase.invoke())
                     }
+                    Log.d("TAG", "weather: done")
                 }
             }
 
             is HomeScreenIntent.UpdateNews -> {
                 viewModelScope.launch(context = Dispatchers.IO) {
                     _uiState.update {
-                        it.copy(news = getNewsUseCase.invoke())
+                        it.copy(newsDomainModel = getNewsUseCase.invoke())
                     }
+                    Log.d("TAG", "news: done")
                 }
             }
         }

@@ -4,8 +4,8 @@ import com.example.domain.model.news.NewsDomainModel
 import com.example.domain.model.weather.WeatherDomainModel
 
 data class HomeScreenContract(
-    val news: NewsDomainModel = NewsDomainModel(),
-    val weather: WeatherDomainModel = WeatherDomainModel()
+    val newsDomainModel: NewsDomainModel = NewsDomainModel(),
+    val weatherDomainModel: WeatherDomainModel = WeatherDomainModel()
 )
 
 sealed class HomeScreenIntent {

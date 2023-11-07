@@ -4,6 +4,6 @@ import com.example.common.ApiResult
 
 interface WeatherNetworkRepo {
 
-    suspend fun getForecastWeather(apiKey: String, country: String, days: Int, aqi: String, alerts: String) : ApiResult
+    suspend fun getForecastWeather(country: String, days: Int, aqi: String, alerts: String) : ApiResult
 
 }

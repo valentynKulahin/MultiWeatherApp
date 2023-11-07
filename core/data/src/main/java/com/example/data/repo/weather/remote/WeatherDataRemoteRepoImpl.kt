@@ -12,7 +12,6 @@ class WeatherDataRemoteRepoImpl @Inject constructor(
 
     override suspend fun getForecastWeather(): ApiResult {
         return weatherNetworkRepo.getForecastWeather(
-            apiKey = "",
             country = "Essen",
             days = 2,
             aqi = "yes",

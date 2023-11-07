@@ -9,7 +9,7 @@ import retrofit2.http.Query
 interface NewsApi {
 
     @Headers("Content-Type: application/json")
-    @GET(value = "/top-headlines")
+    @GET(value = "top-headlines")
     fun getTopHeadlineNews(
         @Query("country") country: String,
         @Query("apiKey") apiKey: String

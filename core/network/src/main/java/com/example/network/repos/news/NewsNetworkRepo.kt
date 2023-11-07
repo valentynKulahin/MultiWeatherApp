@@ -4,6 +4,6 @@ import com.example.common.ApiResult
 
 interface NewsNetworkRepo {
 
-    suspend fun getTopNews(country: String, apiKey: String): ApiResult
+    suspend fun getTopNews(country: String): ApiResult
 
 }

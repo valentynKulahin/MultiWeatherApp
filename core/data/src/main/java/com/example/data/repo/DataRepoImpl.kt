@@ -9,6 +9,9 @@ import com.example.data.repo.weather.local.WeatherDataLocalRepo
 import com.example.data.repo.weather.remote.WeatherDataRemoteRepo
 import com.example.data.util.NetworkMonitor
 import com.example.data.util.NetworkStatus
+import com.example.data.util.mappers.mapToData
+import com.example.network.models.news.NewsNetworkModel
+import com.example.network.models.weather.WeatherNetworkModel
 import kotlinx.coroutines.flow.first
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -27,7 +30,8 @@ class DataRepoImpl @Inject constructor(
             is NetworkStatus.Connected -> {
                 return when (val result = newsDataRemoteRepo.getTopNews()) {
                     is ApiResult.ApiSuccess -> {
-                        result.data as NewsDataModel
+                        val news = result.data as NewsNetworkModel
+                        return news.mapToData()
                     }
                     is ApiResult.ApiException -> { NewsDataModel() }
                     is ApiResult.ApiError -> { NewsDataModel() }
@@ -43,7 +47,8 @@ class DataRepoImpl @Inject constructor(
             is NetworkStatus.Connected -> {
                 return when (val result = weatherDataRemoteRepo.getForecastWeather()) {
                     is ApiResult.ApiSuccess -> {
-                        result.data as WeatherDataModel
+                        val weather = result.data as WeatherNetworkModel
+                        return weather.mapToData()
                     }
                     is ApiResult.ApiException -> { WeatherDataModel() }
                     is ApiResult.ApiError -> { WeatherDataModel() }
