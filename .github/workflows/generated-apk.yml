@@ -40,7 +40,6 @@ jobs:
         with:
           path: app/build/outputs/apk/debug/debug-apk.apk
           if-no-files-found: error
-
       - name: Get local.properties from secrets
         run: echo "${{secret.LOCAL_PROPERTIES }}" > $GITHUB_WORKSPACE/local.properties
 
