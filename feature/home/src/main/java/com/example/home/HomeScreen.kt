@@ -32,8 +32,6 @@ fun HomeScreen(
 ) {
 
     val uiState = homeVM.uiState.collectAsStateWithLifecycle()
-//    val news = remember { mutableStateOf(uiState.value.newsDomainModel) }
-//    val weather = remember { mutableStateOf(uiState.value.weatherDomainModel) }
     val verticalScrollState = rememberScrollState()
 
     WeatherBackground(modifier = Modifier.wrapContentHeight()) {

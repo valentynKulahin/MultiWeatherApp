@@ -57,6 +57,10 @@ dependencies {
     implementation(project(":core:common"))
     implementation(project(":core:datastore"))
 
+    //accompanist
+    implementation(libs.accompanist.webview)
+    implementation(libs.androidx.browser)
+
     //core
     implementation(libs.core.ktx)
 
