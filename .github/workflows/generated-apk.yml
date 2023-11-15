@@ -35,12 +35,12 @@ jobs:
 
       - name: Update news api key from Secrets
         env:
-            MOCK_USERNAME: ${{ secrets.NEWS_API_KEY }}
+          NEWS_API_KEY: ${{ secrets.NEWS_API_KEY }}
         run: echo NEWS_API_KEY="NEWS_API_KEY" > ./local.properties
 
       - name: Update weather api key from Secrets
         env:
-          MOCK_USERNAME: ${{ secrets.WEATHER_API_KEY }}
+          WEATHER_API_KEY: ${{ secrets.WEATHER_API_KEY }}
         run: echo WEATHER_API_KEY="WEATHER_API_KEY" > ./local.properties
 
       - name: Build with Gradle
