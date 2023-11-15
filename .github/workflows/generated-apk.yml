@@ -57,6 +57,7 @@ jobs:
 
   release:
      if: "contains(github.event.head_commit.message, 'deploy')"
+     permissions: write-all
      name: Release APK
      needs: build
      runs-on: ubuntu-latest
@@ -75,7 +76,7 @@ jobs:
            release_name: ${{ github.event.repository.name }} v${{ github.run_number }}          
        - name: Upload Release APK
          id: upload_release_asset
-         uses: actions/upload-release-asset@v1.0.1
+         uses: actions/upload-release-asset@v0.0.1
          env:
            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
          with:
