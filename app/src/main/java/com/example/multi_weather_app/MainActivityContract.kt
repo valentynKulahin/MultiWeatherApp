@@ -1,4 +1,4 @@
-package com.example.multiweatherapp
+package com.example.multi_weather_app
 
 import com.example.data.util.NetworkStatus
 

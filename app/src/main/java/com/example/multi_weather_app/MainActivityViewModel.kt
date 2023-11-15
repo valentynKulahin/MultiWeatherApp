@@ -1,11 +1,10 @@
-package com.example.multiweatherapp
+package com.example.multi_weather_app
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.data.util.NetworkMonitor
 import com.example.data.util.NetworkStatus
 import com.example.datastore.repo.DataStoreRepo
-import com.example.designsystem.navigation.AppNavigator
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -18,7 +17,7 @@ import javax.inject.Inject
 @HiltViewModel
 class MainActivityViewModel @Inject constructor(
     networkMonitor: NetworkMonitor,
-    appNavigator: AppNavigator,
+//    appNavigator: AppNavigator,
     private val dataStoreRepo: DataStoreRepo
 ) : ViewModel() {
 
@@ -28,8 +27,6 @@ class MainActivityViewModel @Inject constructor(
             started = SharingStarted.WhileSubscribed(5_000),
             initialValue = NetworkStatus.Unknown
         )
-
-    val navigatorChannel = appNavigator.navigationChannel
 
     init {
         viewModelScope.launch {

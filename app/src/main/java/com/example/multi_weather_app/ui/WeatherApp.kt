@@ -1,4 +1,4 @@
-package com.example.multiweatherapp.ui
+package com.example.multi_weather_app.ui
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -27,8 +27,8 @@ import com.example.designsystem.component.WeatherDrawerMenu
 import com.example.designsystem.component.WeatherTopAppBar
 import com.example.designsystem.navigation.WeatherDestinations
 import com.example.home.HomeScreen
-import com.example.multiweatherapp.MainActivityViewModel
-import com.example.multiweatherapp.R
+import com.example.multi_weather_app.R
+import com.example.multi_weather_app.MainActivityViewModel
 import com.example.search.SearchScreen
 import com.example.splash.SplashScreen
 import kotlinx.coroutines.delay
@@ -43,7 +43,6 @@ fun WeatherApp(
     val snackbarHostState = SnackbarHostState()
     val notConnectedMessage = stringResource(id = R.string.not_connected)
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
-    val scope = rememberCoroutineScope()
     val startAnimation = remember { mutableStateOf(false) }
     val startMainNavigation = remember { mutableStateOf(false) }
 

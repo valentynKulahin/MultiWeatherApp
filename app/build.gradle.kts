@@ -10,11 +10,11 @@ plugins {
 }
 
 android {
-    namespace = "com.example.multiweatherapp"
+    namespace = "com.example.multi_weather_app"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.example.multiweatherapp"
+        applicationId = "com.example.multi_weather_app"
         minSdk = 30
         targetSdk = 34
         versionCode = 1
@@ -35,17 +35,11 @@ android {
     buildTypes {
         release {
             isDebuggable = false
-            isMinifyEnabled = false
+            isMinifyEnabled = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
-
-//            val properties = Properties()
-//            properties.load(project.rootProject.file("local.properties").inputStream())
-//
-//            buildConfigField("String", "NEWS_API_KEY", "\"${properties.getProperty("NEWS_API_KEY")}\"")
-//            buildConfigField("String", "WEATHER_API_KEY", "\"${properties.getProperty("WEATHER_API_KEY")}\"")
         }
     }
     compileOptions {
