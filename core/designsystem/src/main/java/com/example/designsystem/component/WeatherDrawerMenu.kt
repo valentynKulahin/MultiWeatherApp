@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.requiredWidth
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AddLocationAlt
@@ -22,6 +23,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
@@ -34,7 +36,8 @@ fun WeatherDrawerMenu(
     drawerState: DrawerState,
     scope: CoroutineScope = rememberCoroutineScope(),
     currentLocation: String,
-    favouriteLocations: List<Any>
+    favouriteLocations: List<Any>,
+    drawerWidth: Dp
 ) {
     ModalDrawerSheet(
         drawerContainerColor = MaterialTheme.colorScheme.primary,
@@ -42,6 +45,7 @@ fun WeatherDrawerMenu(
     ) {
         Column(
             modifier = Modifier
+                .requiredWidth(drawerWidth)
                 .fillMaxHeight()
                 .padding(start = 8.dp),
             horizontalAlignment = Alignment.Start,
@@ -93,9 +97,11 @@ private fun WeatherDrawerMenu_Center(
     scope: CoroutineScope,
     favouriteLocations: List<Any>
 ) {
-    Column(modifier = Modifier
-        .wrapContentHeight()
-        .padding(horizontal = 10.dp, vertical = 10.dp)) {
+    Column(
+        modifier = Modifier
+            .wrapContentHeight()
+            .padding(horizontal = 10.dp, vertical = 10.dp)
+    ) {
         WeatherLocationText(
             imageVector = Icons.Default.AddLocationAlt,
             text = stringResource(id = R.string.drawer_sheet_add_location),
