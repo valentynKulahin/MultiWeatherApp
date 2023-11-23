@@ -1,6 +1,5 @@
 package com.example.home.components
 
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -26,7 +25,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import com.example.common.convert.convertStringToLink
 import com.example.domain.model.weather.CurrentDomainModel
@@ -42,12 +40,10 @@ import kotlin.math.roundToInt
 
 @Composable
 fun ForecastElevatedCard(
-    navController: NavHostController,
     currentWeather: CurrentDomainModel,
     forecastWeather: ForecastDomainModel
 ) {
     Forecast_Screen(
-        navController = navController,
         forecastWeather = forecastWeather,
         currentWeather = currentWeather
     )
@@ -55,7 +51,6 @@ fun ForecastElevatedCard(
 
 @Composable
 private fun Forecast_Screen(
-    navController: NavHostController,
     currentWeather: CurrentDomainModel,
     forecastWeather: ForecastDomainModel
 ) {
@@ -96,7 +91,6 @@ private fun Forecast_Card_Top(
                 text = currentWeather.condition?.text.toString(),
                 fontSize = 20.sp
             )
-//            Spacer(modifier = Modifier.height(10.dp))
             Text(
                 text = getCurrentFormattedDate(),
                 fontSize = 20.sp,
@@ -111,7 +105,6 @@ private fun Forecast_Card_Top(
     }
 }
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun Forecast_Card_Lists(
     forecastWeather: ForecastDomainModel,
@@ -127,7 +120,7 @@ private fun Forecast_Card_Lists(
     ) {
         forecastDays.forEach { forecastItem ->
             if ((forecastItem.hour?.size ?: 0) > 0) {
-                items(items = forecastItem.hour ?: listOf()) {
+                items(items = forecastItem.hour ?: listOf<HourDomainModel>()) {
                     val forecastDateTime = LocalDateTime.parse(it.time, formatter)
                     if (forecastDateTime >= currentDateTime) {
                         Forecast_Card_Item(

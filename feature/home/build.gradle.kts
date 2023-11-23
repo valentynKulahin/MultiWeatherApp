@@ -81,6 +81,7 @@ dependencies {
     implementation(libs.material3)
     implementation(libs.androidx.navigation.compose)
     implementation(libs.androidx.icons.extended)
+    implementation(libs.accompanist.pager.indicator)
 
     //lifecycle
     implementation(libs.androidx.lifecycle.runtime.ktx)

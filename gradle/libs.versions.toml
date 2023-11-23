@@ -1,11 +1,11 @@
 [versions]
-agp = "8.1.3"
+agp = "8.1.4"
 org-jetbrains-kotlin-android = "1.9.10"
 core-ktx = "1.12.0"
 junit = "4.13.2"
 androidx-test-ext-junit = "1.1.5"
 espresso-core = "3.5.1"
-activity-compose = "1.8.0"
+activity-compose = "1.8.1"
 compose-bom = "2023.10.01"
 compose-navigation = "2.7.5"
 material-icons-extended = "1.5.4"
@@ -18,11 +18,13 @@ interceptor = "5.0.0-alpha.1"
 hilt = "2.48"
 kotlin-coroutines = "1.7.1"
 accompanist-permission = "0.28.0"
+accompanist-pager-indicatior = "0.30.1"
+accompanist-webview = "0.32.0"
 ksp = "1.9.10-1.0.13"
 coil = "2.4.0"
 sgp = "2.0.1"
-webview = "0.32.0"
-browser = "1.6.0"
+browser = "1.7.0"
+compose-foundation = "1.6.0-beta01"
 
 [libraries]
 core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "core-ktx" }
@@ -43,6 +45,8 @@ androidx-hilt-navigation = { group = "androidx.hilt", name = "hilt-navigation-co
 activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "activity-compose" }
 compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "compose-bom" }
 ui = { group = "androidx.compose.ui", name = "ui" }
+ui-util = { group = "androidx.compose.ui", name = "ui-util" }
+ui-foundation = { group = "androidx.compose.foundation", name = "foundation", version.ref = "compose-foundation" }
 ui-graphics = { group = "androidx.compose.ui", name = "ui-graphics" }
 ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling" }
 ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview" }
@@ -51,7 +55,9 @@ ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
 material3 = { group = "androidx.compose.material3", name = "material3" }
 kotlinx-coroutines-android = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-android", version.ref = "kotlin-coroutines" }
 kotlinx-coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "kotlin-coroutines" }
-google-accompanist = { group = "com.google.accompanist", name = "accompanist-permissions", version.ref = "accompanist-permission" }
+accompanist-permissions = { group = "com.google.accompanist", name = "accompanist-permissions", version.ref = "accompanist-permission" }
+accompanist-webview = { group = "com.google.accompanist", name = "accompanist-webview", version.ref = "accompanist-webview"}
+accompanist-pager-indicator = { group = "com.google.accompanist", name = "accompanist-pager-indicators", version.ref = "accompanist-pager-indicatior"}
 google-hilt-android = { group = "com.google.dagger", name = "hilt-android", version.ref = "hilt" }
 google-hilt-compiler = { group = "com.google.dagger", name = "hilt-android-compiler", version.ref = "hilt" }
 squareup-retrofit = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = "retrofit" }
@@ -59,7 +65,6 @@ squareup-converter-gson = { group = "com.squareup.retrofit2", name = "converter-
 squareup-okhttp-interceptor = { group = "com.squareup.okhttp3", name = "logging-interceptor", version.ref = "interceptor" }
 kotlin-bom = { group = "org.jetbrains.kotlin", name = "kotlin-bom", version.ref = "org-jetbrains-kotlin-android" }
 coil = { group = "io.coil-kt", name = "coil-compose", version.ref = "coil" }
-accompanist-webview = { group = "com.google.accompanist", name = "accompanist-webview", version.ref = "webview"}
 androidx-browser = { group = "androidx.browser", name = "browser", version.ref = "browser" }
 
 # Dependencies of the included build-logic

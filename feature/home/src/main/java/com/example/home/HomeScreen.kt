@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.DrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -28,7 +27,6 @@ import com.example.home.components.WindElevatedCard
 
 @Composable
 fun HomeScreen(
-    drawerState: DrawerState,
     navController: NavHostController,
     homeVM: HomeScreenViewModel = hiltViewModel()
 ) {
@@ -50,10 +48,9 @@ fun HomeScreen(
                 weatherDomainModel = uiState.value.weatherDomainModel
             )
             Spacer(modifier = Modifier.height(10.dp))
-            HomeScreen_NewsCard(navController = navController, news = uiState.value.newsDomainModel)
+            HomeScreen_NewsCard(news = uiState.value.newsDomainModel)
             Spacer(modifier = Modifier.height(10.dp))
             HomeScreen_ForecastCard(
-                navController = navController,
                 currentWeather = uiState.value.weatherDomainModel.current ?: CurrentDomainModel(),
                 forecastWeather = uiState.value.weatherDomainModel.forecast ?: ForecastDomainModel()
             )
@@ -82,18 +79,16 @@ private fun HomeScreen_WeatherCard(
 }
 
 @Composable
-private fun HomeScreen_NewsCard(navController: NavHostController, news: NewsDomainModel) {
-    NewsElevatedCard(navController = navController, news = news)
+private fun HomeScreen_NewsCard(news: NewsDomainModel) {
+    NewsElevatedCard(news = news)
 }
 
 @Composable
 private fun HomeScreen_ForecastCard(
-    navController: NavHostController,
     currentWeather: CurrentDomainModel,
     forecastWeather: ForecastDomainModel
 ) {
     ForecastElevatedCard(
-        navController = navController,
         currentWeather = currentWeather,
         forecastWeather = forecastWeather
     )

@@ -4,9 +4,9 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.requiredWidth
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AddLocationAlt
@@ -23,7 +23,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
@@ -32,20 +31,22 @@ import kotlinx.coroutines.CoroutineScope
 
 @Composable
 fun WeatherDrawerMenu(
+    modifier: Modifier = Modifier,
     navController: NavController,
     drawerState: DrawerState,
     scope: CoroutineScope = rememberCoroutineScope(),
     currentLocation: String,
     favouriteLocations: List<Any>,
-    drawerWidth: Dp
+    drawerWidth: Float
 ) {
     ModalDrawerSheet(
+        modifier = modifier,
         drawerContainerColor = MaterialTheme.colorScheme.primary,
         drawerContentColor = MaterialTheme.colorScheme.onPrimary
     ) {
         Column(
             modifier = Modifier
-                .requiredWidth(drawerWidth)
+                .fillMaxWidth(drawerWidth)
                 .fillMaxHeight()
                 .padding(start = 8.dp),
             horizontalAlignment = Alignment.Start,

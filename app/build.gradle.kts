@@ -86,7 +86,7 @@ dependencies {
     implementation(libs.core.ktx)
 
     //permissions
-    implementation(libs.google.accompanist)
+    implementation(libs.accompanist.permissions)
 
     //hilt
     implementation(libs.google.hilt.android)
@@ -97,11 +97,14 @@ dependencies {
     implementation(platform(libs.compose.bom))
     implementation(libs.activity.compose)
     implementation(libs.ui)
+    implementation(libs.ui.util)
+    implementation(libs.ui.foundation)
     implementation(libs.ui.graphics)
     implementation(libs.ui.tooling.preview)
     implementation(libs.material3)
     implementation(libs.androidx.navigation.compose)
     implementation(libs.androidx.icons.extended)
+    implementation(libs.accompanist.pager.indicator)
 
     //room
     implementation(libs.androidx.room.ktx)
