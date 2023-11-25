@@ -26,31 +26,29 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
-import com.example.common.convert.convertStringToLink
 import com.example.domain.model.weather.CurrentDomainModel
 import com.example.domain.model.weather.ForecastDomainModel
 import com.example.domain.model.weather.HourDomainModel
 import com.example.home.R
-import java.time.LocalDate
+import com.example.home.components.CommonFun.convertStringToLink
+import com.example.home.components.CommonFun.getCurrentFormattedDate
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
-import java.time.format.TextStyle
-import java.util.Locale
 import kotlin.math.roundToInt
 
 @Composable
-fun ForecastElevatedCard(
+fun ForecastElevatedCardHour(
     currentWeather: CurrentDomainModel,
     forecastWeather: ForecastDomainModel
 ) {
-    Forecast_Screen(
+    Forecast_Screen_Hour(
         forecastWeather = forecastWeather,
         currentWeather = currentWeather
     )
 }
 
 @Composable
-private fun Forecast_Screen(
+private fun Forecast_Screen_Hour(
     currentWeather: CurrentDomainModel,
     forecastWeather: ForecastDomainModel
 ) {
@@ -65,8 +63,8 @@ private fun Forecast_Screen(
         shape = CardDefaults.elevatedShape
     ) {
         Column(modifier = Modifier.fillMaxSize()) {
-            Forecast_Card_Top(currentWeather = currentWeather)
-            Forecast_Card_Lists(
+            Forecast_Card_Top_Hour(currentWeather = currentWeather)
+            Forecast_Card_Lists_Hour(
                 forecastWeather = forecastWeather,
                 currentDateTime = currentDateTime
             )
@@ -76,7 +74,7 @@ private fun Forecast_Screen(
 }
 
 @Composable
-private fun Forecast_Card_Top(
+private fun Forecast_Card_Top_Hour(
     currentWeather: CurrentDomainModel
 ) {
     Row(
@@ -106,7 +104,7 @@ private fun Forecast_Card_Top(
 }
 
 @Composable
-private fun Forecast_Card_Lists(
+private fun Forecast_Card_Lists_Hour(
     forecastWeather: ForecastDomainModel,
     currentDateTime: LocalDateTime
 ) {
@@ -118,12 +116,12 @@ private fun Forecast_Card_Lists(
         modifier = Modifier.fillMaxWidth(),
         state = lazyListState
     ) {
-        forecastDays.forEach { forecastItem ->
+        forecastDays.take(2).forEach { forecastItem ->
             if ((forecastItem.hour?.size ?: 0) > 0) {
                 items(items = forecastItem.hour ?: listOf<HourDomainModel>()) {
                     val forecastDateTime = LocalDateTime.parse(it.time, formatter)
                     if (forecastDateTime >= currentDateTime) {
-                        Forecast_Card_Item(
+                        Forecast_Card_Item_Hour(
                             hourModel = it,
                             forecastDateTime = forecastDateTime,
                             currentDateTime = currentDateTime
@@ -137,7 +135,7 @@ private fun Forecast_Card_Lists(
 }
 
 @Composable
-fun Forecast_Card_Item(
+private fun Forecast_Card_Item_Hour(
     hourModel: HourDomainModel,
     forecastDateTime: LocalDateTime,
     currentDateTime: LocalDateTime
@@ -162,26 +160,6 @@ fun Forecast_Card_Item(
             text = "${hourModel.temp_c?.roundToInt()}\u2103",
             fontSize = 15.sp
         )
-    }
-}
-
-fun getCurrentFormattedDate(): String {
-    val currentDate = LocalDate.now()
-
-    // Format the month and day
-    val month = currentDate.month.getDisplayName(TextStyle.FULL, Locale.getDefault())
-    val day = currentDate.dayOfMonth.toString() + getDayOfMonthSuffix(currentDate.dayOfMonth)
-    val year = currentDate.year
-
-    return "$month, $day $year"
-}
-
-fun getDayOfMonthSuffix(day: Int): String {
-    return when (day) {
-        1, 21, 31 -> "st"
-        2, 22 -> "nd"
-        3, 23 -> "rd"
-        else -> "th"
     }
 }
 

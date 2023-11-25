@@ -26,14 +26,18 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
-import com.example.common.convert.convertStringToLink
 import com.example.designsystem.component.WeatherLocationText
 import com.example.domain.model.weather.CurrentDomainModel
 import com.example.domain.model.weather.LocationDomainModel
 import com.example.home.R
+import com.example.home.components.CommonFun.convertStringToLink
 
 @Composable
-fun WeatherElevatedCard(navController: NavHostController, currentWeather: CurrentDomainModel, locationDomainModel: LocationDomainModel) {
+fun WeatherElevatedCard(
+    navController: NavHostController,
+    currentWeather: CurrentDomainModel,
+    locationDomainModel: LocationDomainModel
+) {
     HomeScreen_WeatherCard(
         navController = navController,
         currentWeather = currentWeather,
@@ -62,7 +66,10 @@ private fun HomeScreen_WeatherCard(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                HomeScreen_WeatherCard_Left(currentWeather = currentWeather, locationDomainModel = locationDomainModel)
+                HomeScreen_WeatherCard_Left(
+                    currentWeather = currentWeather,
+                    locationDomainModel = locationDomainModel
+                )
                 HomeScreen_WeatherCard_Right(currentWeather = currentWeather)
             }
             Spacer(modifier = Modifier.height(15.dp))

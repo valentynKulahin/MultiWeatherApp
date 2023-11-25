@@ -13,7 +13,7 @@ class WeatherDataRemoteRepoImpl @Inject constructor(
     override suspend fun getForecastWeather(): ApiResult {
         return weatherNetworkRepo.getForecastWeather(
             country = "Essen",
-            days = 2,
+            days = 7,
             aqi = "yes",
             alerts = "yes"
         )

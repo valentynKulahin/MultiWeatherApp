@@ -19,7 +19,8 @@ import com.example.domain.model.weather.ForecastDomainModel
 import com.example.domain.model.weather.LocationDomainModel
 import com.example.domain.model.weather.WeatherDomainModel
 import com.example.home.components.CalendarElevatedCard
-import com.example.home.components.ForecastElevatedCard
+import com.example.home.components.ForecastElevatedCardDays
+import com.example.home.components.ForecastElevatedCardHour
 import com.example.home.components.NewsElevatedCard
 import com.example.home.components.SunConditionElevatedCard
 import com.example.home.components.WeatherElevatedCard
@@ -50,12 +51,19 @@ fun HomeScreen(
             Spacer(modifier = Modifier.height(10.dp))
             HomeScreen_NewsCard(news = uiState.value.newsDomainModel)
             Spacer(modifier = Modifier.height(10.dp))
-            HomeScreen_ForecastCard(
+            HomeScreen_ForecastCard_Hour(
                 currentWeather = uiState.value.weatherDomainModel.current ?: CurrentDomainModel(),
                 forecastWeather = uiState.value.weatherDomainModel.forecast ?: ForecastDomainModel()
             )
             Spacer(modifier = Modifier.height(10.dp))
-            HomeScreen_SunCondition(navController = navController)
+            HomeScreen_ForecastCard_Days(
+                currentWeather = uiState.value.weatherDomainModel.current ?: CurrentDomainModel(),
+                forecastWeather = uiState.value.weatherDomainModel.forecast ?: ForecastDomainModel()
+            )
+            Spacer(modifier = Modifier.height(10.dp))
+            HomeScreen_SunCondition(
+                currentDomainModel = uiState.value.weatherDomainModel.current ?: CurrentDomainModel()
+            )
             Spacer(modifier = Modifier.height(10.dp))
             HomeScreen_WindCard(navController = navController)
             Spacer(modifier = Modifier.height(10.dp))
@@ -84,19 +92,30 @@ private fun HomeScreen_NewsCard(news: NewsDomainModel) {
 }
 
 @Composable
-private fun HomeScreen_ForecastCard(
+private fun HomeScreen_ForecastCard_Hour(
     currentWeather: CurrentDomainModel,
     forecastWeather: ForecastDomainModel
 ) {
-    ForecastElevatedCard(
+    ForecastElevatedCardHour(
         currentWeather = currentWeather,
         forecastWeather = forecastWeather
     )
 }
 
 @Composable
-private fun HomeScreen_SunCondition(navController: NavHostController) {
-    SunConditionElevatedCard(navController = navController)
+private fun HomeScreen_ForecastCard_Days(
+    currentWeather: CurrentDomainModel,
+    forecastWeather: ForecastDomainModel
+) {
+    ForecastElevatedCardDays(
+        currentWeather = currentWeather,
+        forecastWeather = forecastWeather
+    )
+}
+
+@Composable
+private fun HomeScreen_SunCondition(currentDomainModel: CurrentDomainModel) {
+    SunConditionElevatedCard(currentDomainModel = currentDomainModel)
 }
 
 @Composable
