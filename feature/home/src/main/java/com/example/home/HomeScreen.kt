@@ -14,6 +14,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import com.example.designsystem.component.WeatherBackground
 import com.example.domain.model.news.NewsDomainModel
+import com.example.domain.model.weather.AstroDomainModel
 import com.example.domain.model.weather.CurrentDomainModel
 import com.example.domain.model.weather.ForecastDomainModel
 import com.example.domain.model.weather.LocationDomainModel
@@ -62,7 +63,10 @@ fun HomeScreen(
             )
             Spacer(modifier = Modifier.height(10.dp))
             HomeScreen_SunCondition(
-                currentDomainModel = uiState.value.weatherDomainModel.current ?: CurrentDomainModel()
+                currentDomainModel = uiState.value.weatherDomainModel.current
+                    ?: CurrentDomainModel(),
+                astroDomainModel = if (uiState.value.weatherDomainModel.forecast?.forecastday.isNullOrEmpty()) AstroDomainModel() else uiState.value.weatherDomainModel.forecast?.forecastday?.first()?.astro
+                    ?: AstroDomainModel()
             )
             Spacer(modifier = Modifier.height(10.dp))
             HomeScreen_WindCard(navController = navController)
@@ -114,8 +118,14 @@ private fun HomeScreen_ForecastCard_Days(
 }
 
 @Composable
-private fun HomeScreen_SunCondition(currentDomainModel: CurrentDomainModel) {
-    SunConditionElevatedCard(currentDomainModel = currentDomainModel)
+private fun HomeScreen_SunCondition(
+    currentDomainModel: CurrentDomainModel,
+    astroDomainModel: AstroDomainModel
+) {
+    SunConditionElevatedCard(
+        currentDomainModel = currentDomainModel,
+        astroDomainModel = astroDomainModel
+    )
 }
 
 @Composable
