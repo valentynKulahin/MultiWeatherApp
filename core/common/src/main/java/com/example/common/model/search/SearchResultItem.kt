@@ -1,6 +1,6 @@
-package com.example.data.model.search
+package com.example.common.model.search
 
-data class SearchDataResultItem(
+data class SearchResultItem(
     val country: String? = null,
     val id: Int? = null,
     val lat: Double? = null,

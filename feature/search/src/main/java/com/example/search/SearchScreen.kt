@@ -1,9 +1,15 @@
 package com.example.search
 
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavHostController
 
 @Composable
-fun SearchScreen() {
-    Text(text = "SEARCH SCREEN")
+fun SearchScreen(
+    navController: NavHostController,
+    searchVM: SearchScreenViewModel = hiltViewModel()
+) {
+
+
+
 }

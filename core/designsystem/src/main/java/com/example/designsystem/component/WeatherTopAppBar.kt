@@ -25,14 +25,16 @@ import kotlinx.coroutines.launch
 @Composable
 fun WeatherTopAppBar(
     navController: NavHostController,
+    screenName: String,
     drawerState: DrawerState,
+    onClickSearchAction: () -> Unit = {},
     scope: CoroutineScope = rememberCoroutineScope()
 ) {
     CenterAlignedTopAppBar(
         modifier = Modifier.fillMaxWidth(),
         title = {
             Text(
-                text = navController.currentBackStackEntry?.destination?.route ?: "",
+                text = screenName,
                 maxLines = 1,
                 overflow = TextOverflow.Clip
             )
@@ -53,7 +55,7 @@ fun WeatherTopAppBar(
         },
         colors = TopAppBarDefaults.topAppBarColors(containerColor = MaterialTheme.colorScheme.background),
         actions = {
-            IconButton(onClick = { /*TODO*/ }) {
+            IconButton(onClick = { onClickSearchAction() }) {
                 Icon(imageVector = Icons.Default.Search, contentDescription = null)
             }
         }

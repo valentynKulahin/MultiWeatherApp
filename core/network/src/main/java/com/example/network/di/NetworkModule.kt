@@ -5,6 +5,8 @@ import com.example.network.api.NewsApi
 import com.example.network.api.WeatherApi
 import com.example.network.repos.news.NewsNetworkRepo
 import com.example.network.repos.news.NewsNetworkRepoImpl
+import com.example.network.repos.search.SearchNetworkRepo
+import com.example.network.repos.search.SearchNetworkRepoImpl
 import com.example.network.repos.weather.WeatherNetworkRepo
 import com.example.network.repos.weather.WeatherNetworkRepoImpl
 import dagger.Module
@@ -42,6 +44,18 @@ class NetworkModule {
         )
     }
 
+    @Singleton
+    @Provides
+    fun provideSearchNetworkRepo(
+        weatherApi: WeatherApi,
+        dataStoreRepo: DataStoreRepo
+    ): SearchNetworkRepo {
+        return SearchNetworkRepoImpl(
+            weatherApi = weatherApi,
+            dataStoreRepo = dataStoreRepo
+        )
+    }
+
 }
 
 @Qualifier
@@ -51,3 +65,4 @@ annotation class NewsRetrofit
 @Qualifier
 @Retention(value = AnnotationRetention.BINARY)
 annotation class WeatherRetrofit
+

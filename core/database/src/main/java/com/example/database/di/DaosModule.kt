@@ -2,7 +2,7 @@ package com.example.database.di
 
 import com.example.database.WeatherDatabase
 import com.example.database.dao.FavouritesCountriesDao
-import com.example.database.dao.SearchCountriesDao
+import com.example.database.dao.SearchingHistoryCountriesDao
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -18,8 +18,8 @@ object DaosModule {
     ): FavouritesCountriesDao = database.favouritesCountriesDao()
 
     @Provides
-    fun providesSearchCountriesDao(
+    fun providesSearchingHistoryCountriesDao(
         database: WeatherDatabase
-    ): SearchCountriesDao = database.searchCountriesDao()
+    ): SearchingHistoryCountriesDao = database.searchCountriesDao()
 
 }

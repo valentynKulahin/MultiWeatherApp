@@ -68,6 +68,11 @@ dependencies {
     //coil
     implementation(libs.coil)
 
+    //google maps
+    implementation(libs.google.maps.maps)
+    implementation(libs.google.maps.utils)
+    implementation(libs.google.maps.widgets)
+
     //ui
     implementation(platform(libs.compose.bom))
     implementation(libs.activity.compose)

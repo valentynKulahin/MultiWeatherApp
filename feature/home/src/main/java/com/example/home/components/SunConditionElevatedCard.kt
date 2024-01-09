@@ -1,5 +1,7 @@
 package com.example.home.components
 
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -17,6 +19,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -125,12 +130,9 @@ private fun SunCondition_Bottom(
     astroDomainModel: AstroDomainModel,
 //    scope: CoroutineScope
 ) {
-//    val vector = Icons.Default.WbSunny
-//    val painter = rememberVectorPainter(image = vector)
 
-//    val imageSunny =
-//        remember { mutableStateOf(ImageBitmap.imageResource(com.example.home.R.drawable.ic_weather_sunny)) }
-
+    val bitmap = BitmapFactory.decodeResource(LocalContext.current.resources, com.example.home.R.drawable.sun)
+    val bitmapImage = Bitmap.createBitmap(bitmap, 0, 0, 40, 40).asImageBitmap()
 
     Column(modifier = Modifier.fillMaxWidth()) {
         Canvas(
@@ -138,9 +140,14 @@ private fun SunCondition_Bottom(
                 .fillMaxWidth()
                 .padding(horizontal = 8.dp)
         ) {
-//            with(painter) {
-//                draw(size = painter.intrinsicSize.copy(width = 40.dp.toPx(), height = 40.dp.toPx()))
-//            }
+            drawImage(
+                image = bitmapImage,
+                topLeft = Offset(
+                    x = (size.minDimension + size.maxDimension) / 2,
+                    y = -40.dp.toPx()
+                ),
+                colorFilter = ColorFilter.tint(color = Color.Black)
+            )
             drawLine(
                 start = Offset(x = size.minDimension, y = 0F),
                 end = Offset(x = size.maxDimension, y = 0F),
@@ -152,11 +159,7 @@ private fun SunCondition_Bottom(
                 radius = 4.dp.toPx(),
                 center = Offset(x = (size.minDimension + size.maxDimension) / 2, y = 0F)
             )
-//            drawImage(
-//                image = Icons.Default.WbSunny,
-//                topLeft = Offset((size.minDimension + size.maxDimension) / 2, y = 0F),
-//                colorFilter = ColorFilter.tint(color = Color.Black)
-//            )
+
         }
         Row(
             modifier = Modifier

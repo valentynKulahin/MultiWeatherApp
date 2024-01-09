@@ -3,6 +3,7 @@ package com.example.home
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.domain.usecase.GetFavouriteCountriesUseCase
 import com.example.domain.usecase.GetWeatherUseCase
 import com.example.domain.usecase.GetNewsUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -16,7 +17,8 @@ import javax.inject.Inject
 @HiltViewModel
 class HomeScreenViewModel @Inject constructor(
     private val getWeatherUseCase: GetWeatherUseCase,
-    private val getNewsUseCase: GetNewsUseCase
+    private val getNewsUseCase: GetNewsUseCase,
+    private val getFavouriteCountriesUseCase: GetFavouriteCountriesUseCase
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(HomeScreenContract())
@@ -32,7 +34,7 @@ class HomeScreenViewModel @Inject constructor(
             is HomeScreenIntent.UpdateWeather -> {
                 viewModelScope.launch(context = Dispatchers.IO) {
                     _uiState.update {
-                        it.copy(weatherDomainModel = getWeatherUseCase.invoke())
+                        it.copy(weatherDomainModel = getWeatherUseCase.invoke("Essen"))
                     }
                     Log.d("TAG", "weather: done")
                 }

@@ -1,6 +1,7 @@
 package com.example.data.repo
 
 import com.example.common.ApiResult
+import com.example.common.model.search.SearchingResult
 import com.example.data.model.news.NewsDataModel
 import com.example.data.model.weather.WeatherDataModel
 import com.example.data.repo.news.local.NewsDataLocalRepo
@@ -33,30 +34,70 @@ class DataRepoImpl @Inject constructor(
                         val news = result.data as NewsNetworkModel
                         return news.mapToData()
                     }
-                    is ApiResult.ApiException -> { NewsDataModel() }
-                    is ApiResult.ApiError -> { NewsDataModel() }
+
+                    is ApiResult.ApiException -> {
+                        NewsDataModel()
+                    }
+
+                    is ApiResult.ApiError -> {
+                        NewsDataModel()
+                    }
                 }
             }
+
             else -> {}
         }
         return NewsDataModel()
     }
 
-    override suspend fun getForecastWeather(): WeatherDataModel {
+    override suspend fun getForecastWeather(country: String): WeatherDataModel {
         when (networkMonitor.networkStatus.first()) {
             is NetworkStatus.Connected -> {
-                return when (val result = weatherDataRemoteRepo.getForecastWeather()) {
+                return when (val result =
+                    weatherDataRemoteRepo.getForecastWeather(country = country)) {
                     is ApiResult.ApiSuccess -> {
                         val weather = result.data as WeatherNetworkModel
                         return weather.mapToData()
                     }
-                    is ApiResult.ApiException -> { WeatherDataModel() }
-                    is ApiResult.ApiError -> { WeatherDataModel() }
+
+                    is ApiResult.ApiException -> {
+                        WeatherDataModel()
+                    }
+
+                    is ApiResult.ApiError -> {
+                        WeatherDataModel()
+                    }
                 }
             }
+
             else -> {}
         }
         return WeatherDataModel()
+    }
+
+    override suspend fun getSearchingCountriesList(country: String): SearchingResult {
+        when (networkMonitor.networkStatus.first()) {
+            is NetworkStatus.Connected -> {
+                return when (val result =
+                    weatherDataRemoteRepo.getSearchingCountriesList(country = country)) {
+                    is ApiResult.ApiSuccess -> {
+                        val searchingList = result.data as SearchingResult
+                        return searchingList
+                    }
+
+                    is ApiResult.ApiException -> {
+                        SearchingResult()
+                    }
+
+                    is ApiResult.ApiError -> {
+                        SearchingResult()
+                    }
+                }
+            }
+
+            else -> {}
+        }
+        return SearchingResult()
     }
 
 }

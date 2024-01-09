@@ -1,5 +1,6 @@
 package com.example.network.api
 
+import com.example.common.model.search.SearchingResult
 import com.example.network.models.weather.WeatherNetworkModel
 import retrofit2.Call
 import retrofit2.http.GET
@@ -17,5 +18,12 @@ interface WeatherApi {
         @Query("aqi") aqi: String,
         @Query("alerts") alerts: String
     ): Call<WeatherNetworkModel>
+
+    @Headers("Content-Type: application/json")
+    @GET(value = "search.json")
+    fun getSearchingCountriesList(
+        @Query("key") apiKey: String,
+        @Query("q") country: String
+    ): Call<SearchingResult>
 
 }

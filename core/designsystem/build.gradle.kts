@@ -51,6 +51,9 @@ dependencies {
     //core
     implementation(libs.core.ktx)
 
+    //accompanist
+    implementation(libs.accompanist.permissions)
+
     //ui
     implementation(platform(libs.compose.bom))
     implementation(libs.activity.compose)

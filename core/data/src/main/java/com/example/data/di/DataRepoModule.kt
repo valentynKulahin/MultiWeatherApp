@@ -12,6 +12,7 @@ import com.example.data.repo.weather.remote.WeatherDataRemoteRepo
 import com.example.data.repo.weather.remote.WeatherDataRemoteRepoImpl
 import com.example.data.util.NetworkMonitor
 import com.example.network.repos.news.NewsNetworkRepo
+import com.example.network.repos.search.SearchNetworkRepo
 import com.example.network.repos.weather.WeatherNetworkRepo
 import dagger.Module
 import dagger.Provides
@@ -68,9 +69,10 @@ class DataRepoModule {
     @Provides
     @Singleton
     fun provideWeatherDataRemoteRepo(
-        weatherNetworkRepo: WeatherNetworkRepo
+        weatherNetworkRepo: WeatherNetworkRepo,
+        searchNetworkRepo: SearchNetworkRepo
     ) : WeatherDataRemoteRepo {
-        return WeatherDataRemoteRepoImpl(weatherNetworkRepo = weatherNetworkRepo)
+        return WeatherDataRemoteRepoImpl(weatherNetworkRepo = weatherNetworkRepo, searchNetworkRepo = searchNetworkRepo)
     }
 
 }

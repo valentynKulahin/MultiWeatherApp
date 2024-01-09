@@ -36,7 +36,10 @@ fun HomeScreen(
     val uiState = homeVM.uiState.collectAsStateWithLifecycle()
     val verticalScrollState = rememberScrollState()
 
-    WeatherBackground(modifier = Modifier.wrapContentHeight()) {
+    WeatherBackground(
+        modifier = Modifier
+            .wrapContentHeight()
+    ) {
         Column(
             modifier = Modifier
                 .wrapContentHeight()
@@ -53,13 +56,17 @@ fun HomeScreen(
             HomeScreen_NewsCard(news = uiState.value.newsDomainModel)
             Spacer(modifier = Modifier.height(10.dp))
             HomeScreen_ForecastCard_Hour(
-                currentWeather = uiState.value.weatherDomainModel.current ?: CurrentDomainModel(),
-                forecastWeather = uiState.value.weatherDomainModel.forecast ?: ForecastDomainModel()
+                currentWeather = uiState.value.weatherDomainModel.current
+                    ?: CurrentDomainModel(),
+                forecastWeather = uiState.value.weatherDomainModel.forecast
+                    ?: ForecastDomainModel()
             )
             Spacer(modifier = Modifier.height(10.dp))
             HomeScreen_ForecastCard_Days(
-                currentWeather = uiState.value.weatherDomainModel.current ?: CurrentDomainModel(),
-                forecastWeather = uiState.value.weatherDomainModel.forecast ?: ForecastDomainModel()
+                currentWeather = uiState.value.weatherDomainModel.current
+                    ?: CurrentDomainModel(),
+                forecastWeather = uiState.value.weatherDomainModel.forecast
+                    ?: ForecastDomainModel()
             )
             Spacer(modifier = Modifier.height(10.dp))
             HomeScreen_SunCondition(
@@ -75,7 +82,6 @@ fun HomeScreen(
             Spacer(modifier = Modifier.height(10.dp))
         }
     }
-
 }
 
 @Composable

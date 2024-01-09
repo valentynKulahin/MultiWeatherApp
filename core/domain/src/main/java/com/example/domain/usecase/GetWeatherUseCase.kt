@@ -11,8 +11,8 @@ class GetWeatherUseCase @Inject constructor(
     private val dataRepo: DataRepo
 ) {
 
-    suspend operator fun invoke(): WeatherDomainModel {
-        return dataRepo.getForecastWeather().mapToDomain()
+    suspend operator fun invoke(country: String): WeatherDomainModel {
+        return dataRepo.getForecastWeather(country = country).mapToDomain()
     }
 
 }

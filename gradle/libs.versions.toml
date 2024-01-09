@@ -1,20 +1,20 @@
 [versions]
-agp = "8.1.4"
+agp = "8.2.1"
 org-jetbrains-kotlin-android = "1.9.10"
 core-ktx = "1.12.0"
 junit = "4.13.2"
 androidx-test-ext-junit = "1.1.5"
 espresso-core = "3.5.1"
-activity-compose = "1.8.1"
+activity-compose = "1.8.2"
 compose-bom = "2023.10.01"
-compose-navigation = "2.7.5"
+compose-navigation = "2.7.6"
 material-icons-extended = "1.5.4"
 androidx-hilt-navigation = "1.1.0"
 androidx-lifecycle = "2.6.2"
-androidx-room = "2.6.0"
-androidx-data-store = "1.1.0-alpha06"
+androidx-room = "2.6.1"
+androidx-data-store = "1.1.0-alpha07"
 retrofit = "2.9.0"
-interceptor = "5.0.0-alpha.1"
+interceptor = "5.0.0-alpha.3"
 hilt = "2.48"
 kotlin-coroutines = "1.7.1"
 accompanist-permission = "0.28.0"
@@ -24,7 +24,8 @@ ksp = "1.9.10-1.0.13"
 coil = "2.4.0"
 sgp = "2.0.1"
 browser = "1.7.0"
-compose-foundation = "1.6.0-beta01"
+compose-foundation = "1.6.0-beta03"
+google-maps-compose = "4.3.0"
 
 [libraries]
 core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "core-ktx" }
@@ -66,6 +67,9 @@ squareup-okhttp-interceptor = { group = "com.squareup.okhttp3", name = "logging-
 kotlin-bom = { group = "org.jetbrains.kotlin", name = "kotlin-bom", version.ref = "org-jetbrains-kotlin-android" }
 coil = { group = "io.coil-kt", name = "coil-compose", version.ref = "coil" }
 androidx-browser = { group = "androidx.browser", name = "browser", version.ref = "browser" }
+google-maps-maps = { group = "com.google.maps.android", name = "maps-compose", version.ref = "google-maps-compose" }
+google-maps-utils = { group = "com.google.maps.android", name = "maps-compose-utils", version.ref = "google-maps-compose" }
+google-maps-widgets = { group = "com.google.maps.android", name = "maps-compose-widgets", version.ref = "google-maps-compose" }
 
 # Dependencies of the included build-logic
 android-gradle-plugin = { group = "com.android.tools.build", name = "gradle", version.ref = "agp" }
