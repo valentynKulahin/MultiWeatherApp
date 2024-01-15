@@ -73,6 +73,7 @@ dependencies {
     implementation(project(":feature:search"))
     implementation(project(":feature:settings"))
 
+    implementation(project(":core:navi"))
     implementation(project(":core:common"))
     implementation(project(":core:data"))
     implementation(project(":core:database"))

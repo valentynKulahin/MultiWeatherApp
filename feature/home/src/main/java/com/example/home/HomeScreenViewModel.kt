@@ -6,6 +6,8 @@ import androidx.lifecycle.viewModelScope
 import com.example.domain.usecase.GetFavouriteCountriesUseCase
 import com.example.domain.usecase.GetWeatherUseCase
 import com.example.domain.usecase.GetNewsUseCase
+import com.example.navi.repo.AppNavigator
+import com.example.navi.util.WeatherDestinations
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -16,6 +18,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class HomeScreenViewModel @Inject constructor(
+    private val appNavigator: AppNavigator,
     private val getWeatherUseCase: GetWeatherUseCase,
     private val getNewsUseCase: GetNewsUseCase,
     private val getFavouriteCountriesUseCase: GetFavouriteCountriesUseCase
@@ -47,6 +50,10 @@ class HomeScreenViewModel @Inject constructor(
                     }
                     Log.d("TAG", "news: done")
                 }
+            }
+
+            is HomeScreenIntent.NavigateToSearchScreen -> {
+                appNavigator.tryNavigateTo(route = WeatherDestinations.SearchScreen.route)
             }
         }
     }

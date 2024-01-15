@@ -1,4 +1,4 @@
-package com.example.designsystem.navigation
+package com.example.navi.util
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
@@ -6,7 +6,11 @@ import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.ui.graphics.vector.ImageVector
 
-sealed class WeatherDestinations(val route: String, val icon: ImageVector?, label: String? = null) {
+sealed class WeatherDestinations(
+    val route: String,
+    val icon: ImageVector?,
+    val label: String? = null
+) {
 
     data object HomeScreen :
         WeatherDestinations(route = "home", icon = Icons.Default.Home, label = "Home")
@@ -28,4 +32,5 @@ sealed class WeatherDestinations(val route: String, val icon: ImageVector?, labe
 
     data object DrawerMenuScreen :
         WeatherDestinations(route = "drawer", icon = Icons.Default.Menu, label = "Menu")
+
 }

@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.data.util.NetworkMonitor
 import com.example.data.util.NetworkStatus
 import com.example.datastore.repo.DataStoreRepo
+import com.example.navi.repo.AppNavigator
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -17,9 +18,11 @@ import javax.inject.Inject
 @HiltViewModel
 class MainActivityViewModel @Inject constructor(
     networkMonitor: NetworkMonitor,
-//    appNavigator: AppNavigator,
+    appNavigator: AppNavigator,
     private val dataStoreRepo: DataStoreRepo
 ) : ViewModel() {
+
+    val navigationChannel = appNavigator.navigationChannel
 
     val networkStatus: StateFlow<NetworkStatus> =
         networkMonitor.networkStatus.stateIn(

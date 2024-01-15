@@ -24,7 +24,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import com.example.designsystem.component.WeatherLocationText
 import com.example.domain.model.weather.CurrentDomainModel
@@ -34,12 +33,10 @@ import com.example.home.components.CommonFun.convertStringToLink
 
 @Composable
 fun WeatherElevatedCard(
-    navController: NavHostController,
     currentWeather: CurrentDomainModel,
     locationDomainModel: LocationDomainModel
 ) {
     HomeScreen_WeatherCard(
-        navController = navController,
         currentWeather = currentWeather,
         locationDomainModel = locationDomainModel
     )
@@ -47,7 +44,6 @@ fun WeatherElevatedCard(
 
 @Composable
 private fun HomeScreen_WeatherCard(
-    navController: NavHostController,
     currentWeather: CurrentDomainModel,
     locationDomainModel: LocationDomainModel
 ) {

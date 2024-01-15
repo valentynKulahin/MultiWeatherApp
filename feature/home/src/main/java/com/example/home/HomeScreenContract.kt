@@ -14,4 +14,6 @@ sealed class HomeScreenIntent {
 
     data object UpdateNews : HomeScreenIntent()
 
+    data object NavigateToSearchScreen : HomeScreenIntent()
+
 }

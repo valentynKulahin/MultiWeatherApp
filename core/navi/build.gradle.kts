@@ -7,17 +7,14 @@ plugins {
 }
 
 android {
-    namespace = "com.example.location"
+    namespace = "com.example.navi"
     compileSdk = 34
 
     defaultConfig {
-        minSdk = 30
+        minSdk = 29
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
-        vectorDrawables {
-            useSupportLibrary = true
-        }
     }
 
     buildTypes {
@@ -36,27 +33,11 @@ android {
     kotlinOptions {
         jvmTarget = "17"
     }
-    buildFeatures {
-        compose = true
-        buildConfig = true
-    }
-    composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.3"
-    }
-    packaging {
-        resources {
-            excludes += "/META-INF/{AL2.0,LGPL2.1}"
-        }
-    }
 }
 
 dependencies {
 
-    implementation(project(":core:navi"))
-    implementation(project(":core:domain"))
-    implementation(project(":core:designsystem"))
     implementation(project(":core:common"))
-    implementation(project(":core:datastore"))
 
     //core
     implementation(libs.core.ktx)
@@ -64,10 +45,6 @@ dependencies {
     //hilt
     implementation(libs.google.hilt.android)
     ksp(libs.google.hilt.compiler)
-    implementation(libs.androidx.hilt.navigation)
-
-    //coil
-    implementation(libs.coil)
 
     //ui
     implementation(platform(libs.compose.bom))
@@ -78,13 +55,10 @@ dependencies {
     implementation(libs.material3)
     implementation(libs.androidx.navigation.compose)
     implementation(libs.androidx.icons.extended)
-
-    //lifecycle
-    implementation(libs.androidx.lifecycle.runtime.ktx)
-    implementation(libs.androidx.lifecycle.runtime.compose)
-    implementation(libs.androidx.lifecycle.viewmodel.compose)
+    implementation(libs.ui.foundation)
 
     //tests
+    implementation(libs.material3)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.test.ext.junit)
     androidTestImplementation(libs.espresso.core)

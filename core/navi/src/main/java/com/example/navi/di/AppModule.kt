@@ -1,7 +1,7 @@
-package com.example.designsystem.navigation.di
+package com.example.navi.di
 
-import com.example.designsystem.navigation.AppNavigator
-import com.example.designsystem.navigation.AppNavigatorImpl
+import com.example.navi.repo.AppNavigator
+import com.example.navi.repo.AppNavigatorImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -10,10 +10,9 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-interface NavigationModule {
+interface AppModule {
 
     @Singleton
     @Binds
     fun bindAppNavigator(appNavigatorImpl: AppNavigatorImpl): AppNavigator
-
 }

@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.domain.usecase.GetSearchingCoutriesUseCase
 import com.example.domain.usecase.GetSearchingHistoryUseCase
+import com.example.navi.repo.AppNavigator
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -14,6 +15,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SearchScreenViewModel @Inject constructor(
+    private val appNavigator: AppNavigator,
     private val getSearchingCoutriesUseCase: GetSearchingCoutriesUseCase,
     private val getSearchingHistoryUseCase: GetSearchingHistoryUseCase
 ) : ViewModel() {
@@ -49,6 +51,10 @@ class SearchScreenViewModel @Inject constructor(
                         it.copy(searchingName = intent.country)
                     }
                 }
+            }
+
+            is SearchScreenIntent.NavigateBack -> {
+                appNavigator.tryNavigateBack()
             }
         }
     }

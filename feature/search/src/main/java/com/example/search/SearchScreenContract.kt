@@ -16,4 +16,6 @@ sealed class SearchScreenIntent {
 
     data class UpdateSearchingName(val country: String) : SearchScreenIntent()
 
+    data object NavigateBack : SearchScreenIntent()
+
 }
