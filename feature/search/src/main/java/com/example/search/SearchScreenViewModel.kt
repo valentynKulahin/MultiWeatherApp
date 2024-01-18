@@ -31,16 +31,28 @@ class SearchScreenViewModel @Inject constructor(
                         it.copy(
                             countriesList = getSearchingCoutriesUseCase.invoke(
                                 country = _uiState.value.searchingName.toString()
-                            ).searchResultList
+                            )
                         )
                     }
                 }
             }
 
+            is SearchScreenIntent.UpdateCityValue -> {
+                viewModelScope.launch(context = Dispatchers.IO) {
+                    _uiState.update {
+                        it.copy(cityValue = intent.searchingItem)
+                    }
+                }
+            }
+
+            is SearchScreenIntent.GetHistoryOfSearch -> {
+
+            }
+
             is SearchScreenIntent.GetWeatherInCountry -> {
                 viewModelScope.launch(context = Dispatchers.IO) {
                     _uiState.update {
-                        it.copy(searchingHistoryList = getSearchingHistoryUseCase.invoke().searchResultList)
+                        it.copy(searchingHistoryList = getSearchingHistoryUseCase.invoke())
                     }
                 }
             }
@@ -48,7 +60,7 @@ class SearchScreenViewModel @Inject constructor(
             is SearchScreenIntent.UpdateSearchingName -> {
                 viewModelScope.launch(context = Dispatchers.IO) {
                     _uiState.update {
-                        it.copy(searchingName = intent.country)
+                        it.copy(searchingName = intent.seachingValue)
                     }
                 }
             }

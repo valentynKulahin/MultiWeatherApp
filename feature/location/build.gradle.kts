@@ -4,6 +4,7 @@ plugins {
     alias(libs.plugins.org.jetbrains.kotlin.android)
     alias(libs.plugins.com.google.hilt)
     alias(libs.plugins.com.google.ksp)
+    alias(libs.plugins.com.google.sgp)
 }
 
 android {
@@ -83,6 +84,15 @@ dependencies {
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.lifecycle.runtime.compose)
     implementation(libs.androidx.lifecycle.viewmodel.compose)
+
+    //maps
+    implementation(libs.google.maps.maps)
+    implementation(libs.google.maps.utils)
+    implementation(libs.google.maps.widgets)
+
+    //google services
+    implementation(libs.google.play.services.maps)
+    implementation(libs.google.play.services.location)
 
     //tests
     testImplementation(libs.junit)

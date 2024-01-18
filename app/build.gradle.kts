@@ -130,6 +130,15 @@ dependencies {
     implementation(libs.kotlinx.coroutines.android)
     implementation(libs.kotlinx.coroutines.core)
 
+    //maps
+    implementation(libs.google.maps.maps)
+    implementation(libs.google.maps.utils)
+    implementation(libs.google.maps.widgets)
+
+    //google services
+    implementation(libs.google.play.services.maps)
+    implementation(libs.google.play.services.location)
+
     //tests
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.test.ext.junit)
@@ -138,4 +147,5 @@ dependencies {
     androidTestImplementation(libs.ui.test.junit4)
     debugImplementation(libs.ui.tooling)
     debugImplementation(libs.ui.test.manifest)
+
 }

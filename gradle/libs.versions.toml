@@ -26,8 +26,8 @@ sgp = "2.0.1"
 browser = "1.7.0"
 compose-foundation = "1.6.0-rc01"
 google-maps-compose = "4.3.0"
-appcompat = "1.6.1"
-material = "1.11.0"
+google-services-maps = "18.2.0"
+google-services-location = "21.0.1"
 
 [libraries]
 core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "core-ktx" }
@@ -72,6 +72,8 @@ androidx-browser = { group = "androidx.browser", name = "browser", version.ref =
 google-maps-maps = { group = "com.google.maps.android", name = "maps-compose", version.ref = "google-maps-compose" }
 google-maps-utils = { group = "com.google.maps.android", name = "maps-compose-utils", version.ref = "google-maps-compose" }
 google-maps-widgets = { group = "com.google.maps.android", name = "maps-compose-widgets", version.ref = "google-maps-compose" }
+google-play-services-maps = { group = "com.google.android.gms", name = "play-services-maps", version.ref = "google-services-maps" }
+google-play-services-location = { group = "com.google.android.gms", name = "play-services-location", version.ref = "google-services-location" }
 
 # Dependencies of the included build-logic
 android-gradle-plugin = { group = "com.android.tools.build", name = "gradle", version.ref = "agp" }

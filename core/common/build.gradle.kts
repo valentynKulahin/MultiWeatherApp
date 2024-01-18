@@ -35,7 +35,13 @@ android {
 
 dependencies {
 
+    //core
+    implementation(platform(libs.kotlin.bom))
     implementation(libs.core.ktx)
+
+    //gson
+    implementation(libs.squareup.converter.gson)
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.test.ext.junit)
     androidTestImplementation(libs.espresso.core)

@@ -27,7 +27,8 @@ fun RequestPermissions() {
         val multipleLocationPermissionState = rememberMultiplePermissionsState(
             permissions = listOf(
                 Manifest.permission.ACCESS_COARSE_LOCATION,
-                Manifest.permission.ACCESS_FINE_LOCATION
+                Manifest.permission.ACCESS_FINE_LOCATION,
+                Manifest.permission.ACCESS_BACKGROUND_LOCATION
             )
         )
         Location_Permissions(permissionState = multipleLocationPermissionState)

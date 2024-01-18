@@ -1,7 +1,7 @@
 package com.example.data.repo
 
 import com.example.common.ApiResult
-import com.example.common.model.search.SearchingResult
+import com.example.common.model.search.SearchResultItem
 import com.example.data.model.news.NewsDataModel
 import com.example.data.model.weather.WeatherDataModel
 import com.example.data.repo.news.local.NewsDataLocalRepo
@@ -75,29 +75,29 @@ class DataRepoImpl @Inject constructor(
         return WeatherDataModel()
     }
 
-    override suspend fun getSearchingCountriesList(country: String): SearchingResult {
+    override suspend fun getSearchingCountriesList(country: String): List<SearchResultItem> {
         when (networkMonitor.networkStatus.first()) {
             is NetworkStatus.Connected -> {
                 return when (val result =
                     weatherDataRemoteRepo.getSearchingCountriesList(country = country)) {
                     is ApiResult.ApiSuccess -> {
-                        val searchingList = result.data as SearchingResult
+                        val searchingList = result.data as List<SearchResultItem>
                         return searchingList
                     }
 
                     is ApiResult.ApiException -> {
-                        SearchingResult()
+                        emptyList<SearchResultItem>()
                     }
 
                     is ApiResult.ApiError -> {
-                        SearchingResult()
+                        emptyList<SearchResultItem>()
                     }
                 }
             }
 
             else -> {}
         }
-        return SearchingResult()
+        return emptyList<SearchResultItem>()
     }
 
 }
