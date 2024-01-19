@@ -1,4 +1,4 @@
-package com.example.home.components
+package com.example.common
 
 import java.time.LocalDate
 import java.time.format.TextStyle

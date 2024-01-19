@@ -26,12 +26,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
+import com.example.common.CommonFun.convertStringToLink
+import com.example.common.CommonFun.getCurrentFormattedDate
 import com.example.domain.model.weather.CurrentDomainModel
 import com.example.domain.model.weather.ForecastDomainModel
 import com.example.domain.model.weather.HourDomainModel
 import com.example.home.R
-import com.example.home.components.CommonFun.convertStringToLink
-import com.example.home.components.CommonFun.getCurrentFormattedDate
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import kotlin.math.roundToInt

@@ -23,13 +23,13 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
+import com.example.common.CommonFun.convertStringToLink
+import com.example.common.CommonFun.getCurrentFormattedDate
+import com.example.common.CommonFun.getDayOfWeekFromDate
 import com.example.domain.model.weather.CurrentDomainModel
 import com.example.domain.model.weather.ForecastDomainModel
 import com.example.domain.model.weather.ForecastdayDomainModel
 import com.example.home.R
-import com.example.home.components.CommonFun.convertStringToLink
-import com.example.home.components.CommonFun.getCurrentFormattedDate
-import com.example.home.components.CommonFun.getDayOfWeekFromDate
 import kotlin.math.roundToInt
 
 @Composable

@@ -25,11 +25,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
+import com.example.common.CommonFun.convertStringToLink
 import com.example.designsystem.component.WeatherLocationText
 import com.example.domain.model.weather.CurrentDomainModel
 import com.example.domain.model.weather.LocationDomainModel
 import com.example.home.R
-import com.example.home.components.CommonFun.convertStringToLink
 
 @Composable
 fun WeatherElevatedCard(

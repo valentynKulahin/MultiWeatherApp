@@ -1,14 +1,14 @@
 package com.example.search
 
 import com.example.common.model.search.SearchResultItem
-import com.example.domain.model.weather.ForecastDomainModel
+import com.example.domain.model.weather.CurrentDomainModel
 
 data class SearchScreenContract(
     val searchingName: String? = null,
     val countriesList: List<SearchResultItem> = emptyList(),
     val searchingHistoryList: List<SearchResultItem> = emptyList(),
     val cityValue: SearchResultItem = SearchResultItem(),
-    val forecastDomainModel: ForecastDomainModel = ForecastDomainModel()
+    val currentDomainModel: CurrentDomainModel = CurrentDomainModel()
 )
 
 sealed class SearchScreenIntent {
