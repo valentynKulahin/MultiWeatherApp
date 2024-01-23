@@ -2,6 +2,7 @@ package com.example.search
 
 import com.example.common.model.search.SearchResultItem
 import com.example.domain.model.weather.CurrentDomainModel
+import com.google.android.gms.maps.model.LatLng
 
 data class SearchScreenContract(
     val searchingName: String? = null,
@@ -16,6 +17,8 @@ sealed class SearchScreenIntent {
     data object GetSearchingCountriesList : SearchScreenIntent()
 
     data class GetWeatherInCountry(val searchingValue: String) : SearchScreenIntent()
+
+    data class GetWeatherInCountryByLatLon(val latLon: LatLng) : SearchScreenIntent()
 
     data object GetHistoryOfSearch : SearchScreenIntent()
 

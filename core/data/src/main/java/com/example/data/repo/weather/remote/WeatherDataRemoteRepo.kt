@@ -6,6 +6,8 @@ interface WeatherDataRemoteRepo {
 
     suspend fun getForecastWeather(country: String): ApiResult
 
+    suspend fun getForecastWeatherByLatLon(latLon: String): ApiResult
+
     suspend fun getSearchingCountriesList(country: String): ApiResult
 
 }

@@ -75,6 +75,31 @@ class DataRepoImpl @Inject constructor(
         return WeatherDataModel()
     }
 
+    override suspend fun getForecastWeatherByLatLon(latLon: String): WeatherDataModel {
+        when (networkMonitor.networkStatus.first()) {
+            is NetworkStatus.Connected -> {
+                return when (val result =
+                    weatherDataRemoteRepo.getForecastWeatherByLatLon(latLon = latLon)) {
+                    is ApiResult.ApiSuccess -> {
+                        val weather = result.data as WeatherNetworkModel
+                        return weather.mapToData()
+                    }
+
+                    is ApiResult.ApiException -> {
+                        WeatherDataModel()
+                    }
+
+                    is ApiResult.ApiError -> {
+                        WeatherDataModel()
+                    }
+                }
+            }
+
+            else -> {}
+        }
+        return WeatherDataModel()
+    }
+
     override suspend fun getSearchingCountriesList(country: String): List<SearchResultItem> {
         when (networkMonitor.networkStatus.first()) {
             is NetworkStatus.Connected -> {

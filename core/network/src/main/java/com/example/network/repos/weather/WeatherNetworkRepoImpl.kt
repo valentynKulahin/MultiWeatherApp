@@ -32,5 +32,23 @@ class WeatherNetworkRepoImpl @Inject constructor(
             )
         }
     }
+
+    override suspend fun getForecastWeatherByLatLon(
+        latLon: String,
+        days: Int,
+        aqi: String,
+        alerts: String
+    ): ApiResult {
+        val apiKey = dataStoreRepo.getWeatherToken().first()
+        return execute {
+            weatherApi.getForecastWeatherByLatLon(
+                apiKey = apiKey,
+                latLon = latLon,
+                days = days,
+                aqi = aqi,
+                alerts = alerts
+            )
+        }
+    }
     
 }

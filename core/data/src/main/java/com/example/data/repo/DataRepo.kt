@@ -10,6 +10,8 @@ interface DataRepo {
 
     suspend fun getForecastWeather(country: String) : WeatherDataModel
 
+    suspend fun getForecastWeatherByLatLon(latLon: String) : WeatherDataModel
+
     suspend fun getSearchingCountriesList(country: String) : List<SearchResultItem>
 
 }

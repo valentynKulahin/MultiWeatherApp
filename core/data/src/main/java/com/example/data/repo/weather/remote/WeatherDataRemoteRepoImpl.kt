@@ -21,6 +21,15 @@ class WeatherDataRemoteRepoImpl @Inject constructor(
         )
     }
 
+    override suspend fun getForecastWeatherByLatLon(latLon: String): ApiResult {
+        return weatherNetworkRepo.getForecastWeatherByLatLon(
+            latLon = latLon,
+            days = 1,
+            aqi = "yes",
+            alerts = "yes"
+        )
+    }
+
     override suspend fun getSearchingCountriesList(country: String): ApiResult {
         return searchNetworkRepo.searchCountry(country = country)
     }

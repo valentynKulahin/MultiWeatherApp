@@ -20,6 +20,7 @@ import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.ArrowDropUp
 import androidx.compose.material.icons.filled.LocationOn
+import androidx.compose.material3.BottomSheetDefaults
 import androidx.compose.material3.Divider
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
@@ -53,7 +54,6 @@ import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -148,7 +148,21 @@ fun SearchScreen(
                 searchVM = searchVM,
                 countriesList = uiState.value.countriesList,
                 cityValue = uiState.value.cityValue,
-                currentDomainModel = uiState.value.currentDomainModel
+                currentDomainModel = uiState.value.currentDomainModel,
+                onClickMyLocation = {
+                    searchVM.reducer(
+                        intent = SearchScreenIntent.GetWeatherInCountryByLatLon(
+                            latLon = LatLng(it.latitude, it.longitude)
+                        )
+                    )
+                },
+                onMapClick = {
+                    searchVM.reducer(
+                        intent = SearchScreenIntent.GetWeatherInCountryByLatLon(
+                            latLon = LatLng(it.latitude, it.longitude)
+                        )
+                    )
+                }
             )
         }
     }
@@ -163,7 +177,9 @@ private fun SearchScreenMain(
     searchVM: SearchScreenViewModel,
     countriesList: List<SearchResultItem>,
     cityValue: SearchResultItem,
-    currentDomainModel: CurrentDomainModel
+    currentDomainModel: CurrentDomainModel,
+    onClickMyLocation: (LatLng) -> Unit,
+    onMapClick: (LatLng) -> Unit
 ) {
     val searchingValue = remember { mutableStateOf("") }
     val expanded = remember { mutableStateOf(false) }
@@ -189,19 +205,24 @@ private fun SearchScreenMain(
             onClickDropDownItem = {
                 searchVM.reducer(intent = SearchScreenIntent.UpdateSearchingName(seachingValue = it.name.toString()))
                 searchVM.reducer(intent = SearchScreenIntent.UpdateCityValue(searchingItem = it))
+                searchVM.reducer(intent = SearchScreenIntent.GetWeatherInCountry(searchingValue = it.name.toString()))
                 expanded.value = false
                 searchingValue.value = it.name.toString()
+                showSheet.value = true
             },
             countriesList = countriesList
         )
         Spacer(modifier = Modifier.height(10.dp))
         SearchScreen_GoogleMaps(
             location = location,
-            showSheet = showSheet
+            showSheet = showSheet,
+            onClickMyLocation = onClickMyLocation,
+            onMapClick = onMapClick
         )
         if (showSheet.value) {
             SearchScreen_BottomSheet(
                 showSheet = showSheet,
+                location = location,
                 bottomSheetState = sheetState,
                 cityValue = cityValue,
                 currentDomainModel = currentDomainModel
@@ -297,7 +318,9 @@ private fun SearchScreen_Find(
 @Composable
 private fun SearchScreen_GoogleMaps(
     location: LatLng,
-    showSheet: MutableState<Boolean>
+    showSheet: MutableState<Boolean>,
+    onClickMyLocation: (LatLng) -> Unit,
+    onMapClick: (LatLng) -> Unit
 ) {
     val scope: CoroutineScope = rememberCoroutineScope()
     val cameraPositionState = rememberCameraPositionState {
@@ -315,7 +338,7 @@ private fun SearchScreen_GoogleMaps(
     val properties = remember {
         mutableStateOf(
             MapProperties(
-                mapType = MapType.TERRAIN,
+                mapType = MapType.HYBRID,
                 isMyLocationEnabled = true
             )
         )
@@ -332,15 +355,23 @@ private fun SearchScreen_GoogleMaps(
         cameraPositionState = cameraPositionState,
         uiSettings = uiSettings.value,
         properties = properties.value,
+        onMyLocationClick = {
+            onClickMyLocation(LatLng(it.latitude, it.longitude))
+            showSheet.value = true
+        },
+        onMapClick = {
+            onMapClick(LatLng(it.latitude, it.longitude))
+            showSheet.value = true
+        }
     ) {
-        if (location.latitude != 0.0 && location.longitude != 0.0)
+        if (location.latitude != 0.0 && location.longitude != 0.0) {
             Marker(
                 contentDescription = null,
                 state = markerState,
                 title = "position",
                 draggable = true
             )
-        showSheet.value = true
+        }
     }
 }
 
@@ -348,6 +379,7 @@ private fun SearchScreen_GoogleMaps(
 @Composable
 private fun SearchScreen_BottomSheet(
     showSheet: MutableState<Boolean>,
+    location: LatLng,
     bottomSheetState: SheetState,
     cityValue: SearchResultItem,
     currentDomainModel: CurrentDomainModel
@@ -357,13 +389,14 @@ private fun SearchScreen_BottomSheet(
         onDismissRequest = { showSheet.value = false },
         modifier = Modifier.fillMaxWidth(),
         sheetState = bottomSheetState,
-        shape = MaterialTheme.shapes.small
+        shape = MaterialTheme.shapes.small,
+        dragHandle = { BottomSheetDefaults.DragHandle() }
     ) {
         SearchScreen_BottomSheet_Weather(
             cityValue = cityValue,
             currentDomainModel = currentDomainModel,
-            location = LatLng(0.0, 0.0),
-            wind = ""
+            location = location,
+            wind = currentDomainModel.wind_mph.toString()
         )
     }
 
@@ -380,7 +413,8 @@ private fun SearchScreen_BottomSheet_Weather(
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(10.dp)
+            .padding(10.dp),
+        verticalArrangement = Arrangement.Top
     ) {
         SearchScreen_BottomSheet_Weather_FirstLine(
             cityValue = cityValue,
@@ -401,9 +435,10 @@ private fun SearchScreen_BottomSheet_Weather_FirstLine(
         modifier = Modifier
             .fillMaxWidth()
             .padding(8.dp),
-        horizontalArrangement = Arrangement.SpaceBetween
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
     ) {
-        SearchScreen_BottomSheet_Weather_FirstLine_Left(cityValue)
+        SearchScreen_BottomSheet_Weather_FirstLine_Left(cityValue = cityValue)
         SearchScreen_BottomSheet_Weather_FirstLine_Right(currentDomainModel = currentDomainModel)
     }
 }
@@ -412,7 +447,10 @@ private fun SearchScreen_BottomSheet_Weather_FirstLine(
 private fun SearchScreen_BottomSheet_Weather_FirstLine_Left(
     cityValue: SearchResultItem
 ) {
-    Row {
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.Center
+    ) {
         Icon(imageVector = Icons.Default.LocationOn, contentDescription = null)
         Column {
             Text(text = cityValue.name.toString())
@@ -430,11 +468,14 @@ private fun SearchScreen_BottomSheet_Weather_FirstLine_Right(
 ) {
     val iconURL = convertStringToLink(currentDomainModel.condition?.icon.toString())
 
-    Row {
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.Center
+    ) {
         AsyncImage(
             model = iconURL,
             contentDescription = "weather",
-            modifier = Modifier.size(110.dp)
+            modifier = Modifier.size(70.dp)
         )
         Spacer(modifier = Modifier.width(10.dp))
         Text(
@@ -469,7 +510,11 @@ private fun SearchScreen_BottomSheet_Weather_SecondLine_Latitude(
 
     Column {
         Text(text = "Latitude and longtitude")
-        Text(text = "${location.latitude}, ${location.longitude}")
+        Text(
+            text = "${location.latitude}, ${location.longitude}",
+            style = MaterialTheme.typography.titleSmall,
+            fontWeight = FontWeight.Bold
+        )
     }
 
 }
@@ -480,12 +525,12 @@ private fun SearchScreen_BottomSheet_Weather_SecondLine_Wind(
 ) {
 
     Column {
-        Icon(
-            painter = painterResource(id = R.drawable.ic_weather_wind),
-            contentDescription = null,
-            modifier = Modifier.size(20.dp)
+        Text(text = "Wind")
+        Text(
+            text = "$wind mp/h",
+            style = MaterialTheme.typography.titleSmall,
+            fontWeight = FontWeight.Bold
         )
-        Text(text = wind, style = MaterialTheme.typography.titleSmall, fontWeight = FontWeight.Bold)
     }
 
 }

@@ -20,6 +20,16 @@ interface WeatherApi {
     ): Call<WeatherNetworkModel>
 
     @Headers("Content-Type: application/json")
+    @GET(value = "forecast.json")
+    fun getForecastWeatherByLatLon(
+        @Query("key") apiKey: String,
+        @Query("q") latLon: String,
+        @Query("days") days: Int,
+        @Query("aqi") aqi: String,
+        @Query("alerts") alerts: String
+    ): Call<WeatherNetworkModel>
+
+    @Headers("Content-Type: application/json")
     @GET(value = "search.json")
     fun getSearchingCountriesList(
         @Query("key") apiKey: String,

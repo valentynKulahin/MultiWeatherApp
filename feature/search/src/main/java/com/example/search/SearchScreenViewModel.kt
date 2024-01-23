@@ -2,8 +2,12 @@ package com.example.search
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.common.model.search.SearchResultItem
+import com.example.domain.model.weather.CurrentDomainModel
 import com.example.domain.usecase.GetSearchingCoutriesUseCase
 import com.example.domain.usecase.GetSearchingHistoryUseCase
+import com.example.domain.usecase.GetWeatherByLatLonUseCase
+import com.example.domain.usecase.GetWeatherUseCase
 import com.example.navi.repo.AppNavigator
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -17,7 +21,9 @@ import javax.inject.Inject
 class SearchScreenViewModel @Inject constructor(
     private val appNavigator: AppNavigator,
     private val getSearchingCoutriesUseCase: GetSearchingCoutriesUseCase,
-    private val getSearchingHistoryUseCase: GetSearchingHistoryUseCase
+    private val getSearchingHistoryUseCase: GetSearchingHistoryUseCase,
+    private val getWeatherUseCase: GetWeatherUseCase,
+    private val getWeatherByLatLonUseCase: GetWeatherByLatLonUseCase
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(SearchScreenContract())
@@ -52,7 +58,40 @@ class SearchScreenViewModel @Inject constructor(
             is SearchScreenIntent.GetWeatherInCountry -> {
                 viewModelScope.launch(context = Dispatchers.IO) {
                     _uiState.update {
-                        it.copy(searchingHistoryList = getSearchingHistoryUseCase.invoke())
+                        val weatherDomainModel =
+                            getWeatherUseCase.invoke(country = intent.searchingValue)
+                        it.copy(
+                            searchingHistoryList = getSearchingHistoryUseCase.invoke(),
+                            currentDomainModel = weatherDomainModel.current ?: CurrentDomainModel(),
+                            cityValue = SearchResultItem(
+                                country = weatherDomainModel.location?.country,
+                                lat = weatherDomainModel.location?.lat,
+                                lon = weatherDomainModel.location?.lon,
+                                name = weatherDomainModel.location?.name,
+                                region = weatherDomainModel.location?.region
+                            )
+                        )
+                    }
+                }
+            }
+
+            is SearchScreenIntent.GetWeatherInCountryByLatLon -> {
+                viewModelScope.launch(context = Dispatchers.IO) {
+                    _uiState.update {
+                        val weatherDomainModel =
+                            getWeatherByLatLonUseCase.invoke(latLon = "${intent.latLon.latitude}, ${intent.latLon.longitude}")
+                        it.copy(
+                            searchingHistoryList = getSearchingHistoryUseCase.invoke(),
+                            currentDomainModel = weatherDomainModel.current ?: CurrentDomainModel(),
+                            cityValue = SearchResultItem(
+                                country = weatherDomainModel.location?.country,
+                                lat = weatherDomainModel.location?.lat,
+                                lon = weatherDomainModel.location?.lon,
+                                name = weatherDomainModel.location?.name,
+                                region = weatherDomainModel.location?.region
+                            ),
+                            searchingName = weatherDomainModel.location?.name
+                        )
                     }
                 }
             }
