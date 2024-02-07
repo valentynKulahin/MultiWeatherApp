@@ -10,7 +10,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class WeatherNetworkRepoImpl @Inject constructor(
+internal class WeatherNetworkRepoImpl @Inject constructor(
     @WeatherRetrofit private val weatherApi: WeatherApi,
     private val dataStoreRepo: DataStoreRepo
 ) : WeatherNetworkRepo {

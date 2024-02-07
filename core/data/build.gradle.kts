@@ -40,6 +40,11 @@ dependencies {
     implementation(project(":core:common"))
     implementation(project(":core:network"))
     implementation(project(":core:datastore"))
+    implementation(project(":core:database"))
+
+    //google play
+    implementation(libs.google.play.services.location)
+    implementation(libs.google.play.services.maps)
 
     //core
     implementation(libs.core.ktx)

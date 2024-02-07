@@ -1,7 +1,7 @@
 package com.example.multi_weather_app
 
-import com.example.data.util.NetworkStatus
+sealed interface MainActivityContract {
 
-data class MainActivityContract(
-    val networkStatus: NetworkStatus = NetworkStatus.Unknown
-)
+    data object Loading : MainActivityContract
+
+}

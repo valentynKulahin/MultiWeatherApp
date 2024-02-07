@@ -13,7 +13,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class DataStoreRepoImpl @Inject constructor(
+internal class DataStoreRepoImpl @Inject constructor(
     private val dataStore: DataStore<Preferences>
 ) : DataStoreRepo {
 

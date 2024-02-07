@@ -7,7 +7,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class WeatherDataRemoteRepoImpl @Inject constructor(
+internal class WeatherDataRemoteRepoImpl @Inject constructor(
     private val weatherNetworkRepo: WeatherNetworkRepo,
     private val searchNetworkRepo: SearchNetworkRepo
 ) : WeatherDataRemoteRepo {

@@ -1,33 +1,33 @@
 [versions]
-agp = "8.2.1"
+agp = "8.2.2"
 org-jetbrains-kotlin-android = "1.9.10"
 core-ktx = "1.12.0"
 junit = "4.13.2"
 androidx-test-ext-junit = "1.1.5"
 espresso-core = "3.5.1"
 activity-compose = "1.8.2"
-compose-bom = "2023.10.01"
+compose-bom = "2024.01.00"
 compose-navigation = "2.7.6"
-material-icons-extended = "1.5.4"
+material-icons-extended = "1.6.0"
 androidx-hilt-navigation = "1.1.0"
 androidx-lifecycle = "2.7.0"
 androidx-room = "2.6.1"
 androidx-data-store = "1.1.0-beta01"
 retrofit = "2.9.0"
 interceptor = "5.0.0-alpha.3"
-hilt = "2.48"
-kotlin-coroutines = "1.7.1"
-accompanist-permission = "0.28.0"
+hilt = "2.48.1"
+kotlin-coroutines = "1.7.3"
+accompanist-permission = "0.32.0"
 accompanist-pager-indicatior = "0.30.1"
 accompanist-webview = "0.32.0"
 ksp = "1.9.10-1.0.13"
 coil = "2.4.0"
 sgp = "2.0.1"
 browser = "1.7.0"
-compose-foundation = "1.6.0-rc01"
 google-maps-compose = "4.3.0"
 google-services-maps = "18.2.0"
-google-services-location = "21.0.1"
+google-services-location = "21.1.0"
+androidxComposeCompiler = "1.5.8"
 
 [libraries]
 core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "core-ktx" }
@@ -49,7 +49,6 @@ activity-compose = { group = "androidx.activity", name = "activity-compose", ver
 compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "compose-bom" }
 ui = { group = "androidx.compose.ui", name = "ui" }
 ui-util = { group = "androidx.compose.ui", name = "ui-util" }
-ui-foundation = { group = "androidx.compose.foundation", name = "foundation", version.ref = "compose-foundation" }
 ui-graphics = { group = "androidx.compose.ui", name = "ui-graphics" }
 ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling" }
 ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview" }

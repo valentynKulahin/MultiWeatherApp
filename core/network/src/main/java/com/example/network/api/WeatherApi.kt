@@ -1,6 +1,6 @@
 package com.example.network.api
 
-import com.example.common.model.search.SearchResultItem
+import com.example.network.models.country.CountryItemNetworkModel
 import com.example.network.models.weather.WeatherNetworkModel
 import retrofit2.Call
 import retrofit2.http.GET
@@ -34,6 +34,6 @@ interface WeatherApi {
     fun getSearchingCountriesList(
         @Query("key") apiKey: String,
         @Query("q") country: String
-    ): Call<List<SearchResultItem>>
+    ): Call<List<CountryItemNetworkModel>>
 
 }

@@ -18,7 +18,7 @@ android {
         minSdk = 30
         targetSdk = 34
         versionCode = 1
-        versionName = "1.0"
+        versionName = "0.0.1"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -33,6 +33,9 @@ android {
     }
 
     buildTypes {
+//        debug {
+//            applicationIdSuffix = WeatherBuildType.DEBUG.applicationIdSuffix
+//        }
         release {
             isDebuggable = false
             isMinifyEnabled = true
@@ -99,7 +102,6 @@ dependencies {
     implementation(libs.activity.compose)
     implementation(libs.ui)
     implementation(libs.ui.util)
-    implementation(libs.ui.foundation)
     implementation(libs.ui.graphics)
     implementation(libs.ui.tooling.preview)
     implementation(libs.material3)

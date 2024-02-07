@@ -2,15 +2,14 @@ package com.example.data.di
 
 import com.example.data.repo.DataRepo
 import com.example.data.repo.DataRepoImpl
-import com.example.data.repo.news.local.NewsDataLocalRepo
-import com.example.data.repo.news.local.NewsDataLocalRepoImpl
-import com.example.data.repo.news.remote.NewsDataRemoteRepo
-import com.example.data.repo.news.remote.NewsDataRemoteRepoImpl
+import com.example.data.repo.news.NewsDataRemoteRepo
+import com.example.data.repo.news.NewsDataRemoteRepoImpl
 import com.example.data.repo.weather.local.WeatherDataLocalRepo
 import com.example.data.repo.weather.local.WeatherDataLocalRepoImpl
 import com.example.data.repo.weather.remote.WeatherDataRemoteRepo
 import com.example.data.repo.weather.remote.WeatherDataRemoteRepoImpl
 import com.example.data.util.NetworkMonitor
+import com.example.database.dao.FavouritesCountriesDao
 import com.example.network.repos.news.NewsNetworkRepo
 import com.example.network.repos.search.SearchNetworkRepo
 import com.example.network.repos.weather.WeatherNetworkRepo
@@ -28,7 +27,6 @@ class DataRepoModule {
     @Singleton
     fun provideDataRepo(
         networkMonitor: NetworkMonitor,
-        newsDataLocalRepo: NewsDataLocalRepo,
         newsDataRemoteRepo: NewsDataRemoteRepo,
         weatherDataLocalRepo: WeatherDataLocalRepo,
         weatherDataRemoteRepo: WeatherDataRemoteRepo
@@ -36,7 +34,6 @@ class DataRepoModule {
         return DataRepoImpl(
             networkMonitor = networkMonitor,
             newsDataRemoteRepo = newsDataRemoteRepo,
-            newsDataLocalRepo = newsDataLocalRepo,
             weatherDataLocalRepo = weatherDataLocalRepo,
             weatherDataRemoteRepo = weatherDataRemoteRepo
         )
@@ -44,26 +41,18 @@ class DataRepoModule {
 
     @Provides
     @Singleton
-    fun provideNewsDataLocalRepo(
-
-    ) : NewsDataLocalRepo {
-        return NewsDataLocalRepoImpl()
-    }
-
-    @Provides
-    @Singleton
     fun provideNewsDataRemoteRepo(
         newsNetworkRepo: NewsNetworkRepo
-    ) : NewsDataRemoteRepo {
+    ): NewsDataRemoteRepo {
         return NewsDataRemoteRepoImpl(newsNetworkRepo = newsNetworkRepo)
     }
 
     @Provides
     @Singleton
     fun provideWeatherDataLocalRepo(
-
-    ) : WeatherDataLocalRepo {
-        return WeatherDataLocalRepoImpl()
+        favouriteCountriesRepo: FavouritesCountriesDao
+    ): WeatherDataLocalRepo {
+        return WeatherDataLocalRepoImpl(favouriteCountriesRepo = favouriteCountriesRepo)
     }
 
     @Provides
@@ -71,8 +60,11 @@ class DataRepoModule {
     fun provideWeatherDataRemoteRepo(
         weatherNetworkRepo: WeatherNetworkRepo,
         searchNetworkRepo: SearchNetworkRepo
-    ) : WeatherDataRemoteRepo {
-        return WeatherDataRemoteRepoImpl(weatherNetworkRepo = weatherNetworkRepo, searchNetworkRepo = searchNetworkRepo)
+    ): WeatherDataRemoteRepo {
+        return WeatherDataRemoteRepoImpl(
+            weatherNetworkRepo = weatherNetworkRepo,
+            searchNetworkRepo = searchNetworkRepo
+        )
     }
 
 }

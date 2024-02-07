@@ -3,7 +3,9 @@ package com.example.navi.repo
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.channels.Channel
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class AppNavigatorImpl @Inject constructor() : AppNavigator {
     override val navigationChannel = Channel<NavigationIntent>(
         capacity = Int.MAX_VALUE,

@@ -10,7 +10,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class NewsNetworkRepoImpl @Inject constructor(
+internal class NewsNetworkRepoImpl @Inject constructor(
     @NewsRetrofit private val newsApi: NewsApi,
     private val dataStoreRepo: DataStoreRepo
 ) : NewsNetworkRepo {

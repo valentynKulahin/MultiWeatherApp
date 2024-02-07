@@ -58,6 +58,10 @@ dependencies {
     implementation(project(":core:common"))
     implementation(project(":core:datastore"))
 
+    //google play
+    implementation(libs.google.play.services.location)
+    implementation(libs.google.play.services.maps)
+
     //accompanist
     implementation(libs.accompanist.webview)
     implementation(libs.androidx.browser)

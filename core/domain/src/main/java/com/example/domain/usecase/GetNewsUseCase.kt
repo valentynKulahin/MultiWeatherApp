@@ -11,8 +11,8 @@ class GetNewsUseCase @Inject constructor(
     private val dataRepo: DataRepo
 ) {
 
-    suspend operator fun invoke(): NewsDomainModel {
-        return dataRepo.getTopNews().mapToDomain()
+    suspend operator fun invoke(country: String): NewsDomainModel {
+        return dataRepo.getTopNews(country = country).mapToDomain()
     }
 
 }

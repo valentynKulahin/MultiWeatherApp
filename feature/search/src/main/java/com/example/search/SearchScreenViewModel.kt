@@ -2,8 +2,10 @@ package com.example.search
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.common.model.search.SearchResultItem
+import com.example.domain.model.country.CountryItemDomainModel
 import com.example.domain.model.weather.CurrentDomainModel
+import com.example.domain.usecase.AddCountryToFavouriteUseCase
+import com.example.domain.usecase.DeleteCountryFromFavouriteUseCase
 import com.example.domain.usecase.GetSearchingCoutriesUseCase
 import com.example.domain.usecase.GetSearchingHistoryUseCase
 import com.example.domain.usecase.GetWeatherByLatLonUseCase
@@ -23,7 +25,9 @@ class SearchScreenViewModel @Inject constructor(
     private val getSearchingCoutriesUseCase: GetSearchingCoutriesUseCase,
     private val getSearchingHistoryUseCase: GetSearchingHistoryUseCase,
     private val getWeatherUseCase: GetWeatherUseCase,
-    private val getWeatherByLatLonUseCase: GetWeatherByLatLonUseCase
+    private val getWeatherByLatLonUseCase: GetWeatherByLatLonUseCase,
+    private val addCountryToFavouriteUseCase: AddCountryToFavouriteUseCase,
+    private val deleteCountryFromFavouriteUseCase: DeleteCountryFromFavouriteUseCase
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(SearchScreenContract())
@@ -43,16 +47,18 @@ class SearchScreenViewModel @Inject constructor(
                 }
             }
 
-            is SearchScreenIntent.UpdateCityValue -> {
+            is SearchScreenIntent.UpdateCountryForSearch -> {
                 viewModelScope.launch(context = Dispatchers.IO) {
                     _uiState.update {
-                        it.copy(cityValue = intent.searchingItem)
+                        it.copy(countryForSearch = intent.searchingItem)
                     }
                 }
             }
 
             is SearchScreenIntent.GetHistoryOfSearch -> {
-
+                viewModelScope.launch(context = Dispatchers.IO) {
+                    getSearchingHistoryUseCase.invoke()
+                }
             }
 
             is SearchScreenIntent.GetWeatherInCountry -> {
@@ -63,7 +69,7 @@ class SearchScreenViewModel @Inject constructor(
                         it.copy(
                             searchingHistoryList = getSearchingHistoryUseCase.invoke(),
                             currentDomainModel = weatherDomainModel.current ?: CurrentDomainModel(),
-                            cityValue = SearchResultItem(
+                            countryForSearch = CountryItemDomainModel(
                                 country = weatherDomainModel.location?.country,
                                 lat = weatherDomainModel.location?.lat,
                                 lon = weatherDomainModel.location?.lon,
@@ -83,7 +89,7 @@ class SearchScreenViewModel @Inject constructor(
                         it.copy(
                             searchingHistoryList = getSearchingHistoryUseCase.invoke(),
                             currentDomainModel = weatherDomainModel.current ?: CurrentDomainModel(),
-                            cityValue = SearchResultItem(
+                            countryForSearch = CountryItemDomainModel(
                                 country = weatherDomainModel.location?.country,
                                 lat = weatherDomainModel.location?.lat,
                                 lon = weatherDomainModel.location?.lon,
@@ -106,6 +112,28 @@ class SearchScreenViewModel @Inject constructor(
 
             is SearchScreenIntent.NavigateBack -> {
                 appNavigator.tryNavigateBack()
+            }
+
+            is SearchScreenIntent.AddToFavourite -> {
+                viewModelScope.launch(context = Dispatchers.IO) {
+                    addCountryToFavouriteUseCase.invoke(countryItemDomainModel = uiState.value.countryForSearch)
+                    _uiState.update { it.copy(countryInFavourite = true) }
+                }
+            }
+
+            is SearchScreenIntent.DeleteFromFavourite -> {
+                viewModelScope.launch(context = Dispatchers.IO) {
+                    deleteCountryFromFavouriteUseCase.invoke(countryItemDomainModel = uiState.value.countryForSearch)
+                    _uiState.update { it.copy(countryInFavourite = false) }
+                }
+            }
+
+            is SearchScreenIntent.UpdateCountryInFavouriteValue -> {
+                viewModelScope.launch(context = Dispatchers.IO) {
+                    _uiState.update {
+                        it.copy(countryInFavourite = intent.value)
+                    }
+                }
             }
         }
     }
