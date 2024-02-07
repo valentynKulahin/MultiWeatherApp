@@ -20,9 +20,9 @@ import javax.inject.Singleton
 
 @Singleton
 class ILocationServicesImpl @Inject constructor(
-    private val context: Context ,
+    private val context: Context,
     private val locationClient: FusedLocationProviderClient
-):ILocationServices {
+) : ILocationServices {
 
     @SuppressLint("MissingPermission")
     override fun requestLocationUpdates(): Flow<LatLng?> = callbackFlow {
