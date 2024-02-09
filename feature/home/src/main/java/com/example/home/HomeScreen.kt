@@ -16,14 +16,12 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FabPosition
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.ProgressIndicatorDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Snackbar
 import androidx.compose.material3.SnackbarHost
@@ -55,9 +53,6 @@ import com.example.home.components.SunConditionElevatedCard
 import com.example.home.components.WeatherElevatedCard
 import com.example.home.components.WindElevatedCard
 import com.google.accompanist.pager.HorizontalPagerIndicator
-import com.google.android.gms.location.FusedLocationProviderClient
-import com.google.android.gms.location.LocationCallback
-import com.google.android.gms.location.LocationServices
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -73,9 +68,9 @@ fun HomeScreen(
 ) {
     val uiState = homeVM.uiState.collectAsStateWithLifecycle()
 
-    if (uiState.value.loading) {
-        CircularProgressIndicator(modifier = Modifier.fillMaxSize())
-    }
+//    if (uiState.value.loading) {
+//        CircularProgressIndicator(modifier = Modifier.fillMaxSize())
+//    }
 
     WeatherBackground(
         modifier = Modifier

@@ -5,7 +5,6 @@ import kotlinx.coroutines.flow.Flow
 
 interface ILocationServices {
 
-    fun requestLocationUpdates(): Flow<LatLng?>
-    fun requestCurrentLocation(): Flow<LatLng?>
+    val myLocation: Flow<LatLng?>
 
 }

@@ -33,9 +33,14 @@ android {
     }
 
     buildTypes {
-//        debug {
-//            applicationIdSuffix = WeatherBuildType.DEBUG.applicationIdSuffix
-//        }
+        debug {
+            isDebuggable = true
+            isMinifyEnabled = true
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
+            )
+        }
         release {
             isDebuggable = false
             isMinifyEnabled = true
@@ -57,7 +62,7 @@ android {
         compose = true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.3"
+        kotlinCompilerExtensionVersion = "1.5.8"
     }
     packaging {
         resources {

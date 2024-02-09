@@ -1,7 +1,5 @@
 package com.example.domain.usecase
 
-import android.os.Build
-import androidx.annotation.RequiresApi
 import com.example.data.repo.location.ILocationServices
 import com.google.android.gms.maps.model.LatLng
 import kotlinx.coroutines.flow.Flow
@@ -12,7 +10,7 @@ class GetLocationUseCase @Inject constructor(
 ) {
 
     operator fun invoke(): Flow<LatLng?> {
-        return locationService.requestLocationUpdates()
+        return locationService.myLocation
     }
 
 }

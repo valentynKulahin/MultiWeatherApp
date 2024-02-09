@@ -25,10 +25,9 @@ class ILocationServicesImpl @Inject constructor(
 ) : ILocationServices {
 
     @SuppressLint("MissingPermission")
-    override fun requestLocationUpdates(): Flow<LatLng?> = callbackFlow {
+    override val myLocation: Flow<LatLng?> = callbackFlow {
         if (!context.hasLocationPermission()) {
-            trySend(null)
-            return@callbackFlow
+            channel.trySend(null)
         }
 
         val request = LocationRequest.Builder(10000L)
@@ -39,7 +38,7 @@ class ILocationServicesImpl @Inject constructor(
         val locationCallback = object : LocationCallback() {
             override fun onLocationResult(locationResult: LocationResult) {
                 locationResult.locations.lastOrNull()?.let {
-                    trySend(LatLng(it.latitude, it.longitude))
+                    channel.trySend(LatLng(it.latitude, it.longitude))
                 }
             }
         }
@@ -52,11 +51,9 @@ class ILocationServicesImpl @Inject constructor(
 
         awaitClose {
             locationClient.removeLocationUpdates(locationCallback)
+            channel.close()
         }
-    }
 
-    override fun requestCurrentLocation(): Flow<LatLng?> {
-        TODO("Not yet implemented")
     }
 
 }
