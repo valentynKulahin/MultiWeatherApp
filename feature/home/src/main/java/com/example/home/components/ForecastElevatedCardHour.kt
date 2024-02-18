@@ -26,20 +26,20 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
-import com.example.common.CommonFun.convertStringToLink
-import com.example.common.CommonFun.getCurrentFormattedDate
-import com.example.domain.model.weather.CurrentDomainModel
-import com.example.domain.model.weather.ForecastDomainModel
-import com.example.domain.model.weather.HourDomainModel
+import com.example.common.func.work_with_date.Common_Date.getCurrentFormattedDate
+import com.example.common.func.work_with_url.Common_URL.convertStringToLink
 import com.example.home.R
+import com.example.model.model.weather.CurrentExternalModel
+import com.example.model.model.weather.ForecastExternalModel
+import com.example.model.model.weather.HourExternalModel
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import kotlin.math.roundToInt
 
 @Composable
 fun ForecastElevatedCardHour(
-    currentWeather: CurrentDomainModel,
-    forecastWeather: ForecastDomainModel
+    currentWeather: CurrentExternalModel,
+    forecastWeather: ForecastExternalModel
 ) {
     Forecast_Screen_Hour(
         forecastWeather = forecastWeather,
@@ -49,8 +49,8 @@ fun ForecastElevatedCardHour(
 
 @Composable
 private fun Forecast_Screen_Hour(
-    currentWeather: CurrentDomainModel,
-    forecastWeather: ForecastDomainModel
+    currentWeather: CurrentExternalModel,
+    forecastWeather: ForecastExternalModel
 ) {
 
     val currentDateTime = LocalDateTime.now().withMinute(0).withSecond(0).withNano(0)
@@ -75,7 +75,7 @@ private fun Forecast_Screen_Hour(
 
 @Composable
 private fun Forecast_Card_Top_Hour(
-    currentWeather: CurrentDomainModel
+    currentWeather: CurrentExternalModel
 ) {
     Row(
         modifier = Modifier
@@ -105,7 +105,7 @@ private fun Forecast_Card_Top_Hour(
 
 @Composable
 private fun Forecast_Card_Lists_Hour(
-    forecastWeather: ForecastDomainModel,
+    forecastWeather: ForecastExternalModel,
     currentDateTime: LocalDateTime
 ) {
     val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")
@@ -118,7 +118,7 @@ private fun Forecast_Card_Lists_Hour(
     ) {
         forecastDays.take(2).forEach { forecastItem ->
             if ((forecastItem.hour?.size ?: 0) > 0) {
-                items(items = forecastItem.hour ?: listOf<HourDomainModel>()) {
+                items(items = forecastItem.hour ?: listOf<HourExternalModel>()) {
                     val forecastDateTime = LocalDateTime.parse(it.time, formatter)
                     if (forecastDateTime >= currentDateTime) {
                         Forecast_Card_Item_Hour(
@@ -136,7 +136,7 @@ private fun Forecast_Card_Lists_Hour(
 
 @Composable
 private fun Forecast_Card_Item_Hour(
-    hourModel: HourDomainModel,
+    hourModel: HourExternalModel,
     forecastDateTime: LocalDateTime,
     currentDateTime: LocalDateTime
 ) {

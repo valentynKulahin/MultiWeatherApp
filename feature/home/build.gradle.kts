@@ -54,6 +54,7 @@ dependencies {
 
     implementation(project(":core:navi"))
     implementation(project(":core:domain"))
+    implementation(project(":core:model"))
     implementation(project(":core:designsystem"))
     implementation(project(":core:common"))
     implementation(project(":core:datastore"))
@@ -65,6 +66,9 @@ dependencies {
     //accompanist
     implementation(libs.accompanist.webview)
     implementation(libs.androidx.browser)
+
+    //permissions
+    implementation(libs.accompanist.permissions)
 
     //core
     implementation(libs.core.ktx)

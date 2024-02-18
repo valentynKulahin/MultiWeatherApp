@@ -1,18 +1,20 @@
 package com.example.domain.usecase
 
-import com.example.data.repo.DataRepo
-import com.example.domain.model.weather.WeatherDomainModel
-import com.example.domain.util.mapToDomain
+import com.example.data.repo.weather.remote.WeatherDataRemoteRepo
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class GetWeatherByLatLonUseCase @Inject constructor(
-    private val dataRepo: DataRepo
+    private val weatherDataRemoteRepo: WeatherDataRemoteRepo
 ) {
 
-    suspend operator fun invoke(latLon: String): WeatherDomainModel {
-        return dataRepo.getForecastWeatherByLatLon(latLon = latLon).mapToDomain()
-    }
+    suspend operator fun invoke(latLon: String) =
+        weatherDataRemoteRepo.getForecastWeatherByLatLon(
+            latLon = latLon,
+            days = 1,
+            aqi = "yes",
+            alerts = "yes"
+        )
 
 }

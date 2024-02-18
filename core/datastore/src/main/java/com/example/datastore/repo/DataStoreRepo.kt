@@ -12,4 +12,8 @@ interface DataStoreRepo {
 
     suspend fun getWeatherToken(): Flow<String>
 
+    suspend fun updateMapsToken(token: String)
+
+    suspend fun getMapsToken(): Flow<String>
+
 }

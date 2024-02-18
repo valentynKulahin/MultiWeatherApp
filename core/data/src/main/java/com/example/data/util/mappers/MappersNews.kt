@@ -1,19 +1,19 @@
 package com.example.data.util.mappers
 
-import com.example.data.model.news.ArticleDataModel
-import com.example.data.model.news.NewsDataModel
-import com.example.data.model.news.SourceDataModel
+import com.example.model.model.news.ArticleExternalModel
+import com.example.model.model.news.NewsExternalModel
+import com.example.model.model.news.SourceExternalModel
 import com.example.network.models.news.ArticleNetworkModel
 import com.example.network.models.news.NewsNetworkModel
 import com.example.network.models.news.SourceNetworkModel
 
-fun NewsNetworkModel.mapToData(): NewsDataModel {
-    return NewsDataModel(articles.mapToData(), status, totalResults)
+fun NewsNetworkModel.mapToData(): NewsExternalModel {
+    return NewsExternalModel(articles.mapToData(), status, totalResults)
 }
 
 @JvmName(name = "listArticleNetworkModelToData")
-fun List<ArticleNetworkModel?>?.mapToData(): List<ArticleDataModel> {
-    return mutableListOf<ArticleDataModel>().apply {
+fun List<ArticleNetworkModel?>?.mapToData(): List<ArticleExternalModel> {
+    return mutableListOf<ArticleExternalModel>().apply {
         this@mapToData?.forEach {
             this.add(it.mapToData())
         }
@@ -21,8 +21,8 @@ fun List<ArticleNetworkModel?>?.mapToData(): List<ArticleDataModel> {
 }
 
 @JvmName(name = "articleNetworkModelToData")
-fun ArticleNetworkModel?.mapToData(): ArticleDataModel {
-    return ArticleDataModel(
+fun ArticleNetworkModel?.mapToData(): ArticleExternalModel {
+    return ArticleExternalModel(
         this?.author,
         this?.content,
         this?.description,
@@ -35,6 +35,6 @@ fun ArticleNetworkModel?.mapToData(): ArticleDataModel {
 }
 
 @JvmName(name = "sourceNetworkModelToData")
-fun SourceNetworkModel.mapToData(): SourceDataModel {
-    return SourceDataModel(id, name)
+fun SourceNetworkModel.mapToData(): SourceExternalModel {
+    return SourceExternalModel(id, name)
 }

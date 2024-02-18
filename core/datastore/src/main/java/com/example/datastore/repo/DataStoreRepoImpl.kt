@@ -53,4 +53,22 @@ internal class DataStoreRepoImpl @Inject constructor(
         dataStore.edit { it[PreferencesKey.weather_token] = token }
     }
 
+    override suspend fun getMapsToken(): Flow<String> {
+        return dataStore.data
+            .catch { exception ->
+                // dataStore.data throws an IOException when an error is encountered when reading data
+                if (exception is IOException) {
+                    emit(emptyPreferences())
+                } else {
+                    throw exception
+                }
+            }.map { preferences ->
+                preferences[PreferencesKey.maps_token] ?: ""
+            }
+    }
+
+    override suspend fun updateMapsToken(token: String) {
+        dataStore.edit { it[PreferencesKey.maps_token] = token }
+    }
+
 }

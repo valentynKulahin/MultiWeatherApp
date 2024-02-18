@@ -80,7 +80,7 @@ private val darkColors = darkColorScheme(
 )
 
 @Composable
-fun MultiWeatherApp(
+fun MultiWeatherAppTheme(
     useDarkTheme: Boolean = isSystemInDarkTheme(),
     content: @Composable() () -> Unit
 ) {

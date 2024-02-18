@@ -1,20 +1,25 @@
 package com.example.home
 
-import com.example.domain.model.country.CountryItemDomainModel
-import com.example.domain.model.news.NewsDomainModel
-import com.example.domain.model.weather.WeatherDomainModel
+import com.example.common.network.response.DataResponseError
+import com.example.common.network.status.NetworkStatus
+import com.example.model.model.country.CountryItemExternalModel
 import com.google.android.gms.maps.model.LatLng
 
-data class HomeScreenContract(
-    val favouritesCountry: List<CountryItemDomainModel> = emptyList(),
-    val loading: Boolean = false,
-    val myLocation: LatLng? = null
+data class HomeScreenUiState(
+    val favouritesCountry: List<CountryItemExternalModel> = emptyList(),
+    val isLoading: Boolean = false,
+    val isError: Boolean = false,
+    val error: DataResponseError = DataResponseError(0, ""),
+    val myLocation: LatLng? = null,
+    val networkStatus: NetworkStatus = NetworkStatus.Unknown
 )
 
-sealed interface HomeScreenIntent {
+sealed interface HomeScreenUiAction {
 
-    data object NavigateToSearchScreen : HomeScreenIntent
+    data object NavigateToSearchScreen : HomeScreenUiAction
 
-    data class DeleteFromFavourite(val countryItemDomainModel: CountryItemDomainModel) : HomeScreenIntent
+    data object UpdateWeatherAndNews : HomeScreenUiAction
+
+    data class DeleteFromFavourite(val countryItemExternalModel: CountryItemExternalModel) : HomeScreenUiAction
 
 }

@@ -26,20 +26,20 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.example.designsystem.R
-import com.example.domain.model.weather.AstroDomainModel
-import com.example.domain.model.weather.CurrentDomainModel
+import com.example.model.model.weather.AstroExternalModel
+import com.example.model.model.weather.CurrentExternalModel
 import kotlinx.coroutines.CoroutineScope
 
 @Composable
 fun SunConditionElevatedCard(
-    currentDomainModel: CurrentDomainModel,
-    astroDomainModel: AstroDomainModel,
+    currentExternalModel: CurrentExternalModel,
+    astroExternalModel: AstroExternalModel,
     scope: CoroutineScope = rememberCoroutineScope()
 ) {
 
     SunCondition_Screen(
-        currentDomainModel = currentDomainModel,
-        astroDomainModel = astroDomainModel,
+        currentExternalModel = currentExternalModel,
+        astroExternalModel = astroExternalModel,
         scope = scope
     )
 
@@ -47,15 +47,15 @@ fun SunConditionElevatedCard(
 
 @Composable
 private fun SunCondition_Screen(
-    currentDomainModel: CurrentDomainModel,
-    astroDomainModel: AstroDomainModel,
+    currentExternalModel: CurrentExternalModel,
+    astroExternalModel: AstroExternalModel,
     scope: CoroutineScope
 ) {
     Column {
         SunCondition_Header()
         SunCondition_Screen_Card(
-            currentDomainModel = currentDomainModel,
-            astroDomainModel = astroDomainModel,
+            currentExternalModel = currentExternalModel,
+            astroExternalModel = astroExternalModel,
             scope = scope
         )
     }
@@ -63,8 +63,8 @@ private fun SunCondition_Screen(
 
 @Composable
 private fun SunCondition_Screen_Card(
-    currentDomainModel: CurrentDomainModel,
-    astroDomainModel: AstroDomainModel,
+    currentExternalModel: CurrentExternalModel,
+    astroExternalModel: AstroExternalModel,
     scope: CoroutineScope
 ) {
 
@@ -81,9 +81,9 @@ private fun SunCondition_Screen_Card(
                 .padding(10.dp),
             verticalArrangement = Arrangement.SpaceBetween
         ) {
-            SunCondition_Top(currentDomainModel = currentDomainModel)
+            SunCondition_Top(currentExternalModel = currentExternalModel)
             SunCondition_Bottom(
-                astroDomainModel = astroDomainModel,
+                astroExternalModel = astroExternalModel,
 //                scope = scope
             )
         }
@@ -100,7 +100,7 @@ private fun SunCondition_Header() {
 }
 
 @Composable
-private fun SunCondition_Top(currentDomainModel: CurrentDomainModel) {
+private fun SunCondition_Top(currentExternalModel: CurrentExternalModel) {
     Column {
         Row(
             modifier = Modifier
@@ -120,14 +120,14 @@ private fun SunCondition_Top(currentDomainModel: CurrentDomainModel) {
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(text = stringResource(id = R.string.sun_text))
-            Text(text = currentDomainModel.uv.toString(), fontWeight = FontWeight.Bold)
+            Text(text = currentExternalModel.uv.toString(), fontWeight = FontWeight.Bold)
         }
     }
 }
 
 @Composable
 private fun SunCondition_Bottom(
-    astroDomainModel: AstroDomainModel,
+    astroExternalModel: AstroExternalModel,
 //    scope: CoroutineScope
 ) {
 
@@ -167,8 +167,8 @@ private fun SunCondition_Bottom(
                 .padding(horizontal = 8.dp),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Text(text = astroDomainModel.sunrise.toString())
-            Text(text = astroDomainModel.sunset.toString())
+            Text(text = astroExternalModel.sunrise.toString())
+            Text(text = astroExternalModel.sunset.toString())
         }
     }
 }

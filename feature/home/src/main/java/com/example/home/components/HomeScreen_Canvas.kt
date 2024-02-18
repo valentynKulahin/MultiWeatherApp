@@ -16,11 +16,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.unit.dp
-import com.example.domain.model.weather.AstroDomainModel
+import com.example.model.model.weather.AstroExternalModel
 
 @Composable
 fun HomeScreen_Canvas(
-    astroDomainModel: AstroDomainModel
+    astroDomainModel: AstroExternalModel
 ) {
     Column(
         modifier = Modifier

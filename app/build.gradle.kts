@@ -10,11 +10,11 @@ plugins {
 }
 
 android {
-    namespace = "com.example.multi_weather_app"
+    namespace = "com.example.apps.multi_weather_app"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.example.multi_weather_app"
+        applicationId = "com.example.apps.multi_weather_app"
         minSdk = 30
         targetSdk = 34
         versionCode = 1
@@ -33,16 +33,8 @@ android {
     }
 
     buildTypes {
-        debug {
-            isDebuggable = true
-            isMinifyEnabled = true
-            proguardFiles(
-                getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
-            )
-        }
         release {
-            isDebuggable = false
+            isDebuggable = true
             isMinifyEnabled = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
@@ -73,15 +65,12 @@ android {
 
 dependencies {
 
-    implementation(project(":feature:splash"))
     implementation(project(":feature:home"))
-    implementation(project(":feature:detail"))
-    implementation(project(":feature:location"))
-    implementation(project(":feature:news"))
     implementation(project(":feature:search"))
     implementation(project(":feature:settings"))
 
     implementation(project(":core:navi"))
+    implementation(project(":core:model"))
     implementation(project(":core:common"))
     implementation(project(":core:data"))
     implementation(project(":core:database"))
@@ -94,8 +83,14 @@ dependencies {
     implementation(platform(libs.kotlin.bom))
     implementation(libs.core.ktx)
 
+    //splash screen
+    implementation(libs.androidx.core.splashscreen)
+
     //permissions
     implementation(libs.accompanist.permissions)
+
+    //progress bar
+    implementation(libs.accompanist.pager.indicator)
 
     //hilt
     implementation(libs.google.hilt.android)
@@ -112,7 +107,6 @@ dependencies {
     implementation(libs.material3)
     implementation(libs.androidx.navigation.compose)
     implementation(libs.androidx.icons.extended)
-    implementation(libs.accompanist.pager.indicator)
 
     //room
     implementation(libs.androidx.room.ktx)

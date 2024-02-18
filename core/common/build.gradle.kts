@@ -39,10 +39,15 @@ dependencies {
     implementation(platform(libs.kotlin.bom))
     implementation(libs.core.ktx)
 
+    //coroutines
+    implementation(libs.kotlinx.coroutines.android)
+    implementation(libs.kotlinx.coroutines.core)
+
     //gson
     implementation(libs.squareup.converter.gson)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.test.ext.junit)
     androidTestImplementation(libs.espresso.core)
+
 }

@@ -33,13 +33,13 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.example.designsystem.R
-import com.example.domain.model.news.ArticleDomainModel
-import com.example.domain.model.news.NewsDomainModel
+import com.example.model.model.news.ArticleExternalModel
+import com.example.model.model.news.NewsExternalModel
 import com.google.accompanist.pager.HorizontalPagerIndicator
 
 @Composable
 fun NewsElevatedCard(
-    news: NewsDomainModel
+    news: NewsExternalModel
 ) {
 
     News_Screen(
@@ -50,7 +50,7 @@ fun NewsElevatedCard(
 
 @Composable
 private fun News_Screen(
-    news: NewsDomainModel
+    news: NewsExternalModel
 ) {
 
     val newsLink = remember { mutableStateOf("") }
@@ -86,7 +86,7 @@ private fun News_Header() {
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun News_Cards(
-    news: List<ArticleDomainModel?>?,
+    news: List<ArticleExternalModel?>?,
     onClick: (String) -> Unit
 ) {
     val pagerState = rememberPagerState(pageCount = { news?.size ?: 0 })
@@ -105,7 +105,7 @@ private fun News_Cards(
                 horizontalArrangement = Arrangement.Center,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                News_Card(article = news?.get(it) ?: ArticleDomainModel())
+                News_Card(article = news?.get(it) ?: ArticleExternalModel())
             }
         }
     }
@@ -122,7 +122,7 @@ private fun News_Cards(
 }
 
 @Composable
-private fun News_Card(article: ArticleDomainModel?) {
+private fun News_Card(article: ArticleExternalModel?) {
     ElevatedCard(
         modifier = Modifier
             .fillMaxWidth()

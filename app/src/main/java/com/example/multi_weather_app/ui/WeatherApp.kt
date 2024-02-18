@@ -30,15 +30,15 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.data.util.NetworkStatus
+import com.example.apps.multi_weather_app.R
+import com.example.common.network.status.NetworkStatus
 import com.example.designsystem.component.WeatherDrawerMenu
 import com.example.navi.util.WeatherDestinations
-import com.example.designsystem.permissions.RequestPermissions
 import com.example.home.HomeScreen
-import com.example.multi_weather_app.R
 import com.example.multi_weather_app.MainActivityViewModel
 import com.example.navi.repo.NavigationIntent
 import com.example.search.SearchScreen
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlin.math.roundToInt
@@ -49,7 +49,7 @@ enum class DragAnchors {
 }
 
 @RequiresApi(Build.VERSION_CODES.S)
-@OptIn(ExperimentalFoundationApi::class)
+@OptIn(ExperimentalFoundationApi::class, ExperimentalPermissionsApi::class)
 @Composable
 fun WeatherApp(
     mainActivityViewModel: MainActivityViewModel = hiltViewModel()
@@ -95,8 +95,6 @@ fun WeatherApp(
 
         else -> {}
     }
-
-    RequestPermissions()
 
     NavigationEffects(
         navigationChannel = mainActivityViewModel.navigationChannel,

@@ -1,18 +1,16 @@
 package com.example.network.repos.weather
 
-import com.example.common.ApiResult
-import com.example.datastore.repo.DataStoreRepo
+import com.example.network.utils.NetworkError
+import com.example.network.utils.NetworkResponse
 import com.example.network.api.WeatherApi
 import com.example.network.di.WeatherRetrofit
-import com.example.network.repos.execute
-import kotlinx.coroutines.flow.first
+import com.example.network.models.weather.WeatherNetworkModel
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 internal class WeatherNetworkRepoImpl @Inject constructor(
-    @WeatherRetrofit private val weatherApi: WeatherApi,
-    private val dataStoreRepo: DataStoreRepo
+    @WeatherRetrofit private val weatherApi: WeatherApi
 ) : WeatherNetworkRepo {
 
     override suspend fun getForecastWeather(
@@ -20,17 +18,13 @@ internal class WeatherNetworkRepoImpl @Inject constructor(
         days: Int,
         aqi: String,
         alerts: String
-    ): ApiResult {
-        val apiKey = dataStoreRepo.getWeatherToken().first()
-        return execute {
-            weatherApi.getForecastWeather(
-                apiKey = apiKey,
-                country = country,
-                days = days,
-                aqi = aqi,
-                alerts = alerts
-            )
-        }
+    ): NetworkResponse<WeatherNetworkModel, NetworkError> {
+        return weatherApi.getForecastWeather(
+            country = country,
+            days = days,
+            aqi = aqi,
+            alerts = alerts
+        )
     }
 
     override suspend fun getForecastWeatherByLatLon(
@@ -38,17 +32,13 @@ internal class WeatherNetworkRepoImpl @Inject constructor(
         days: Int,
         aqi: String,
         alerts: String
-    ): ApiResult {
-        val apiKey = dataStoreRepo.getWeatherToken().first()
-        return execute {
-            weatherApi.getForecastWeatherByLatLon(
-                apiKey = apiKey,
-                latLon = latLon,
-                days = days,
-                aqi = aqi,
-                alerts = alerts
-            )
-        }
+    ): NetworkResponse<WeatherNetworkModel, NetworkError> {
+        return weatherApi.getForecastWeatherByLatLon(
+            latLon = latLon,
+            days = days,
+            aqi = aqi,
+            alerts = alerts
+        )
     }
-    
+
 }

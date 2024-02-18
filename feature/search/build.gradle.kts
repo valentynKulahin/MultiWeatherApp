@@ -54,12 +54,16 @@ dependencies {
 
     implementation(project(":core:navi"))
     implementation(project(":core:domain"))
+    implementation(project(":core:model"))
     implementation(project(":core:designsystem"))
     implementation(project(":core:common"))
     implementation(project(":core:datastore"))
 
     //core
     implementation(libs.core.ktx)
+
+    //permissions
+    implementation(libs.accompanist.permissions)
 
     //hilt
     implementation(libs.google.hilt.android)

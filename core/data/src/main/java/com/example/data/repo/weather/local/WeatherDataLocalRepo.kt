@@ -1,14 +1,14 @@
 package com.example.data.repo.weather.local
 
-import com.example.data.model.country.CountryItemDataModel
+import com.example.model.model.country.CountryItemExternalModel
 import kotlinx.coroutines.flow.Flow
 
 interface WeatherDataLocalRepo {
 
-    suspend fun addCountryToFavourite(countryItemDataModel: CountryItemDataModel)
+    suspend fun addCountryToFavourite(countryItemExternalModel: CountryItemExternalModel)
 
-    fun getFavouriteCountries(): Flow<List<CountryItemDataModel>>
+    fun getFavouriteCountries(): Flow<List<CountryItemExternalModel>>
 
-    suspend fun deleteCountryFromFavourite(countryItemDataModel: CountryItemDataModel)
+    suspend fun deleteCountryFromFavourite(countryItemExternalModel: CountryItemExternalModel)
 
 }

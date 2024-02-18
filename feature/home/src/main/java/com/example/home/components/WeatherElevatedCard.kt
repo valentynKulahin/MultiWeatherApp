@@ -25,27 +25,27 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
-import com.example.common.CommonFun.convertStringToLink
+import com.example.common.func.work_with_url.Common_URL.convertStringToLink
 import com.example.designsystem.component.WeatherLocationText
-import com.example.domain.model.weather.CurrentDomainModel
-import com.example.domain.model.weather.LocationDomainModel
 import com.example.home.R
+import com.example.model.model.weather.CurrentExternalModel
+import com.example.model.model.weather.LocationExternalModel
 
 @Composable
 fun WeatherElevatedCard(
-    currentWeather: CurrentDomainModel,
-    locationDomainModel: LocationDomainModel
+    currentWeather: CurrentExternalModel,
+    locationExternalModel: LocationExternalModel
 ) {
     HomeScreen_WeatherCard(
         currentWeather = currentWeather,
-        locationDomainModel = locationDomainModel
+        locationExternalModel = locationExternalModel
     )
 }
 
 @Composable
 private fun HomeScreen_WeatherCard(
-    currentWeather: CurrentDomainModel,
-    locationDomainModel: LocationDomainModel
+    currentWeather: CurrentExternalModel,
+    locationExternalModel: LocationExternalModel
 ) {
     ElevatedCard(
         modifier = Modifier
@@ -64,7 +64,7 @@ private fun HomeScreen_WeatherCard(
             ) {
                 HomeScreen_WeatherCard_Left(
                     currentWeather = currentWeather,
-                    locationDomainModel = locationDomainModel
+                    locationExternalModel = locationExternalModel
                 )
                 HomeScreen_WeatherCard_Right(currentWeather = currentWeather)
             }
@@ -76,8 +76,8 @@ private fun HomeScreen_WeatherCard(
 
 @Composable
 private fun HomeScreen_WeatherCard_Left(
-    currentWeather: CurrentDomainModel,
-    locationDomainModel: LocationDomainModel
+    currentWeather: CurrentExternalModel,
+    locationExternalModel: LocationExternalModel
 ) {
     Column(
         horizontalAlignment = Alignment.Start,
@@ -102,7 +102,7 @@ private fun HomeScreen_WeatherCard_Left(
         Row {
             WeatherLocationText(
                 imageVector = Icons.Default.LocationOn,
-                text = "${locationDomainModel.country.toString()}, ${locationDomainModel.name.toString()}",
+                text = "${locationExternalModel.country.toString()}, ${locationExternalModel.name.toString()}",
                 spacer = 6
             )
         }
@@ -111,7 +111,7 @@ private fun HomeScreen_WeatherCard_Left(
 
 @Composable
 private fun HomeScreen_WeatherCard_Right(
-    currentWeather: CurrentDomainModel
+    currentWeather: CurrentExternalModel
 ) {
     val iconURL = convertStringToLink(currentWeather.condition?.icon.toString())
     AsyncImage(
@@ -122,7 +122,7 @@ private fun HomeScreen_WeatherCard_Right(
 }
 
 @Composable
-private fun HomeScreen_WeatherCard_Bottom(currentWeather: CurrentDomainModel) {
+private fun HomeScreen_WeatherCard_Bottom(currentWeather: CurrentExternalModel) {
     Row(
         modifier = Modifier
             .fillMaxWidth()

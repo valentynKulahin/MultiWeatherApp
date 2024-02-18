@@ -23,36 +23,30 @@ class NetworkModule {
     @Singleton
     @Provides
     fun provideWeatherNetworkRepo(
-        weatherApi: WeatherApi,
-        dataStoreRepo: DataStoreRepo
+        weatherApi: WeatherApi
     ): WeatherNetworkRepo {
         return WeatherNetworkRepoImpl(
-            weatherApi = weatherApi,
-            dataStoreRepo = dataStoreRepo
+            weatherApi = weatherApi
         )
     }
 
     @Singleton
     @Provides
     fun provideNewsNetworkRepo(
-        newsApi: NewsApi,
-        dataStoreRepo: DataStoreRepo
+        newsApi: NewsApi
     ): NewsNetworkRepo {
         return NewsNetworkRepoImpl(
-            newsApi = newsApi,
-            dataStoreRepo = dataStoreRepo
+            newsApi = newsApi
         )
     }
 
     @Singleton
     @Provides
     fun provideSearchNetworkRepo(
-        weatherApi: WeatherApi,
-        dataStoreRepo: DataStoreRepo
+        weatherApi: WeatherApi
     ): SearchNetworkRepo {
         return SearchNetworkRepoImpl(
-            weatherApi = weatherApi,
-            dataStoreRepo = dataStoreRepo
+            weatherApi = weatherApi
         )
     }
 

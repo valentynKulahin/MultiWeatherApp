@@ -1,17 +1,17 @@
 package com.example.data.util.mappers
 
-import com.example.data.model.weather.AirQualityDataModel
-import com.example.data.model.weather.AlertDataModel
-import com.example.data.model.weather.AlertsDataModel
-import com.example.data.model.weather.AstroDataModel
-import com.example.data.model.weather.ConditionDataModel
-import com.example.data.model.weather.CurrentDataModel
-import com.example.data.model.weather.DayDataModel
-import com.example.data.model.weather.ForecastDataModel
-import com.example.data.model.weather.ForecastdayDataModel
-import com.example.data.model.weather.HourDataModel
-import com.example.data.model.weather.LocationDataModel
-import com.example.data.model.weather.WeatherDataModel
+import com.example.model.model.weather.AirQualityExternalModel
+import com.example.model.model.weather.AlertExternalModel
+import com.example.model.model.weather.AlertsExternalModel
+import com.example.model.model.weather.AstroExternalModel
+import com.example.model.model.weather.ConditionExternalModel
+import com.example.model.model.weather.CurrentExternalModel
+import com.example.model.model.weather.DayExternalModel
+import com.example.model.model.weather.ForecastExternalModel
+import com.example.model.model.weather.ForecastdayExternalModel
+import com.example.model.model.weather.HourExternalModel
+import com.example.model.model.weather.LocationExternalModel
+import com.example.model.model.weather.WeatherExternalModel
 import com.example.network.models.weather.AirQualityNetworkModel
 import com.example.network.models.weather.AlertNetworkModel
 import com.example.network.models.weather.AlertsNetworkModel
@@ -25,8 +25,8 @@ import com.example.network.models.weather.HourNetworkModel
 import com.example.network.models.weather.LocationNetworkModel
 import com.example.network.models.weather.WeatherNetworkModel
 
-fun WeatherNetworkModel.mapToData(): WeatherDataModel {
-    return WeatherDataModel(
+fun WeatherNetworkModel.mapToData(): WeatherExternalModel {
+    return WeatherExternalModel(
         alerts?.mapToData(),
         current?.mapToData(),
         forecast.mapToData(),
@@ -35,13 +35,13 @@ fun WeatherNetworkModel.mapToData(): WeatherDataModel {
 }
 
 @JvmName(name = "alertsNetworkModelToData")
-fun AlertsNetworkModel.mapToData(): AlertsDataModel {
-    return AlertsDataModel(alerts.mapToData())
+fun AlertsNetworkModel.mapToData(): AlertsExternalModel {
+    return AlertsExternalModel(alerts.mapToData())
 }
 
 @JvmName(name = "listAlertNetworkModelToData")
-fun List<AlertNetworkModel?>?.mapToData(): List<AlertDataModel> {
-    return mutableListOf<AlertDataModel>().apply {
+fun List<AlertNetworkModel?>?.mapToData(): List<AlertExternalModel> {
+    return mutableListOf<AlertExternalModel>().apply {
         this@mapToData?.forEach {
             this.add(it.mapToData())
         }
@@ -49,8 +49,8 @@ fun List<AlertNetworkModel?>?.mapToData(): List<AlertDataModel> {
 }
 
 @JvmName(name = "alertNetworkModelToData")
-fun AlertNetworkModel?.mapToData(): AlertDataModel {
-    return AlertDataModel(
+fun AlertNetworkModel?.mapToData(): AlertExternalModel {
+    return AlertExternalModel(
         this?.areas,
         this?.category,
         this?.certainty,
@@ -68,8 +68,8 @@ fun AlertNetworkModel?.mapToData(): AlertDataModel {
 }
 
 @JvmName(name = "currentNetworkModelToData")
-fun CurrentNetworkModel.mapToData(): CurrentDataModel {
-    return CurrentDataModel(
+fun CurrentNetworkModel.mapToData(): CurrentExternalModel {
+    return CurrentExternalModel(
         airQuality?.mapToData(),
         cloud,
         condition?.mapToData(),
@@ -98,8 +98,8 @@ fun CurrentNetworkModel.mapToData(): CurrentDataModel {
 }
 
 @JvmName(name = "airQualityNetworkModelToData")
-fun AirQualityNetworkModel.mapToData(): AirQualityDataModel {
-    return AirQualityDataModel(
+fun AirQualityNetworkModel.mapToData(): AirQualityExternalModel {
+    return AirQualityExternalModel(
         co,
         gbDefraIndex,
         no2,
@@ -112,18 +112,18 @@ fun AirQualityNetworkModel.mapToData(): AirQualityDataModel {
 }
 
 @JvmName(name = "conditionNetworkModelToData")
-fun ConditionNetworkModel.mapToData(): ConditionDataModel {
-    return ConditionDataModel(code, icon, text)
+fun ConditionNetworkModel.mapToData(): ConditionExternalModel {
+    return ConditionExternalModel(code, icon, text)
 }
 
 @JvmName(name = "forecastNetworkModelToData")
-fun ForecastNetworkModel?.mapToData(): ForecastDataModel {
-    return ForecastDataModel(this?.forecastday.mapToData())
+fun ForecastNetworkModel?.mapToData(): ForecastExternalModel {
+    return ForecastExternalModel(this?.forecastday.mapToData())
 }
 
 @JvmName(name = "listForecastDayNetworkModelToData")
-fun List<ForecastdayNetworkModel>?.mapToData(): List<ForecastdayDataModel> {
-    return mutableListOf<ForecastdayDataModel>().apply {
+fun List<ForecastdayNetworkModel>?.mapToData(): List<ForecastdayExternalModel> {
+    return mutableListOf<ForecastdayExternalModel>().apply {
         this@mapToData?.forEach {
             this.add(it.mapToData())
         }
@@ -131,8 +131,8 @@ fun List<ForecastdayNetworkModel>?.mapToData(): List<ForecastdayDataModel> {
 }
 
 @JvmName(name = "forecastDayNetworkModelToData")
-fun ForecastdayNetworkModel.mapToData(): ForecastdayDataModel {
-    return ForecastdayDataModel(
+fun ForecastdayNetworkModel.mapToData(): ForecastdayExternalModel {
+    return ForecastdayExternalModel(
         astro?.mapToData(),
         date,
         dateEpoch,
@@ -142,8 +142,8 @@ fun ForecastdayNetworkModel.mapToData(): ForecastdayDataModel {
 }
 
 @JvmName(name = "astroNetworkModelToData")
-fun AstroNetworkModel.mapToData(): AstroDataModel {
-    return AstroDataModel(
+fun AstroNetworkModel.mapToData(): AstroExternalModel {
+    return AstroExternalModel(
         isMoonUp,
         isSunUp,
         moonIllumination,
@@ -156,8 +156,8 @@ fun AstroNetworkModel.mapToData(): AstroDataModel {
 }
 
 @JvmName(name = "dayNetworkModelToData")
-fun DayNetworkModel.mapToData(): DayDataModel {
-    return DayDataModel(
+fun DayNetworkModel.mapToData(): DayExternalModel {
+    return DayExternalModel(
         avghumidity,
         avgtempC,
         avgtempF,
@@ -182,8 +182,8 @@ fun DayNetworkModel.mapToData(): DayDataModel {
 }
 
 @JvmName(name = "listHourNetworkModelToData")
-fun List<HourNetworkModel>.mapToData(): List<HourDataModel> {
-    return mutableListOf<HourDataModel>().apply {
+fun List<HourNetworkModel>.mapToData(): List<HourExternalModel> {
+    return mutableListOf<HourExternalModel>().apply {
         this@mapToData.forEach {
             this.add(it.mapToData())
         }
@@ -191,8 +191,8 @@ fun List<HourNetworkModel>.mapToData(): List<HourDataModel> {
 }
 
 @JvmName(name = "hourNetworkModelToData")
-fun HourNetworkModel.mapToData(): HourDataModel {
-    return HourDataModel(
+fun HourNetworkModel.mapToData(): HourExternalModel {
+    return HourExternalModel(
         chanceOfRain,
         chanceOfSnow,
         cloud,
@@ -230,8 +230,8 @@ fun HourNetworkModel.mapToData(): HourDataModel {
 }
 
 @JvmName(name = "locationNetworkModelToData")
-fun LocationNetworkModel.mapToData(): LocationDataModel {
-    return LocationDataModel(
+fun LocationNetworkModel.mapToData(): LocationExternalModel {
+    return LocationExternalModel(
         country,
         lat,
         localtime,

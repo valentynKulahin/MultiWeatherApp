@@ -1,7 +1,9 @@
 package com.example.multi_weather_app
 
-sealed interface MainActivityContract {
+sealed interface MainActivityUiState {
 
-    data object Loading : MainActivityContract
+    data object Loading : MainActivityUiState
+
+    data object Success : MainActivityUiState
 
 }

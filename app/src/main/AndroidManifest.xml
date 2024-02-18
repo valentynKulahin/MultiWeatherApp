@@ -7,10 +7,11 @@
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
     <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION"/>
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"
+        android:maxSdkVersion="32" />
 
     <application
-        android:name=".di.WeatherApplication"
+        android:name="com.example.multi_weather_app.di.WeatherApplication"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -34,7 +35,7 @@
             android:value="${WEATHER_API_KEY}"/>
 
         <activity
-            android:name=".MainActivity"
+            android:name="com.example.multi_weather_app.MainActivity"
             android:exported="true"
             android:theme="@style/Theme.MultiWeatherApp">
             <intent-filter>

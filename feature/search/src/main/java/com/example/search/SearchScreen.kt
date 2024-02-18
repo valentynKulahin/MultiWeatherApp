@@ -66,11 +66,11 @@ import androidx.compose.ui.unit.toSize
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
-import com.example.common.CommonFun.convertStringToLink
+import com.example.common.func.work_with_url.Common_URL.convertStringToLink
 import com.example.designsystem.component.WeatherBackground
 import com.example.designsystem.component.WeatherTopAppBar
-import com.example.domain.model.country.CountryItemDomainModel
-import com.example.domain.model.weather.CurrentDomainModel
+import com.example.model.model.country.CountryItemExternalModel
+import com.example.model.model.weather.CurrentExternalModel
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.GoogleMap
@@ -151,7 +151,7 @@ fun SearchScreen(
                 searchVM = searchVM,
                 countriesList = uiState.value.countriesList,
                 countryForSearch = uiState.value.countryForSearch,
-                currentDomainModel = uiState.value.currentDomainModel,
+                currentExternalModel = uiState.value.currentExternalModel,
                 inFavourite = uiState.value.countryInFavourite,
                 onClickMyLocation = {
                     searchVM.reducer(
@@ -185,9 +185,9 @@ private fun SearchScreenMain(
     paddingValues: PaddingValues,
     location: LatLng,
     searchVM: SearchScreenViewModel,
-    countriesList: List<CountryItemDomainModel>,
-    countryForSearch: CountryItemDomainModel,
-    currentDomainModel: CurrentDomainModel,
+    countriesList: List<CountryItemExternalModel>,
+    countryForSearch: CountryItemExternalModel,
+    currentExternalModel: CurrentExternalModel,
     inFavourite: Boolean,
     onClickMyLocation: (LatLng) -> Unit,
     onMapClick: (LatLng) -> Unit,
@@ -238,7 +238,7 @@ private fun SearchScreenMain(
                 location = location,
                 bottomSheetState = sheetState,
                 countryForSearch = countryForSearch,
-                currentDomainModel = currentDomainModel,
+                currentExternalModel = currentExternalModel,
                 inFavourite = inFavourite,
                 addToFavouriteClick = { onClickAddCountryToFavourite() },
                 deleteFromFavouriteClick = { onClickDeleteCountryFromFavourite() }
@@ -252,8 +252,8 @@ private fun SearchScreen_Find(
     searchingValue: MutableState<String>,
     expanded: MutableState<Boolean>,
     onSearch: () -> Unit = {},
-    onClickDropDownItem: (CountryItemDomainModel) -> Unit = {},
-    countriesList: List<CountryItemDomainModel> = emptyList()
+    onClickDropDownItem: (CountryItemExternalModel) -> Unit = {},
+    countriesList: List<CountryItemExternalModel> = emptyList()
 ) {
     var mTextFieldSize by remember { mutableStateOf(Size.Zero) }
     val icon = if (expanded.value)
@@ -400,8 +400,8 @@ private fun SearchScreen_BottomSheet(
     showSheet: MutableState<Boolean>,
     location: LatLng,
     bottomSheetState: SheetState,
-    countryForSearch: CountryItemDomainModel,
-    currentDomainModel: CurrentDomainModel,
+    countryForSearch: CountryItemExternalModel,
+    currentExternalModel: CurrentExternalModel,
     inFavourite: Boolean,
     addToFavouriteClick: () -> Unit,
     deleteFromFavouriteClick: () -> Unit
@@ -416,9 +416,9 @@ private fun SearchScreen_BottomSheet(
     ) {
         SearchScreen_BottomSheet_Weather(
             countryForSearch = countryForSearch,
-            currentDomainModel = currentDomainModel,
+            currentExternalModel = currentExternalModel,
             location = location,
-            wind = currentDomainModel.wind_mph.toString(),
+            wind = currentExternalModel.wind_mph.toString(),
             inFavourite = inFavourite,
             addToFavouriteClick = { addToFavouriteClick() },
             deleteFromFavouriteClick = { deleteFromFavouriteClick() }
@@ -431,8 +431,8 @@ private fun SearchScreen_BottomSheet(
 private fun SearchScreen_BottomSheet_Weather(
     location: LatLng,
     wind: String,
-    countryForSearch: CountryItemDomainModel,
-    currentDomainModel: CurrentDomainModel,
+    countryForSearch: CountryItemExternalModel,
+    currentExternalModel: CurrentExternalModel,
     inFavourite: Boolean,
     addToFavouriteClick: () -> Unit,
     deleteFromFavouriteClick: () -> Unit
@@ -447,7 +447,7 @@ private fun SearchScreen_BottomSheet_Weather(
     ) {
         SearchScreen_BottomSheet_Weather_FirstLine(
             countryForSearch = countryForSearch,
-            currentDomainModel = currentDomainModel
+            currentExternalModel = currentExternalModel
         )
         Divider()
         SearchScreen_BottomSheet_Weather_SecondLine(location = location, wind = wind)
@@ -463,8 +463,8 @@ private fun SearchScreen_BottomSheet_Weather(
 
 @Composable
 private fun SearchScreen_BottomSheet_Weather_FirstLine(
-    countryForSearch: CountryItemDomainModel,
-    currentDomainModel: CurrentDomainModel
+    countryForSearch: CountryItemExternalModel,
+    currentExternalModel: CurrentExternalModel
 ) {
     Row(
         modifier = Modifier
@@ -474,13 +474,13 @@ private fun SearchScreen_BottomSheet_Weather_FirstLine(
         verticalAlignment = Alignment.CenterVertically
     ) {
         SearchScreen_BottomSheet_Weather_FirstLine_Left(countryForSearch = countryForSearch)
-        SearchScreen_BottomSheet_Weather_FirstLine_Right(currentDomainModel = currentDomainModel)
+        SearchScreen_BottomSheet_Weather_FirstLine_Right(currentExternalModel = currentExternalModel)
     }
 }
 
 @Composable
 private fun SearchScreen_BottomSheet_Weather_FirstLine_Left(
-    countryForSearch: CountryItemDomainModel
+    countryForSearch: CountryItemExternalModel
 ) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
@@ -499,9 +499,9 @@ private fun SearchScreen_BottomSheet_Weather_FirstLine_Left(
 
 @Composable
 private fun SearchScreen_BottomSheet_Weather_FirstLine_Right(
-    currentDomainModel: CurrentDomainModel
+    currentExternalModel: CurrentExternalModel
 ) {
-    val iconURL = convertStringToLink(currentDomainModel.condition?.icon.toString())
+    val iconURL = convertStringToLink(currentExternalModel.condition?.icon.toString())
 
     Row(
         verticalAlignment = Alignment.CenterVertically,
@@ -513,7 +513,7 @@ private fun SearchScreen_BottomSheet_Weather_FirstLine_Right(
             modifier = Modifier.size(70.dp)
         )
         Text(
-            text = "${currentDomainModel.temp_c} \u2103",
+            text = "${currentExternalModel.temp_c} \u2103",
             style = MaterialTheme.typography.headlineMedium.copy(fontWeight = FontWeight.Bold)
         )
     }

@@ -1,5 +1,7 @@
 package com.example.home
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -16,6 +18,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FabPosition
@@ -38,13 +41,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.designsystem.component.WeatherBackground
 import com.example.designsystem.component.WeatherTopAppBar
-import com.example.domain.model.country.CountryItemDomainModel
-import com.example.domain.model.news.NewsDomainModel
-import com.example.domain.model.weather.AstroDomainModel
-import com.example.domain.model.weather.CurrentDomainModel
-import com.example.domain.model.weather.ForecastDomainModel
-import com.example.domain.model.weather.LocationDomainModel
-import com.example.domain.model.weather.WeatherDomainModel
+import com.example.designsystem.permissions.ExternalStorage_Permission
+import com.example.designsystem.permissions.Location_Permissions
 import com.example.home.components.CalendarElevatedCard
 import com.example.home.components.ForecastElevatedCardDays
 import com.example.home.components.ForecastElevatedCardHour
@@ -52,12 +50,21 @@ import com.example.home.components.NewsElevatedCard
 import com.example.home.components.SunConditionElevatedCard
 import com.example.home.components.WeatherElevatedCard
 import com.example.home.components.WindElevatedCard
+import com.example.model.model.country.CountryItemExternalModel
+import com.example.model.model.news.NewsExternalModel
+import com.example.model.model.weather.AstroExternalModel
+import com.example.model.model.weather.CurrentExternalModel
+import com.example.model.model.weather.ForecastExternalModel
+import com.example.model.model.weather.LocationExternalModel
+import com.example.model.model.weather.WeatherExternalModel
 import com.google.accompanist.pager.HorizontalPagerIndicator
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalMaterial3Api::class)
+@RequiresApi(Build.VERSION_CODES.S)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalPermissionsApi::class)
 @Composable
 fun HomeScreen(
     homeVM: HomeScreenViewModel = hiltViewModel(),
@@ -68,9 +75,12 @@ fun HomeScreen(
 ) {
     val uiState = homeVM.uiState.collectAsStateWithLifecycle()
 
-//    if (uiState.value.loading) {
-//        CircularProgressIndicator(modifier = Modifier.fillMaxSize())
-//    }
+    if (uiState.value.isLoading) {
+        CircularProgressIndicator(
+            color = MaterialTheme.colorScheme.onPrimary,
+            modifier = Modifier.fillMaxSize()
+        )
+    }
 
     WeatherBackground(
         modifier = Modifier
@@ -104,7 +114,7 @@ fun HomeScreen(
                         }
                     },
                     actions = {
-                        IconButton(onClick = { homeVM.reducer(intent = HomeScreenIntent.NavigateToSearchScreen) }) {
+                        IconButton(onClick = { homeVM.reducer(action = HomeScreenUiAction.NavigateToSearchScreen) }) {
                             Icon(imageVector = Icons.Default.Search, contentDescription = null)
                         }
                     }
@@ -133,10 +143,11 @@ fun HomeScreen(
     }
 }
 
+@RequiresApi(Build.VERSION_CODES.S)
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun HomeScreenMain(
-    favouritesCountry: List<CountryItemDomainModel>,
+    favouritesCountry: List<CountryItemExternalModel>,
     paddingValues: PaddingValues
 ) {
     val verticalScrollState = rememberScrollState()
@@ -145,8 +156,8 @@ private fun HomeScreenMain(
     }
 
     HorizontalPager(state = pagerState) { page ->
-        val weatherDomainModel = favouritesCountry[page].weather
-        val newsDomainModel = favouritesCountry[page].news
+        val weatherExternalModel = favouritesCountry[page].weather
+        val newsExternalModel = favouritesCountry[page].news
 
         Column(
             modifier = Modifier
@@ -158,63 +169,66 @@ private fun HomeScreenMain(
                 )
         ) {
             HomeScreen_WeatherCard(
-                weatherDomainModel = weatherDomainModel
+                weatherExternalModel = weatherExternalModel
             )
             Spacer(modifier = Modifier.height(10.dp))
             HorizontalPagerIndicator(
                 pagerState = pagerState, pageCount = favouritesCountry.size
             )
             Spacer(modifier = Modifier.height(10.dp))
-            HomeScreen_NewsCard(news = newsDomainModel)
+            HomeScreen_NewsCard(news = newsExternalModel)
             Spacer(modifier = Modifier.height(10.dp))
             HomeScreen_ForecastCard_Hour(
-                currentWeather = weatherDomainModel.current
-                    ?: CurrentDomainModel(),
-                forecastWeather = weatherDomainModel.forecast
-                    ?: ForecastDomainModel()
+                currentWeather = weatherExternalModel.current
+                    ?: CurrentExternalModel(),
+                forecastWeather = weatherExternalModel.forecast
+                    ?: ForecastExternalModel()
             )
             Spacer(modifier = Modifier.height(10.dp))
             HomeScreen_ForecastCard_Days(
-                currentWeather = weatherDomainModel.current
-                    ?: CurrentDomainModel(),
-                forecastWeather = weatherDomainModel.forecast
-                    ?: ForecastDomainModel()
+                currentWeather = weatherExternalModel.current
+                    ?: CurrentExternalModel(),
+                forecastWeather = weatherExternalModel.forecast
+                    ?: ForecastExternalModel()
             )
             Spacer(modifier = Modifier.height(10.dp))
             HomeScreen_SunCondition(
-                currentDomainModel = weatherDomainModel.current
-                    ?: CurrentDomainModel(),
-                astroDomainModel = if (weatherDomainModel.forecast?.forecastday.isNullOrEmpty()) AstroDomainModel() else weatherDomainModel.forecast?.forecastday?.first()?.astro
-                    ?: AstroDomainModel()
+                currentExternalModel = weatherExternalModel.current
+                    ?: CurrentExternalModel(),
+                astroExternalModel = if (weatherExternalModel.forecast?.forecastday.isNullOrEmpty()) AstroExternalModel() else weatherExternalModel.forecast?.forecastday?.first()?.astro
+                    ?: AstroExternalModel()
             )
             Spacer(modifier = Modifier.height(10.dp))
             HomeScreen_WindCard()
             Spacer(modifier = Modifier.height(10.dp))
             HomeScreen_CalendarCard()
             Spacer(modifier = Modifier.height(10.dp))
+
+            Location_Permissions()
+            ExternalStorage_Permission()
         }
     }
 }
 
 @Composable
 private fun HomeScreen_WeatherCard(
-    weatherDomainModel: WeatherDomainModel
+    weatherExternalModel: WeatherExternalModel
 ) {
     WeatherElevatedCard(
-        currentWeather = weatherDomainModel.current ?: CurrentDomainModel(),
-        locationDomainModel = weatherDomainModel.location ?: LocationDomainModel()
+        currentWeather = weatherExternalModel.current ?: CurrentExternalModel(),
+        locationExternalModel = weatherExternalModel.location ?: LocationExternalModel()
     )
 }
 
 @Composable
-private fun HomeScreen_NewsCard(news: NewsDomainModel) {
+private fun HomeScreen_NewsCard(news: NewsExternalModel) {
     NewsElevatedCard(news = news)
 }
 
 @Composable
 private fun HomeScreen_ForecastCard_Hour(
-    currentWeather: CurrentDomainModel,
-    forecastWeather: ForecastDomainModel
+    currentWeather: CurrentExternalModel,
+    forecastWeather: ForecastExternalModel
 ) {
     ForecastElevatedCardHour(
         currentWeather = currentWeather,
@@ -224,8 +238,8 @@ private fun HomeScreen_ForecastCard_Hour(
 
 @Composable
 private fun HomeScreen_ForecastCard_Days(
-    currentWeather: CurrentDomainModel,
-    forecastWeather: ForecastDomainModel
+    currentWeather: CurrentExternalModel,
+    forecastWeather: ForecastExternalModel
 ) {
     ForecastElevatedCardDays(
         currentWeather = currentWeather,
@@ -235,12 +249,12 @@ private fun HomeScreen_ForecastCard_Days(
 
 @Composable
 private fun HomeScreen_SunCondition(
-    currentDomainModel: CurrentDomainModel,
-    astroDomainModel: AstroDomainModel
+    currentExternalModel: CurrentExternalModel,
+    astroExternalModel: AstroExternalModel
 ) {
     SunConditionElevatedCard(
-        currentDomainModel = currentDomainModel,
-        astroDomainModel = astroDomainModel
+        currentExternalModel = currentExternalModel,
+        astroExternalModel = astroExternalModel
     )
 }
 

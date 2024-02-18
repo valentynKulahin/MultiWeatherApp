@@ -1,6 +1,8 @@
 package com.example.network.repos.weather
 
-import com.example.common.ApiResult
+import com.example.network.utils.NetworkError
+import com.example.network.utils.NetworkResponse
+import com.example.network.models.weather.WeatherNetworkModel
 
 interface WeatherNetworkRepo {
 
@@ -9,13 +11,13 @@ interface WeatherNetworkRepo {
         days: Int,
         aqi: String,
         alerts: String
-    ): ApiResult
+    ): NetworkResponse<WeatherNetworkModel, NetworkError>
 
     suspend fun getForecastWeatherByLatLon(
         latLon: String,
         days: Int,
         aqi: String,
         alerts: String
-    ): ApiResult
+    ): NetworkResponse<WeatherNetworkModel, NetworkError>
 
 }

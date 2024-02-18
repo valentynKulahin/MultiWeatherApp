@@ -4,12 +4,12 @@ import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 
 data class CountryItemNetworkModel(
+    @SerializedName("id")
+    @Expose
+    val id: Long? = null,
     @SerializedName("country")
     @Expose
     val country: String? = null,
-    @SerializedName("id")
-    @Expose
-    val id: Int? = null,
     @SerializedName("lat")
     @Expose
     val lat: Double? = null,

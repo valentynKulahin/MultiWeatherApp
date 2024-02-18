@@ -23,19 +23,19 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
-import com.example.common.CommonFun.convertStringToLink
-import com.example.common.CommonFun.getCurrentFormattedDate
-import com.example.common.CommonFun.getDayOfWeekFromDate
-import com.example.domain.model.weather.CurrentDomainModel
-import com.example.domain.model.weather.ForecastDomainModel
-import com.example.domain.model.weather.ForecastdayDomainModel
+import com.example.common.func.work_with_date.Common_Date.getCurrentFormattedDate
+import com.example.common.func.work_with_date.Common_Date.getDayOfWeekFromDate
+import com.example.common.func.work_with_url.Common_URL.convertStringToLink
 import com.example.home.R
+import com.example.model.model.weather.CurrentExternalModel
+import com.example.model.model.weather.ForecastExternalModel
+import com.example.model.model.weather.ForecastdayExternalModel
 import kotlin.math.roundToInt
 
 @Composable
 fun ForecastElevatedCardDays(
-    currentWeather: CurrentDomainModel,
-    forecastWeather: ForecastDomainModel
+    currentWeather: CurrentExternalModel,
+    forecastWeather: ForecastExternalModel
 ) {
     Forecast_Screen_Days(
         forecastWeather = forecastWeather,
@@ -45,8 +45,8 @@ fun ForecastElevatedCardDays(
 
 @Composable
 private fun Forecast_Screen_Days(
-    currentWeather: CurrentDomainModel,
-    forecastWeather: ForecastDomainModel
+    currentWeather: CurrentExternalModel,
+    forecastWeather: ForecastExternalModel
 ) {
     Column {
         Forecast_Screen_Header()
@@ -76,7 +76,7 @@ private fun Forecast_Screen_Header() {
 
 @Composable
 private fun Forecast_Card_Top_Days(
-    currentWeather: CurrentDomainModel
+    currentWeather: CurrentExternalModel
 ) {
     Row(
         modifier = Modifier
@@ -106,9 +106,9 @@ private fun Forecast_Card_Top_Days(
 
 @Composable
 private fun Forecast_Card_Lists_Days(
-    forecastWeather: ForecastDomainModel
+    forecastWeather: ForecastExternalModel
 ) {
-    val forecastDays = forecastWeather.forecastday ?: listOf<ForecastdayDomainModel>()
+    val forecastDays = forecastWeather.forecastday ?: listOf<ForecastdayExternalModel>()
 
     Column(
         modifier = Modifier
@@ -123,7 +123,7 @@ private fun Forecast_Card_Lists_Days(
 
 @Composable
 private fun Forecast_Card_Item_Days(
-    forecastItem: ForecastdayDomainModel
+    forecastItem: ForecastdayExternalModel
 ) {
     Row(
         modifier = Modifier
@@ -140,7 +140,7 @@ private fun Forecast_Card_Item_Days(
 
 @Composable
 private fun Forecast_Card_item_Left(
-    forecastItem: ForecastdayDomainModel
+    forecastItem: ForecastdayExternalModel
 ) {
     Row(
         modifier = Modifier.padding(horizontal = 8.dp),
@@ -158,7 +158,7 @@ private fun Forecast_Card_item_Left(
 
 @Composable
 private fun Forecast_Card_item_Right(
-    forecastItem: ForecastdayDomainModel
+    forecastItem: ForecastdayExternalModel
 ) {
     Row(
         modifier = Modifier.padding(horizontal = 8.dp),
