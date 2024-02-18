@@ -32,3 +32,20 @@ fun CountryItemDatabaseModel.mapToData(): CountryItemExternalModel {
 fun CountryItemExternalModel.mapToDatabase(): CountryItemDatabaseModel {
     return CountryItemDatabaseModel(id = 0, country, lat, lon, name, region, url)
 }
+
+
+
+//NETWORK MAP TO DATA
+@JvmName(name = "listCountryNetworkToData")
+fun List<CountryItemNetworkModel>.mapToData(): List<CountryItemExternalModel> {
+    return mutableListOf<CountryItemExternalModel>().apply {
+        this@mapToData.forEach {
+            this.add(it.mapToData())
+        }
+    }
+}
+
+@JvmName(name = "CountryNetworkToData")
+fun CountryItemNetworkModel.mapToData(): CountryItemExternalModel {
+    return CountryItemExternalModel(id, country, lat, lon, name, region, url)
+}
