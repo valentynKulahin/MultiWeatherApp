@@ -1,6 +1,7 @@
 package com.example.data.repo.location
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Looper
@@ -24,7 +25,7 @@ class ILocationServicesRepository @Inject constructor(
     @ApplicationContext val context: Context
 ) : ILocationServices {
 
-    //    @SuppressLint("MissingPermission")
+    @SuppressLint("MissingPermission")
     override val myLocation: Flow<LatLng?> = callbackFlow {
         val locationClient: FusedLocationProviderClient by lazy {
             LocationServices.getFusedLocationProviderClient(context)
@@ -32,7 +33,7 @@ class ILocationServicesRepository @Inject constructor(
 
         if (!context.hasLocationPermission()) {
             channel.trySend(null)
-            return@callbackFlow
+            channel.close()
         }
 
         val request = LocationRequest.Builder(10000L)
