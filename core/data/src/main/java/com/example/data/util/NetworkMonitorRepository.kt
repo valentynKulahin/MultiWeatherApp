@@ -20,6 +20,21 @@ class NetworkMonitorRepository @Inject constructor(
 ) : NetworkMonitor {
 
     override val networkStatus: Flow<NetworkStatus> = callbackFlow {
+
+        val callback = object : NetworkCallback() {
+            override fun onAvailable(network: Network) {
+                channel.trySend(NetworkStatus.Connected)
+            }
+
+            override fun onUnavailable() {
+                channel.trySend(NetworkStatus.Disconnected)
+            }
+
+            override fun onLost(network: Network) {
+                channel.trySend(NetworkStatus.Disconnected)
+            }
+        }
+
         val networkManager = context.getSystemService<ConnectivityManager>()
         if (networkManager == null) {
             channel.trySend(NetworkStatus.Disconnected)
@@ -33,20 +48,6 @@ class NetworkMonitorRepository @Inject constructor(
                 channel.trySend(NetworkStatus.Disconnected)
             }
 
-            val callback = object : NetworkCallback() {
-                override fun onAvailable(network: Network) {
-                    channel.trySend(NetworkStatus.Connected)
-                }
-
-                override fun onUnavailable() {
-                    channel.trySend(NetworkStatus.Disconnected)
-                }
-
-                override fun onLost(network: Network) {
-                    channel.trySend(NetworkStatus.Disconnected)
-                }
-            }
-
             val request = Builder()
                 .addCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
                 .addTransportType(NetworkCapabilities.TRANSPORT_WIFI)
@@ -54,12 +55,12 @@ class NetworkMonitorRepository @Inject constructor(
                 .build()
 
             networkManager.registerNetworkCallback(request, callback)
-
-            awaitClose {
-                networkManager.unregisterNetworkCallback(callback)
-            }
         }
-    }.conflate()
+
+        awaitClose {
+            networkManager?.unregisterNetworkCallback(callback)
+        }
+    }
 
 }
 

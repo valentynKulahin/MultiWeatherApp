@@ -26,7 +26,9 @@ import kotlinx.coroutines.launch
 import java.util.Locale
 import javax.inject.Inject
 import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onCompletion
+import kotlinx.coroutines.flow.onEach
 
 @HiltViewModel
 class HomeScreenViewModel @Inject constructor(
@@ -69,15 +71,14 @@ class HomeScreenViewModel @Inject constructor(
                     networkStatus = networkStatus
                 )
             }
-        }.stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(5000L),
-            initialValue = { false }
-        ).onStart {
-            _uiState.update { it.copy(isLoading = true) }
-        }.onCompletion {
-            viewModelScope.launch(context = Dispatchers.IO) { reducer(action = HomeScreenUiAction.UpdateWeatherAndNews) }
-        }.flowOn(context = Dispatchers.IO)
+            HomeScreenUiAction.UpdateWeatherAndNews
+        }
+            .onStart {
+                _uiState.update { it.copy(isLoading = true) }
+            }
+            .onEach(::reducer)
+            .flowOn(context = Dispatchers.IO)
+            .launchIn(viewModelScope)
     }
 
     fun reducer(action: HomeScreenUiAction) {
