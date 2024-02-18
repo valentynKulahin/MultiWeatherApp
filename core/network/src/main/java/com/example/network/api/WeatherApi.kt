@@ -12,7 +12,7 @@ interface WeatherApi {
 
     @Headers("Content-Type: application/json")
     @GET(value = "forecast.json")
-    fun getForecastWeather(
+    suspend fun getForecastWeather(
         @Query("q") country: String,
         @Query("days") days: Int,
         @Query("aqi") aqi: String,
@@ -21,7 +21,7 @@ interface WeatherApi {
 
     @Headers("Content-Type: application/json")
     @GET(value = "forecast.json")
-    fun getForecastWeatherByLatLon(
+    suspend fun getForecastWeatherByLatLon(
         @Query("q") latLon: String,
         @Query("days") days: Int,
         @Query("aqi") aqi: String,
@@ -30,7 +30,7 @@ interface WeatherApi {
 
     @Headers("Content-Type: application/json")
     @GET(value = "search.json")
-    fun getSearchingCountriesList(
+    suspend fun getSearchingCountriesList(
         @Query("q") country: String
     ): NetworkResponse<List<CountryItemNetworkModel>, NetworkError>
 

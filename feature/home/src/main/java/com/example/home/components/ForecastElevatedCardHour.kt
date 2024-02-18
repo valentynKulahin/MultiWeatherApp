@@ -118,7 +118,7 @@ private fun Forecast_Card_Lists_Hour(
     ) {
         forecastDays.take(2).forEach { forecastItem ->
             if ((forecastItem.hour?.size ?: 0) > 0) {
-                items(items = forecastItem.hour ?: listOf<HourExternalModel>()) {
+                items(items = forecastItem.hour ?: listOf()) {
                     val forecastDateTime = LocalDateTime.parse(it.time, formatter)
                     if (forecastDateTime >= currentDateTime) {
                         Forecast_Card_Item_Hour(

@@ -16,19 +16,15 @@ import com.example.navi.util.WeatherDestinations
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.onStart
-import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.util.Locale
 import javax.inject.Inject
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onCompletion
-import kotlinx.coroutines.flow.onEach
 
 @HiltViewModel
 class HomeScreenViewModel @Inject constructor(
@@ -66,19 +62,15 @@ class HomeScreenViewModel @Inject constructor(
             _uiState.update {
                 it.copy(
                     favouritesCountry = mutableListWithWeather.toList().sortedBy { it.id },
-                    isLoading = false,
                     myLocation = location,
                     networkStatus = networkStatus
                 )
             }
-            HomeScreenUiAction.UpdateWeatherAndNews
-        }
-            .onStart {
-                _uiState.update { it.copy(isLoading = true) }
-            }
-            .onEach(::reducer)
-            .flowOn(context = Dispatchers.IO)
-            .launchIn(viewModelScope)
+
+            reducer(HomeScreenUiAction.UpdateWeatherAndNews)
+        }.onStart {
+            _uiState.update { it.copy(isLoading = true) }
+        }.flowOn(context = Dispatchers.IO).launchIn(scope = viewModelScope)
     }
 
     fun reducer(action: HomeScreenUiAction) {
@@ -96,8 +88,8 @@ class HomeScreenViewModel @Inject constructor(
             is HomeScreenUiAction.UpdateWeatherAndNews -> {
                 viewModelScope.launch(context = Dispatchers.IO) {
                     val newList = arrayListOf<CountryItemExternalModel>()
-                    _uiState.value.favouritesCountry.map { item ->
-                        val weatherState = if (item.id == 0L) getWeatherByLatLonUseCase.invoke(
+                    _uiState.value.favouritesCountry.mapIndexed { index, item ->
+                        val weatherState = if (index == 0) getWeatherByLatLonUseCase.invoke(
                             latLon = "${_uiState.value.myLocation?.latitude}, ${_uiState.value.myLocation?.longitude}"
                         ) else getWeatherUseCase.invoke(country = item.name.toString())
 
@@ -113,7 +105,7 @@ class HomeScreenViewModel @Inject constructor(
                                         error = weatherState.error
                                     )
                                 }
-                                run { return@map item }
+                                run { return@mapIndexed item }
                             }
                         }
 
@@ -131,12 +123,12 @@ class HomeScreenViewModel @Inject constructor(
                                         error = newsState.error
                                     )
                                 }
-                                run { return@map item }
+                                run { return@mapIndexed item }
                             }
                         }
                     }
 
-                    _uiState.update { it.copy(favouritesCountry = newList) }
+                    _uiState.update { it.copy(favouritesCountry = newList, isLoading = false) }
                 }
             }
         }

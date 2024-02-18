@@ -58,13 +58,12 @@ import com.example.model.model.weather.ForecastExternalModel
 import com.example.model.model.weather.LocationExternalModel
 import com.example.model.model.weather.WeatherExternalModel
 import com.google.accompanist.pager.HorizontalPagerIndicator
-import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 @RequiresApi(Build.VERSION_CODES.S)
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalPermissionsApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
     homeVM: HomeScreenViewModel = hiltViewModel(),
@@ -81,6 +80,9 @@ fun HomeScreen(
             modifier = Modifier.fillMaxSize()
         )
     }
+
+    Location_Permissions()
+    ExternalStorage_Permission()
 
     WeatherBackground(
         modifier = Modifier

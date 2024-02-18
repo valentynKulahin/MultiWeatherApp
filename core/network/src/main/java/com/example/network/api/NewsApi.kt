@@ -11,7 +11,7 @@ interface NewsApi {
 
     @Headers("Content-Type: application/json")
     @GET(value = "top-headlines")
-    fun getTopHeadlineNews(
+    suspend fun getTopHeadlineNews(
         @Query("country") country: String
     ): NetworkResponse<NewsNetworkModel, NetworkError>
 

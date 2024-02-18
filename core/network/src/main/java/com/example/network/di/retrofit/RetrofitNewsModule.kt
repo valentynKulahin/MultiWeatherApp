@@ -1,6 +1,7 @@
 package com.example.network.di.retrofit
 
 import com.example.datastore.repo.DataStoreRepo
+import com.example.network.BuildConfig
 import com.example.network.api.NewsApi
 import com.example.network.di.NewsRetrofit
 import com.example.network.di.adapter.NetworkResponseAdapterFactory
@@ -40,9 +41,9 @@ object RetrofitNewsModule {
     fun provideNewsRetrofit(dataStoreRepo: DataStoreRepo): Retrofit {
 
         val interceptor = HttpLoggingInterceptor().apply {
-//            if (BuildConfig.DEBUG) {
-            setLevel(HttpLoggingInterceptor.Level.BODY)
-//            }
+            if (BuildConfig.DEBUG) {
+                setLevel(HttpLoggingInterceptor.Level.BODY)
+            }
         }
 
         var apiKey = ""

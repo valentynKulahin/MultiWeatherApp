@@ -1,6 +1,7 @@
 package com.example.network.di.retrofit
 
 import com.example.datastore.repo.DataStoreRepo
+import com.example.network.BuildConfig
 import com.example.network.api.WeatherApi
 import com.example.network.di.WeatherRetrofit
 import com.example.network.di.adapter.NetworkResponseAdapterFactory
@@ -39,14 +40,14 @@ object RetrofitWeatherModule {
     @Provides
     fun provideWeatherRetrofit(dataStoreRepo: DataStoreRepo): Retrofit {
         val interceptor = HttpLoggingInterceptor().apply {
-//            if (BuildConfig.DEBUG) {
-            setLevel(HttpLoggingInterceptor.Level.BODY)
-//            }
+            if (BuildConfig.DEBUG) {
+                setLevel(HttpLoggingInterceptor.Level.BODY)
+            }
         }
 
         var apiKey = ""
         CoroutineScope(context = Dispatchers.IO).launch {
-            apiKey = dataStoreRepo.getNewsToken().first().toString()
+            apiKey = dataStoreRepo.getWeatherToken().first().toString()
         }
 
         val client = OkHttpClient
@@ -61,6 +62,7 @@ object RetrofitWeatherModule {
             .baseUrl(BASE_URL)
             .client(client)
             .build()
+
     }
 
     @Singleton

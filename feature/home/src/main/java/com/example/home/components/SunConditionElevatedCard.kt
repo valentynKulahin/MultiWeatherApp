@@ -14,7 +14,6 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
@@ -28,19 +27,16 @@ import androidx.compose.ui.unit.dp
 import com.example.designsystem.R
 import com.example.model.model.weather.AstroExternalModel
 import com.example.model.model.weather.CurrentExternalModel
-import kotlinx.coroutines.CoroutineScope
 
 @Composable
 fun SunConditionElevatedCard(
     currentExternalModel: CurrentExternalModel,
-    astroExternalModel: AstroExternalModel,
-    scope: CoroutineScope = rememberCoroutineScope()
+    astroExternalModel: AstroExternalModel
 ) {
 
     SunCondition_Screen(
         currentExternalModel = currentExternalModel,
-        astroExternalModel = astroExternalModel,
-        scope = scope
+        astroExternalModel = astroExternalModel
     )
 
 }
@@ -48,15 +44,13 @@ fun SunConditionElevatedCard(
 @Composable
 private fun SunCondition_Screen(
     currentExternalModel: CurrentExternalModel,
-    astroExternalModel: AstroExternalModel,
-    scope: CoroutineScope
+    astroExternalModel: AstroExternalModel
 ) {
     Column {
         SunCondition_Header()
         SunCondition_Screen_Card(
             currentExternalModel = currentExternalModel,
-            astroExternalModel = astroExternalModel,
-            scope = scope
+            astroExternalModel = astroExternalModel
         )
     }
 }
@@ -64,8 +58,7 @@ private fun SunCondition_Screen(
 @Composable
 private fun SunCondition_Screen_Card(
     currentExternalModel: CurrentExternalModel,
-    astroExternalModel: AstroExternalModel,
-    scope: CoroutineScope
+    astroExternalModel: AstroExternalModel
 ) {
 
     ElevatedCard(

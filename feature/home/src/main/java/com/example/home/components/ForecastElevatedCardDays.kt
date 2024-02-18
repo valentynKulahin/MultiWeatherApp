@@ -108,7 +108,7 @@ private fun Forecast_Card_Top_Days(
 private fun Forecast_Card_Lists_Days(
     forecastWeather: ForecastExternalModel
 ) {
-    val forecastDays = forecastWeather.forecastday ?: listOf<ForecastdayExternalModel>()
+    val forecastDays = forecastWeather.forecastday ?: listOf()
 
     Column(
         modifier = Modifier
