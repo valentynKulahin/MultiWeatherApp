@@ -1,6 +1,6 @@
 package com.example.domain.usecase
 
-import com.example.data.util.NetworkMonitor
+import com.example.data.repo.network.NetworkMonitor
 import com.example.common.network.status.NetworkStatus
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject

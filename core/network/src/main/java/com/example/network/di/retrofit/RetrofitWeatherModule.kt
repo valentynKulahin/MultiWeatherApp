@@ -13,8 +13,10 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -35,20 +37,22 @@ object RetrofitWeatherModule {
             .create()
     }
 
+    @OptIn(ExperimentalCoroutinesApi::class)
     @WeatherRetrofit
     @Singleton
     @Provides
-    fun provideWeatherRetrofit(dataStoreRepo: DataStoreRepo): Retrofit {
+    fun provideWeatherRetrofit(
+        dataStoreRepo: DataStoreRepo
+    ): Retrofit = runBlocking(context = Dispatchers.IO) {
         val interceptor = HttpLoggingInterceptor().apply {
             if (BuildConfig.DEBUG) {
                 setLevel(HttpLoggingInterceptor.Level.BODY)
             }
         }
 
-        var apiKey = ""
-        CoroutineScope(context = Dispatchers.IO).launch {
-            apiKey = dataStoreRepo.getWeatherToken().first().toString()
-        }
+        val apiKey = CoroutineScope(context = Dispatchers.IO).async {
+            dataStoreRepo.getWeatherToken().first().toString()
+        }.await()
 
         val client = OkHttpClient
             .Builder()
@@ -56,13 +60,12 @@ object RetrofitWeatherModule {
             .addInterceptor(QueryParameterInterceptor("key", apiKey))
             .build()
 
-        return Retrofit.Builder()
+        Retrofit.Builder()
             .addConverterFactory(GsonConverterFactory.create(provideWeatherGson()))
             .addCallAdapterFactory(NetworkResponseAdapterFactory())
             .baseUrl(BASE_URL)
             .client(client)
             .build()
-
     }
 
     @Singleton

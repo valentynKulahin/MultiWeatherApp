@@ -8,8 +8,6 @@ import com.google.android.gms.maps.model.LatLng
 data class HomeScreenUiState(
     val favouritesCountry: List<CountryItemExternalModel> = emptyList(),
     val isLoading: Boolean = false,
-    val isError: Boolean = false,
-    val error: DataResponseError = DataResponseError(0, ""),
     val myLocation: LatLng? = null,
     val networkStatus: NetworkStatus = NetworkStatus.Unknown
 )
@@ -20,6 +18,17 @@ sealed interface HomeScreenUiAction {
 
     data object UpdateWeatherAndNews : HomeScreenUiAction
 
+    data object UpdateNews : HomeScreenUiAction
+
+    data object UpdateWeather : HomeScreenUiAction
+
     data class DeleteFromFavourite(val countryItemExternalModel: CountryItemExternalModel) : HomeScreenUiAction
 
 }
+
+data class HomeScreenErrorState(
+    val isWeatherError: Boolean = false,
+    val isWeatherErrorResponse: DataResponseError = DataResponseError(0, ""),
+    val isNewsError: Boolean = false,
+    val isNewsErrorResponse: DataResponseError = DataResponseError(0, ""),
+)

@@ -45,6 +45,7 @@ class ILocationServicesRepository @Inject constructor(
             override fun onLocationResult(locationResult: LocationResult) {
                 locationResult.locations.lastOrNull()?.let {
                     channel.trySend(LatLng(it.latitude, it.longitude))
+                    channel.close()
                 }
             }
         }

@@ -13,8 +13,9 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -38,7 +39,9 @@ object RetrofitNewsModule {
     @NewsRetrofit
     @Singleton
     @Provides
-    fun provideNewsRetrofit(dataStoreRepo: DataStoreRepo): Retrofit {
+    fun provideNewsRetrofit(
+        dataStoreRepo: DataStoreRepo
+    ): Retrofit = runBlocking(context = Dispatchers.IO) {
 
         val interceptor = HttpLoggingInterceptor().apply {
             if (BuildConfig.DEBUG) {
@@ -46,10 +49,9 @@ object RetrofitNewsModule {
             }
         }
 
-        var apiKey = ""
-        CoroutineScope(context = Dispatchers.IO).launch {
-            apiKey = dataStoreRepo.getNewsToken().first().toString()
-        }
+        val apiKey = CoroutineScope(context = Dispatchers.IO).async {
+            dataStoreRepo.getNewsToken().first().toString()
+        }.await()
 
         val client = OkHttpClient
             .Builder()
@@ -57,7 +59,7 @@ object RetrofitNewsModule {
             .addInterceptor(QueryParameterInterceptor("apiKey", apiKey))
             .build()
 
-        return Retrofit.Builder()
+        Retrofit.Builder()
             .addConverterFactory(GsonConverterFactory.create(provideNewsGson()))
             .addCallAdapterFactory(NetworkResponseAdapterFactory())
             .baseUrl(BASE_URL)

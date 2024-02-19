@@ -1,40 +1,47 @@
 package com.example.search
 
+import com.example.common.network.response.DataResponseError
 import com.example.common.network.status.NetworkStatus
 import com.example.model.model.country.CountryItemExternalModel
 import com.example.model.model.weather.CurrentExternalModel
 import com.google.android.gms.maps.model.LatLng
 
-data class SearchScreenContract(
+data class SearchScreenUiState(
     val searchingName: String? = null,
     val countriesList: List<CountryItemExternalModel> = emptyList(),
     val searchingHistoryList: List<CountryItemExternalModel> = emptyList(),
     val countryForSearch: CountryItemExternalModel = CountryItemExternalModel(),
     val currentExternalModel: CurrentExternalModel = CurrentExternalModel(),
     val countryInFavourite: Boolean = false,
-    val networkStatus: NetworkStatus = NetworkStatus.Unknown
+    val networkStatus: NetworkStatus = NetworkStatus.Unknown,
+    val isLoading: Boolean = false
 )
 
-sealed class SearchScreenIntent {
+sealed class SearchScreenUiAction {
 
-    data object GetSearchingCountriesList : SearchScreenIntent()
+    data object GetSearchingCountriesList : SearchScreenUiAction()
 
-    data class GetWeatherInCountry(val searchingValue: String) : SearchScreenIntent()
+    data class GetWeatherInCountry(val searchingValue: String) : SearchScreenUiAction()
 
-    data class GetWeatherInCountryByLatLon(val latLon: LatLng) : SearchScreenIntent()
+    data class GetWeatherInCountryByLatLon(val latLon: LatLng) : SearchScreenUiAction()
 
-    data object GetHistoryOfSearch : SearchScreenIntent()
+    data object GetHistoryOfSearch : SearchScreenUiAction()
 
-    data class UpdateSearchingName(val seachingValue: String) : SearchScreenIntent()
+    data class UpdateSearchingName(val seachingValue: String) : SearchScreenUiAction()
 
-    data class UpdateCountryForSearch(val searchingItem: CountryItemExternalModel) : SearchScreenIntent()
+    data class UpdateCountryForSearch(val searchingItem: CountryItemExternalModel) : SearchScreenUiAction()
 
-    data object NavigateBack : SearchScreenIntent()
+    data object NavigateBack : SearchScreenUiAction()
 
-    data object AddToFavourite : SearchScreenIntent()
+    data object AddToFavourite : SearchScreenUiAction()
 
-    data object DeleteFromFavourite : SearchScreenIntent()
+    data object DeleteFromFavourite : SearchScreenUiAction()
 
-    data class UpdateCountryInFavouriteValue(val value: Boolean) : SearchScreenIntent()
+    data class UpdateCountryInFavouriteValue(val value: Boolean) : SearchScreenUiAction()
 
 }
+
+data class SearchScreenErrorState(
+    val isError: Boolean = false,
+    val isErrorResponse: DataResponseError = DataResponseError(0, "")
+)

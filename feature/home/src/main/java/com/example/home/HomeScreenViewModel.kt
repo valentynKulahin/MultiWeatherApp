@@ -41,6 +41,9 @@ class HomeScreenViewModel @Inject constructor(
     private val _uiState = MutableStateFlow(HomeScreenUiState())
     val uiState = _uiState.asStateFlow()
 
+    private val _errorState = MutableStateFlow(HomeScreenErrorState())
+    val errorState = _errorState.asStateFlow()
+
     init {
         combine(
             getLocationUseCase.invoke(),
@@ -87,25 +90,32 @@ class HomeScreenViewModel @Inject constructor(
 
             is HomeScreenUiAction.UpdateWeatherAndNews -> {
                 viewModelScope.launch(context = Dispatchers.IO) {
+                    _uiState.update { it.copy(isLoading = true) }
+                    _errorState.update { it.copy(isWeatherError = false, isNewsError = false) }
+
                     val newList = arrayListOf<CountryItemExternalModel>()
                     _uiState.value.favouritesCountry.mapIndexed { index, item ->
+                        var newWeather = item.weather.copy()
+                        var newNews = item.news.copy()
+
                         val weatherState = if (index == 0) getWeatherByLatLonUseCase.invoke(
                             latLon = "${_uiState.value.myLocation?.latitude}, ${_uiState.value.myLocation?.longitude}"
                         ) else getWeatherUseCase.invoke(country = item.name.toString())
 
                         when (weatherState) {
                             is DataResponse.Success -> {
-                                newList.add(item.copy(weather = weatherState.body))
+//                                newList.add(item.copy(weather = weatherState.body))
+                                newWeather = weatherState.body
                             }
 
                             is DataResponse.Error -> {
-                                _uiState.update {
+                                _errorState.update {
                                     it.copy(
-                                        isError = true,
-                                        error = weatherState.error
+                                        isWeatherError = true,
+                                        isWeatherErrorResponse = weatherState.error
                                     )
                                 }
-                                run { return@mapIndexed item }
+//                                run { return@mapIndexed item }
                             }
                         }
 
@@ -113,22 +123,90 @@ class HomeScreenViewModel @Inject constructor(
                             getNewsUseCase.invoke(country = getCountryCode(item.name.toString()))
                         when (newsState) {
                             is DataResponse.Success -> {
-                                newList.add(item.copy(news = newsState.body))
+//                                newList.add(item.copy(news = newsState.body))
+                                newNews = newsState.body
                             }
 
                             is DataResponse.Error -> {
-                                _uiState.update {
+                                _errorState.update {
                                     it.copy(
-                                        isError = true,
-                                        error = newsState.error
+                                        isNewsError = true,
+                                        isNewsErrorResponse = newsState.error
                                     )
                                 }
-                                run { return@mapIndexed item }
+//                                run { return@mapIndexed item }
+                            }
+                        }
+                        newList.add(item.copy(weather = newWeather, news = newNews))
+                    }
+                    _uiState.update {
+                        it.copy(
+                            favouritesCountry = newList.toList(),
+                            isLoading = false
+                        )
+                    }
+                }
+            }
+
+            is HomeScreenUiAction.UpdateWeather -> {
+                viewModelScope.launch(context = Dispatchers.IO) {
+                    val weatherList = arrayListOf<CountryItemExternalModel>()
+
+                    _uiState.value.favouritesCountry.mapIndexed { index, item ->
+                        val weatherState = if (index == 0) getWeatherByLatLonUseCase.invoke(
+                            latLon = "${_uiState.value.myLocation?.latitude}, ${_uiState.value.myLocation?.longitude}"
+                        ) else getWeatherUseCase.invoke(
+                            country = _uiState.value.favouritesCountry[index].name.toString()
+                        )
+
+                        when (weatherState) {
+                            is DataResponse.Success -> {
+                                weatherList.add(item.copy(weather = weatherState.body))
+                            }
+
+                            is DataResponse.Error -> {
+                                _errorState.update {
+                                    it.copy(
+                                        isWeatherError = true,
+                                        isWeatherErrorResponse = weatherState.error
+                                    )
+                                }
+//                                run { return@mapIndexed item }
                             }
                         }
                     }
 
-                    _uiState.update { it.copy(favouritesCountry = newList, isLoading = false) }
+                    _uiState.update {
+                        it.copy(favouritesCountry = weatherList)
+                    }
+                }
+            }
+
+            is HomeScreenUiAction.UpdateNews -> {
+                viewModelScope.launch(context = Dispatchers.IO) {
+                    val newsList = arrayListOf<CountryItemExternalModel>()
+
+                    _uiState.value.favouritesCountry.map { item ->
+                        val newsState =
+                            getNewsUseCase.invoke(country = getCountryCode(item.name.toString()))
+                        when (newsState) {
+                            is DataResponse.Success -> {
+                                newsList.add(item.copy(news = newsState.body))
+                            }
+
+                            is DataResponse.Error -> {
+                                _errorState.update {
+                                    it.copy(
+                                        isNewsError = true,
+                                        isNewsErrorResponse = newsState.error
+                                    )
+                                }
+//                                run { return@mapIndexed item }
+                            }
+                        }
+                    }
+
+                    _uiState.update { it.copy(favouritesCountry = newsList) }
                 }
             }
         }

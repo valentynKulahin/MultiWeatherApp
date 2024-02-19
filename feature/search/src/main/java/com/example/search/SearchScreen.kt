@@ -119,7 +119,7 @@ fun SearchScreen(
                     navigationIcon = {
                         IconButton(
                             onClick = {
-                                searchVM.reducer(intent = SearchScreenIntent.NavigateBack)
+                                searchVM.reducer(intent = SearchScreenUiAction.NavigateBack)
                             }
                         ) {
                             Icon(
@@ -155,23 +155,23 @@ fun SearchScreen(
                 inFavourite = uiState.value.countryInFavourite,
                 onClickMyLocation = {
                     searchVM.reducer(
-                        intent = SearchScreenIntent.GetWeatherInCountryByLatLon(
+                        intent = SearchScreenUiAction.GetWeatherInCountryByLatLon(
                             latLon = LatLng(it.latitude, it.longitude)
                         )
                     )
                 },
                 onMapClick = {
                     searchVM.reducer(
-                        intent = SearchScreenIntent.GetWeatherInCountryByLatLon(
+                        intent = SearchScreenUiAction.GetWeatherInCountryByLatLon(
                             latLon = LatLng(it.latitude, it.longitude)
                         )
                     )
                 },
                 onClickAddCountryToFavourite = {
-                    searchVM.reducer(intent = SearchScreenIntent.AddToFavourite)
+                    searchVM.reducer(intent = SearchScreenUiAction.AddToFavourite)
                 },
                 onClickDeleteCountryFromFavourite = {
-                    searchVM.reducer(intent = SearchScreenIntent.DeleteFromFavourite)
+                    searchVM.reducer(intent = SearchScreenUiAction.DeleteFromFavourite)
                 }
             )
         }
@@ -209,16 +209,16 @@ private fun SearchScreenMain(
             expanded = expanded,
             onSearch = {
                 searchVM.reducer(
-                    intent = SearchScreenIntent.UpdateSearchingName(
+                    intent = SearchScreenUiAction.UpdateSearchingName(
                         seachingValue = searchingValue.value
                     )
                 )
-                searchVM.reducer(intent = SearchScreenIntent.GetSearchingCountriesList)
+                searchVM.reducer(intent = SearchScreenUiAction.GetSearchingCountriesList)
             },
             onClickDropDownItem = {
-                searchVM.reducer(intent = SearchScreenIntent.UpdateSearchingName(seachingValue = it.name.toString()))
-                searchVM.reducer(intent = SearchScreenIntent.UpdateCountryForSearch(searchingItem = it))
-                searchVM.reducer(intent = SearchScreenIntent.GetWeatherInCountry(searchingValue = it.name.toString()))
+                searchVM.reducer(intent = SearchScreenUiAction.UpdateSearchingName(seachingValue = it.name.toString()))
+                searchVM.reducer(intent = SearchScreenUiAction.UpdateCountryForSearch(searchingItem = it))
+                searchVM.reducer(intent = SearchScreenUiAction.GetWeatherInCountry(searchingValue = it.name.toString()))
                 expanded.value = false
                 searchingValue.value = it.name.toString()
                 showSheet.value = true

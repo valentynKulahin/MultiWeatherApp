@@ -33,6 +33,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
@@ -41,6 +42,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.designsystem.component.WeatherBackground
 import com.example.designsystem.component.WeatherTopAppBar
+import com.example.designsystem.error.WeatherScreenError
 import com.example.designsystem.permissions.ExternalStorage_Permission
 import com.example.designsystem.permissions.Location_Permissions
 import com.example.home.components.CalendarElevatedCard
@@ -73,13 +75,7 @@ fun HomeScreen(
     snackbarText: String
 ) {
     val uiState = homeVM.uiState.collectAsStateWithLifecycle()
-
-    if (uiState.value.isLoading) {
-        CircularProgressIndicator(
-            color = MaterialTheme.colorScheme.onPrimary,
-            modifier = Modifier.fillMaxSize()
-        )
-    }
+    val errorState = homeVM.errorState.collectAsStateWithLifecycle()
 
     Location_Permissions()
     ExternalStorage_Permission()
@@ -137,10 +133,22 @@ fun HomeScreen(
             floatingActionButton = { },
             floatingActionButtonPosition = FabPosition.End
         ) { padding ->
-            HomeScreenMain(
-                favouritesCountry = uiState.value.favouritesCountry,
-                paddingValues = padding
-            )
+            if (uiState.value.isLoading) {
+                CircularProgressIndicator(
+                    color = MaterialTheme.colorScheme.primary
+                )
+            } else {
+                HomeScreenMain(
+                    isWeatherError = errorState.value.isWeatherError,
+                    isWeatherErrorResponse = errorState.value.isWeatherErrorResponse.message,
+                    isNewsError = errorState.value.isNewsError,
+                    isNewsErrorResponse = errorState.value.isNewsErrorResponse.message,
+                    favouritesCountry = uiState.value.favouritesCountry,
+                    paddingValues = padding,
+                    onClickNewsRetry = { homeVM.reducer(action = HomeScreenUiAction.UpdateNews) },
+                    onClickWeatherRetry = { homeVM.reducer(action = HomeScreenUiAction.UpdateWeather) }
+                )
+            }
         }
     }
 }
@@ -149,8 +157,14 @@ fun HomeScreen(
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun HomeScreenMain(
+    isWeatherError: Boolean,
+    isWeatherErrorResponse: String,
+    isNewsError: Boolean,
+    isNewsErrorResponse: String,
     favouritesCountry: List<CountryItemExternalModel>,
-    paddingValues: PaddingValues
+    paddingValues: PaddingValues,
+    onClickNewsRetry: () -> Unit,
+    onClickWeatherRetry: () -> Unit
 ) {
     val verticalScrollState = rememberScrollState()
     val pagerState = rememberPagerState {
@@ -168,7 +182,8 @@ private fun HomeScreenMain(
                 .verticalScroll(
                     state = verticalScrollState,
                     enabled = true
-                )
+                ),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
             HomeScreen_WeatherCard(
                 weatherExternalModel = weatherExternalModel
@@ -178,36 +193,48 @@ private fun HomeScreenMain(
                 pagerState = pagerState, pageCount = favouritesCountry.size
             )
             Spacer(modifier = Modifier.height(10.dp))
-            HomeScreen_NewsCard(news = newsExternalModel)
-            Spacer(modifier = Modifier.height(10.dp))
-            HomeScreen_ForecastCard_Hour(
-                currentWeather = weatherExternalModel.current
-                    ?: CurrentExternalModel(),
-                forecastWeather = weatherExternalModel.forecast
-                    ?: ForecastExternalModel()
+
+            HomeScreen_NewsCard(
+                isNewsError = isNewsError,
+                isNewsErrorResponse = isNewsErrorResponse,
+                news = newsExternalModel,
+                onClickNewsRetry = onClickNewsRetry
             )
-            Spacer(modifier = Modifier.height(10.dp))
-            HomeScreen_ForecastCard_Days(
-                currentWeather = weatherExternalModel.current
-                    ?: CurrentExternalModel(),
-                forecastWeather = weatherExternalModel.forecast
-                    ?: ForecastExternalModel()
-            )
-            Spacer(modifier = Modifier.height(10.dp))
-            HomeScreen_SunCondition(
-                currentExternalModel = weatherExternalModel.current
-                    ?: CurrentExternalModel(),
-                astroExternalModel = if (weatherExternalModel.forecast?.forecastday.isNullOrEmpty()) AstroExternalModel() else weatherExternalModel.forecast?.forecastday?.first()?.astro
-                    ?: AstroExternalModel()
-            )
-            Spacer(modifier = Modifier.height(10.dp))
-            HomeScreen_WindCard()
-            Spacer(modifier = Modifier.height(10.dp))
-            HomeScreen_CalendarCard()
             Spacer(modifier = Modifier.height(10.dp))
 
-            Location_Permissions()
-            ExternalStorage_Permission()
+            if (isWeatherError) {
+                WeatherScreenError(error = isWeatherErrorResponse, onClick = onClickWeatherRetry)
+            } else {
+                HomeScreen_ForecastCard_Hour(
+                    currentWeather = weatherExternalModel.current
+                        ?: CurrentExternalModel(),
+                    forecastWeather = weatherExternalModel.forecast
+                        ?: ForecastExternalModel()
+                )
+                Spacer(modifier = Modifier.height(10.dp))
+
+                HomeScreen_ForecastCard_Days(
+                    currentWeather = weatherExternalModel.current
+                        ?: CurrentExternalModel(),
+                    forecastWeather = weatherExternalModel.forecast
+                        ?: ForecastExternalModel()
+                )
+                Spacer(modifier = Modifier.height(10.dp))
+
+                HomeScreen_SunCondition(
+                    currentExternalModel = weatherExternalModel.current
+                        ?: CurrentExternalModel(),
+                    astroExternalModel = if (weatherExternalModel.forecast?.forecastday.isNullOrEmpty()) AstroExternalModel() else weatherExternalModel.forecast?.forecastday?.first()?.astro
+                        ?: AstroExternalModel()
+                )
+                Spacer(modifier = Modifier.height(10.dp))
+
+                HomeScreen_WindCard()
+                Spacer(modifier = Modifier.height(10.dp))
+
+                HomeScreen_CalendarCard()
+                Spacer(modifier = Modifier.height(10.dp))
+            }
         }
     }
 }
@@ -223,8 +250,18 @@ private fun HomeScreen_WeatherCard(
 }
 
 @Composable
-private fun HomeScreen_NewsCard(news: NewsExternalModel) {
-    NewsElevatedCard(news = news)
+private fun HomeScreen_NewsCard(
+    isNewsError: Boolean,
+    isNewsErrorResponse: String,
+    news: NewsExternalModel,
+    onClickNewsRetry: () -> Unit
+) {
+    NewsElevatedCard(
+        isNewsError = isNewsError,
+        isNewsErrorResponse = isNewsErrorResponse,
+        news = news,
+        onClickRetry = onClickNewsRetry
+    )
 }
 
 @Composable

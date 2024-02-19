@@ -1,4 +1,4 @@
-package com.example.data.util
+package com.example.data.repo.network
 
 import android.content.Context
 import android.net.ConnectivityManager
@@ -12,7 +12,6 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
-import kotlinx.coroutines.flow.conflate
 import javax.inject.Inject
 
 class NetworkMonitorRepository @Inject constructor(

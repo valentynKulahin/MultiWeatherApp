@@ -33,24 +33,34 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.example.designsystem.R
+import com.example.designsystem.error.WeatherScreenError
 import com.example.model.model.news.ArticleExternalModel
 import com.example.model.model.news.NewsExternalModel
 import com.google.accompanist.pager.HorizontalPagerIndicator
 
 @Composable
 fun NewsElevatedCard(
-    news: NewsExternalModel
+    isNewsError: Boolean,
+    isNewsErrorResponse: String,
+    news: NewsExternalModel,
+    onClickRetry: () -> Unit = {},
 ) {
 
     News_Screen(
-        news = news
+        isNewsError = isNewsError,
+        isNewsErrorResponse = isNewsErrorResponse,
+        news = news,
+        onClickRetry = onClickRetry,
     )
 
 }
 
 @Composable
 private fun News_Screen(
-    news: NewsExternalModel
+    isNewsError: Boolean,
+    isNewsErrorResponse: String,
+    news: NewsExternalModel,
+    onClickRetry: () -> Unit,
 ) {
 
     val newsLink = remember { mutableStateOf("") }
@@ -59,7 +69,10 @@ private fun News_Screen(
     Column {
         News_Header()
         News_Cards(
+            isNewsError = isNewsError,
+            isNewsErrorResponse = isNewsErrorResponse,
             news = news.articles,
+            onClickRetry = onClickRetry,
             onClick = { newsLink.value = it }
         )
     }
@@ -86,38 +99,45 @@ private fun News_Header() {
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun News_Cards(
+    isNewsError: Boolean,
+    isNewsErrorResponse: String,
     news: List<ArticleExternalModel?>?,
+    onClickRetry: () -> Unit = {},
     onClick: (String) -> Unit
 ) {
     val pagerState = rememberPagerState(pageCount = { news?.size ?: 0 })
 
-    HorizontalPager(state = pagerState) {
-        Column {
-            Row(
-                modifier = Modifier.clickable(
-                    interactionSource = remember { MutableInteractionSource() },
-                    indication = null,
-                    enabled = true,
-                    onClick = {
-                        onClick(news?.get(it)?.url ?: "")
-                    }
-                ),
-                horizontalArrangement = Arrangement.Center,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                News_Card(article = news?.get(it) ?: ArticleExternalModel())
+    if (isNewsError) {
+        WeatherScreenError(error = isNewsErrorResponse, onClick = onClickRetry)
+    } else {
+        HorizontalPager(state = pagerState) {
+            Column {
+                Row(
+                    modifier = Modifier.clickable(
+                        interactionSource = remember { MutableInteractionSource() },
+                        indication = null,
+                        enabled = true,
+                        onClick = {
+                            onClick(news?.get(it)?.url ?: "")
+                        }
+                    ),
+                    horizontalArrangement = Arrangement.Center,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    News_Card(article = news?.get(it) ?: ArticleExternalModel())
+                }
             }
         }
-    }
-    Row(
-        modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.Center,
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        HorizontalPagerIndicator(
-            pagerState = pagerState,
-            pageCount = pagerState.pageCount
-        )
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.Center,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            HorizontalPagerIndicator(
+                pagerState = pagerState,
+                pageCount = pagerState.pageCount
+            )
+        }
     }
 }
 

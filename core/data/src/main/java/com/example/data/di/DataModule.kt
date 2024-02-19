@@ -1,7 +1,7 @@
 package com.example.data.di
 
-import com.example.data.util.NetworkMonitor
-import com.example.data.util.NetworkMonitorRepository
+import com.example.data.repo.network.NetworkMonitor
+import com.example.data.repo.network.NetworkMonitorRepository
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
