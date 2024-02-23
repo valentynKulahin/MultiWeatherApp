@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -55,10 +56,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.toSize
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -302,24 +305,18 @@ private fun SearchScreen_Find(
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 10.dp),
-//        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
         OutlinedTextField(
             value = searchingValue.value,
-            onValueChange = {
-                searchingValue.value = it
-            },
+            onValueChange = { searchingValue.value = it },
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 10.dp)
                 .onGloballyPositioned { coordinates ->
-                    // This value is used to assign to
-                    // the DropDown the same width
                     mTextFieldSize = coordinates.size.toSize()
                 },
-            enabled = true,
             singleLine = true,
-            readOnly = false,
             keyboardOptions = KeyboardOptions.Default.copy(
                 keyboardType = KeyboardType.Text,
                 imeAction = ImeAction.Search
@@ -340,19 +337,16 @@ private fun SearchScreen_Find(
         )
         DropdownMenu(
             expanded = expanded.value,
+            offset = DpOffset(10.dp, 0.dp),
             onDismissRequest = { expanded.value = false },
-            modifier = Modifier
-//                .width(with(LocalDensity.current) { mTextFieldSize.width.toDp() })
-//                .width(mTextFieldSize.width.dp)
+            modifier = Modifier.width(with(LocalDensity.current) { mTextFieldSize.width.toDp() })
         ) {
             if (countriesList.isEmpty()) {
                 DropdownMenuItem(
                     colors = MenuDefaults.itemColors(),
                     text = {
                         Column(
-                            modifier = Modifier,
-//                                .fillMaxWidth(),
-//                                .padding(horizontal = 10.dp),
+                            modifier = Modifier.fillMaxWidth(),
                             horizontalAlignment = Alignment.Start
                         ) {
                             Text(
@@ -367,6 +361,7 @@ private fun SearchScreen_Find(
             } else {
                 countriesList.forEach { item ->
                     DropdownMenuItem(
+                        modifier = Modifier.fillMaxWidth(),
                         colors = MenuDefaults.itemColors(),
                         text = {
                             Column(
