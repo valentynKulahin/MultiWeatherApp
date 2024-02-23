@@ -64,7 +64,7 @@ class HomeScreenViewModel @Inject constructor(
 
             _uiState.update {
                 it.copy(
-                    favouritesCountry = mutableListWithWeather.toList().sortedBy { it.id },
+                    favouriteCountries = mutableListWithWeather.toList().sortedBy { it.id },
                     myLocation = location,
                     networkStatus = networkStatus
                 )
@@ -94,7 +94,7 @@ class HomeScreenViewModel @Inject constructor(
                     _errorState.update { it.copy(isWeatherError = false, isNewsError = false) }
 
                     val newList = arrayListOf<CountryItemExternalModel>()
-                    _uiState.value.favouritesCountry.mapIndexed { index, item ->
+                    _uiState.value.favouriteCountries.mapIndexed { index, item ->
                         var newWeather = item.weather.copy()
                         var newNews = item.news.copy()
 
@@ -141,74 +141,13 @@ class HomeScreenViewModel @Inject constructor(
                     }
                     _uiState.update {
                         it.copy(
-                            favouritesCountry = newList.toList(),
+                            favouriteCountries = newList.toList(),
                             isLoading = false
                         )
                     }
                 }
             }
 
-            is HomeScreenUiAction.UpdateWeather -> {
-                viewModelScope.launch(context = Dispatchers.IO) {
-                    val weatherList = arrayListOf<CountryItemExternalModel>()
-
-                    _uiState.value.favouritesCountry.mapIndexed { index, item ->
-                        val weatherState = if (index == 0) getWeatherByLatLonUseCase.invoke(
-                            latLon = "${_uiState.value.myLocation?.latitude}, ${_uiState.value.myLocation?.longitude}"
-                        ) else getWeatherUseCase.invoke(
-                            country = _uiState.value.favouritesCountry[index].name.toString()
-                        )
-
-                        when (weatherState) {
-                            is DataResponse.Success -> {
-                                weatherList.add(item.copy(weather = weatherState.body))
-                            }
-
-                            is DataResponse.Error -> {
-                                _errorState.update {
-                                    it.copy(
-                                        isWeatherError = true,
-                                        isWeatherErrorResponse = weatherState.error
-                                    )
-                                }
-//                                run { return@mapIndexed item }
-                            }
-                        }
-                    }
-
-                    _uiState.update {
-                        it.copy(favouritesCountry = weatherList)
-                    }
-                }
-            }
-
-            is HomeScreenUiAction.UpdateNews -> {
-                viewModelScope.launch(context = Dispatchers.IO) {
-                    val newsList = arrayListOf<CountryItemExternalModel>()
-
-                    _uiState.value.favouritesCountry.map { item ->
-                        val newsState =
-                            getNewsUseCase.invoke(country = getCountryCode(item.name.toString()))
-                        when (newsState) {
-                            is DataResponse.Success -> {
-                                newsList.add(item.copy(news = newsState.body))
-                            }
-
-                            is DataResponse.Error -> {
-                                _errorState.update {
-                                    it.copy(
-                                        isNewsError = true,
-                                        isNewsErrorResponse = newsState.error
-                                    )
-                                }
-//                                run { return@mapIndexed item }
-                            }
-                        }
-                    }
-
-                    _uiState.update { it.copy(favouritesCountry = newsList) }
-                }
-            }
         }
     }
 

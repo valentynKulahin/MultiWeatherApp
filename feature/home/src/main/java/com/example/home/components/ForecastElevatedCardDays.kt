@@ -18,7 +18,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -49,7 +48,7 @@ private fun Forecast_Screen_Days(
     forecastWeather: ForecastExternalModel
 ) {
     Column {
-        Forecast_Screen_Header()
+//        Forecast_Screen_Header()
         ElevatedCard(
             modifier = Modifier
                 .fillMaxWidth()
@@ -64,14 +63,6 @@ private fun Forecast_Screen_Days(
         }
     }
 
-}
-
-@Composable
-private fun Forecast_Screen_Header() {
-    Text(
-        modifier = Modifier.padding(horizontal = 10.dp),
-        text = stringResource(id = com.example.designsystem.R.string.forecast_header)
-    )
 }
 
 @Composable

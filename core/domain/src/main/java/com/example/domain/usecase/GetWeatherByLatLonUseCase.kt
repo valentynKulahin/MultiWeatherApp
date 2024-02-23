@@ -12,7 +12,7 @@ class GetWeatherByLatLonUseCase @Inject constructor(
     suspend operator fun invoke(latLon: String) =
         weatherDataRemoteRepo.getForecastWeatherByLatLon(
             latLon = latLon,
-            days = 1,
+            days = 7,
             aqi = "yes",
             alerts = "yes"
         )

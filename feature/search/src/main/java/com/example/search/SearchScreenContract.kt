@@ -7,12 +7,12 @@ import com.example.model.model.weather.CurrentExternalModel
 import com.google.android.gms.maps.model.LatLng
 
 data class SearchScreenUiState(
+    val favouriteCountries: List<CountryItemExternalModel> = emptyList(),
     val searchingName: String? = null,
     val countriesList: List<CountryItemExternalModel> = emptyList(),
     val searchingHistoryList: List<CountryItemExternalModel> = emptyList(),
     val countryForSearch: CountryItemExternalModel = CountryItemExternalModel(),
     val currentExternalModel: CurrentExternalModel = CurrentExternalModel(),
-    val countryInFavourite: Boolean = false,
     val networkStatus: NetworkStatus = NetworkStatus.Unknown,
     val isLoading: Boolean = false
 )
@@ -27,7 +27,7 @@ sealed class SearchScreenUiAction {
 
     data object GetHistoryOfSearch : SearchScreenUiAction()
 
-    data class UpdateSearchingName(val seachingValue: String) : SearchScreenUiAction()
+    data class UpdateSearchingName(val searchingValue: String) : SearchScreenUiAction()
 
     data class UpdateCountryForSearch(val searchingItem: CountryItemExternalModel) : SearchScreenUiAction()
 
@@ -36,8 +36,6 @@ sealed class SearchScreenUiAction {
     data object AddToFavourite : SearchScreenUiAction()
 
     data object DeleteFromFavourite : SearchScreenUiAction()
-
-    data class UpdateCountryInFavouriteValue(val value: Boolean) : SearchScreenUiAction()
 
 }
 

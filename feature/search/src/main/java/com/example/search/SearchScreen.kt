@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -56,7 +55,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onGloballyPositioned
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -69,6 +67,7 @@ import coil.compose.AsyncImage
 import com.example.common.func.work_with_url.Common_URL.convertStringToLink
 import com.example.designsystem.component.WeatherBackground
 import com.example.designsystem.component.WeatherTopAppBar
+import com.example.designsystem.error.WeatherScreenError
 import com.example.model.model.country.CountryItemExternalModel
 import com.example.model.model.weather.CurrentExternalModel
 import com.google.android.gms.maps.model.CameraPosition
@@ -93,11 +92,14 @@ fun SearchScreen(
 ) {
 
     val uiState = searchVM.uiState.collectAsStateWithLifecycle()
+    val errorState = searchVM.errorState.collectAsStateWithLifecycle()
     val location =
         if (uiState.value.countryForSearch.lat != null || uiState.value.countryForSearch.lon != null) LatLng(
             uiState.value.countryForSearch.lat!!.toDouble(),
             uiState.value.countryForSearch.lon!!.toDouble()
         ) else LatLng(0.0, 0.0)
+    val inFavourite =
+        uiState.value.favouriteCountries.find { it.country == uiState.value.countryForSearch.country && it.region == uiState.value.countryForSearch.region && it.name == uiState.value.countryForSearch.name }?.id != null
 
     WeatherBackground(
         modifier = Modifier
@@ -148,11 +150,12 @@ fun SearchScreen(
             SearchScreenMain(
                 paddingValues = padding,
                 location = location,
-                searchVM = searchVM,
                 countriesList = uiState.value.countriesList,
                 countryForSearch = uiState.value.countryForSearch,
                 currentExternalModel = uiState.value.currentExternalModel,
-                inFavourite = uiState.value.countryInFavourite,
+                inFavourite = inFavourite,
+                isError = errorState.value.isError,
+                isErrorResponse = errorState.value.isErrorResponse.message,
                 onClickMyLocation = {
                     searchVM.reducer(
                         intent = SearchScreenUiAction.GetWeatherInCountryByLatLon(
@@ -172,6 +175,35 @@ fun SearchScreen(
                 },
                 onClickDeleteCountryFromFavourite = {
                     searchVM.reducer(intent = SearchScreenUiAction.DeleteFromFavourite)
+                },
+                updateSearchingName = {
+                    searchVM.reducer(
+                        intent = SearchScreenUiAction.UpdateSearchingName(
+                            searchingValue = it
+                        )
+                    )
+                },
+                getSearchingCountriesList = { searchVM.reducer(intent = SearchScreenUiAction.GetSearchingCountriesList) },
+                getWeatherInCountry = {
+                    searchVM.reducer(
+                        intent = SearchScreenUiAction.GetWeatherInCountry(
+                            it
+                        )
+                    )
+                },
+                updateCountryForSearch = {
+                    searchVM.reducer(
+                        intent = SearchScreenUiAction.UpdateCountryForSearch(
+                            it
+                        )
+                    )
+                },
+                onClickRetry = {
+                    searchVM.reducer(
+                        intent = SearchScreenUiAction.GetWeatherInCountryByLatLon(
+                            location
+                        )
+                    )
                 }
             )
         }
@@ -184,15 +216,21 @@ fun SearchScreen(
 private fun SearchScreenMain(
     paddingValues: PaddingValues,
     location: LatLng,
-    searchVM: SearchScreenViewModel,
+    inFavourite: Boolean,
     countriesList: List<CountryItemExternalModel>,
     countryForSearch: CountryItemExternalModel,
     currentExternalModel: CurrentExternalModel,
-    inFavourite: Boolean,
+    isError: Boolean,
+    isErrorResponse: String,
     onClickMyLocation: (LatLng) -> Unit,
     onMapClick: (LatLng) -> Unit,
     onClickAddCountryToFavourite: () -> Unit,
-    onClickDeleteCountryFromFavourite: () -> Unit
+    onClickDeleteCountryFromFavourite: () -> Unit,
+    updateSearchingName: (String) -> Unit,
+    getSearchingCountriesList: () -> Unit,
+    updateCountryForSearch: (CountryItemExternalModel) -> Unit,
+    getWeatherInCountry: (String) -> Unit,
+    onClickRetry: () -> Unit
 ) {
     val searchingValue = remember { mutableStateOf("") }
     val expanded = remember { mutableStateOf(false) }
@@ -208,17 +246,13 @@ private fun SearchScreenMain(
             searchingValue = searchingValue,
             expanded = expanded,
             onSearch = {
-                searchVM.reducer(
-                    intent = SearchScreenUiAction.UpdateSearchingName(
-                        seachingValue = searchingValue.value
-                    )
-                )
-                searchVM.reducer(intent = SearchScreenUiAction.GetSearchingCountriesList)
+                updateSearchingName(searchingValue.value)
+                getSearchingCountriesList()
             },
             onClickDropDownItem = {
-                searchVM.reducer(intent = SearchScreenUiAction.UpdateSearchingName(seachingValue = it.name.toString()))
-                searchVM.reducer(intent = SearchScreenUiAction.UpdateCountryForSearch(searchingItem = it))
-                searchVM.reducer(intent = SearchScreenUiAction.GetWeatherInCountry(searchingValue = it.name.toString()))
+                updateSearchingName(it.name.toString())
+                updateCountryForSearch(it)
+                getWeatherInCountry(it.name.toString())
                 expanded.value = false
                 searchingValue.value = it.name.toString()
                 showSheet.value = true
@@ -239,9 +273,12 @@ private fun SearchScreenMain(
                 bottomSheetState = sheetState,
                 countryForSearch = countryForSearch,
                 currentExternalModel = currentExternalModel,
+                isError = isError,
                 inFavourite = inFavourite,
-                addToFavouriteClick = { onClickAddCountryToFavourite() },
-                deleteFromFavouriteClick = { onClickDeleteCountryFromFavourite() }
+                isErrorResponse = isErrorResponse,
+                addToFavouriteClick = onClickAddCountryToFavourite,
+                deleteFromFavouriteClick = onClickDeleteCountryFromFavourite,
+                onClickRetry = onClickRetry
             )
         }
     }
@@ -265,7 +302,7 @@ private fun SearchScreen_Find(
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 10.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
+//        horizontalAlignment = Alignment.CenterHorizontally
     ) {
         OutlinedTextField(
             value = searchingValue.value,
@@ -305,27 +342,49 @@ private fun SearchScreen_Find(
             expanded = expanded.value,
             onDismissRequest = { expanded.value = false },
             modifier = Modifier
-                .width(with(LocalDensity.current) { mTextFieldSize.width.toDp() })
+//                .width(with(LocalDensity.current) { mTextFieldSize.width.toDp() })
+//                .width(mTextFieldSize.width.dp)
         ) {
-            countriesList.forEach { item ->
+            if (countriesList.isEmpty()) {
                 DropdownMenuItem(
                     colors = MenuDefaults.itemColors(),
                     text = {
                         Column(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(horizontal = 10.dp),
+                            modifier = Modifier,
+//                                .fillMaxWidth(),
+//                                .padding(horizontal = 10.dp),
                             horizontalAlignment = Alignment.Start
                         ) {
-                            Text(text = item.name.toString())
                             Text(
-                                text = "${item.country.toString()}, ${item.region.toString()}",
-                                color = Color.Red
+                                modifier = Modifier.padding(15.dp),
+                                text = "Countries are not find",
+                                color = MaterialTheme.colorScheme.error
                             )
                         }
                     },
-                    onClick = { onClickDropDownItem(item) }
+                    onClick = { }
                 )
+            } else {
+                countriesList.forEach { item ->
+                    DropdownMenuItem(
+                        colors = MenuDefaults.itemColors(),
+                        text = {
+                            Column(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(horizontal = 10.dp),
+                                horizontalAlignment = Alignment.Start
+                            ) {
+                                Text(text = item.name.toString())
+                                Text(
+                                    text = "${item.country.toString()}, ${item.region.toString()}",
+                                    color = Color.Red
+                                )
+                            }
+                        },
+                        onClick = { onClickDropDownItem(item) }
+                    )
+                }
             }
         }
     }
@@ -399,12 +458,15 @@ private fun SearchScreen_GoogleMaps(
 private fun SearchScreen_BottomSheet(
     showSheet: MutableState<Boolean>,
     location: LatLng,
+    inFavourite: Boolean,
     bottomSheetState: SheetState,
     countryForSearch: CountryItemExternalModel,
     currentExternalModel: CurrentExternalModel,
-    inFavourite: Boolean,
+    isError: Boolean,
+    isErrorResponse: String,
     addToFavouriteClick: () -> Unit,
-    deleteFromFavouriteClick: () -> Unit
+    deleteFromFavouriteClick: () -> Unit,
+    onClickRetry: () -> Unit
 ) {
 
     ModalBottomSheet(
@@ -414,15 +476,19 @@ private fun SearchScreen_BottomSheet(
         shape = MaterialTheme.shapes.small,
         dragHandle = { BottomSheetDefaults.DragHandle() },
     ) {
-        SearchScreen_BottomSheet_Weather(
-            countryForSearch = countryForSearch,
-            currentExternalModel = currentExternalModel,
-            location = location,
-            wind = currentExternalModel.wind_mph.toString(),
-            inFavourite = inFavourite,
-            addToFavouriteClick = { addToFavouriteClick() },
-            deleteFromFavouriteClick = { deleteFromFavouriteClick() }
-        )
+        if (isError) {
+            WeatherScreenError(error = isErrorResponse, onClick = onClickRetry)
+        } else {
+            SearchScreen_BottomSheet_Weather(
+                countryForSearch = countryForSearch,
+                currentExternalModel = currentExternalModel,
+                location = location,
+                inFavourite = inFavourite,
+                wind = currentExternalModel.wind_mph.toString(),
+                addToFavouriteClick = addToFavouriteClick,
+                deleteFromFavouriteClick = deleteFromFavouriteClick
+            )
+        }
     }
 
 }
@@ -431,9 +497,9 @@ private fun SearchScreen_BottomSheet(
 private fun SearchScreen_BottomSheet_Weather(
     location: LatLng,
     wind: String,
+    inFavourite: Boolean,
     countryForSearch: CountryItemExternalModel,
     currentExternalModel: CurrentExternalModel,
-    inFavourite: Boolean,
     addToFavouriteClick: () -> Unit,
     deleteFromFavouriteClick: () -> Unit
 ) {
@@ -454,8 +520,8 @@ private fun SearchScreen_BottomSheet_Weather(
         HorizontalDivider()
         SearchScreen_BottomSheet_Weather_FavouriteButton(
             inFavourite = inFavourite,
-            addToFavouriteClick = { addToFavouriteClick() },
-            deleteFromFavouriteClick = { deleteFromFavouriteClick() }
+            addToFavouriteClick = addToFavouriteClick,
+            deleteFromFavouriteClick = deleteFromFavouriteClick
         )
     }
 
@@ -570,21 +636,23 @@ private fun SearchScreen_BottomSheet_Weather_SecondLine_Wind(
 }
 
 @Composable
-fun SearchScreen_BottomSheet_Weather_FavouriteButton(
+private fun SearchScreen_BottomSheet_Weather_FavouriteButton(
     inFavourite: Boolean,
     addToFavouriteClick: () -> Unit,
     deleteFromFavouriteClick: () -> Unit
 ) {
-
     OutlinedButton(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 15.dp),
-        onClick = { if (inFavourite) {
-            addToFavouriteClick()
-        } else {
-            deleteFromFavouriteClick()
-        } }
+            .padding(horizontal = 15.dp)
+            .padding(bottom = 50.dp),
+        onClick = {
+            if (inFavourite) {
+                deleteFromFavouriteClick()
+            } else {
+                addToFavouriteClick()
+            }
+        }
     ) {
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -595,7 +663,7 @@ fun SearchScreen_BottomSheet_Weather_FavouriteButton(
                 imageVector = if (inFavourite) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
                 contentDescription = null
             )
-            Text(text = if (inFavourite) "Add to favourite" else "Delete from favourite")
+            Text(text = if (!inFavourite) "Add to favourite" else "Delete from favourite")
         }
     }
 

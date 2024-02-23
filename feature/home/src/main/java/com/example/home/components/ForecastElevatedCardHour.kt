@@ -22,6 +22,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -55,22 +56,33 @@ private fun Forecast_Screen_Hour(
 
     val currentDateTime = LocalDateTime.now().withMinute(0).withSecond(0).withNano(0)
 
-    ElevatedCard(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(230.dp)
-            .padding(horizontal = 20.dp),
-        shape = CardDefaults.elevatedShape
-    ) {
-        Column(modifier = Modifier.fillMaxSize()) {
-            Forecast_Card_Top_Hour(currentWeather = currentWeather)
-            Forecast_Card_Lists_Hour(
-                forecastWeather = forecastWeather,
-                currentDateTime = currentDateTime
-            )
+    Column {
+        ForecastHour_Header()
+        ElevatedCard(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(230.dp)
+                .padding(horizontal = 20.dp),
+            shape = CardDefaults.elevatedShape
+        ) {
+            Column(modifier = Modifier.fillMaxSize()) {
+                Forecast_Card_Top_Hour(currentWeather = currentWeather)
+                Forecast_Card_Lists_Hour(
+                    forecastWeather = forecastWeather,
+                    currentDateTime = currentDateTime
+                )
+            }
         }
     }
 
+}
+
+@Composable
+private fun ForecastHour_Header() {
+    Text(
+        modifier = Modifier.padding(horizontal = 10.dp),
+        text = stringResource(id = com.example.designsystem.R.string.forecast_header)
+    )
 }
 
 @Composable

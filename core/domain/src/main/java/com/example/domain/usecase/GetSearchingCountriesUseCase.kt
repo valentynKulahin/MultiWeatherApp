@@ -5,7 +5,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class GetSearchingCoutriesUseCase @Inject constructor(
+class GetSearchingCountriesUseCase @Inject constructor(
     private val weatherDataRemoteRepo: WeatherDataRemoteRepo
 ) {
 

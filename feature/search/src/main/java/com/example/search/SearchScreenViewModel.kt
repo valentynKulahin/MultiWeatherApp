@@ -3,11 +3,11 @@ package com.example.search
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.common.network.response.DataResponse
-import com.example.common.network.status.NetworkStatus
 import com.example.domain.usecase.AddCountryToFavouriteUseCase
 import com.example.domain.usecase.DeleteCountryFromFavouriteUseCase
+import com.example.domain.usecase.GetFavouriteCountriesUseCase
 import com.example.domain.usecase.GetNetworkStatusUseCase
-import com.example.domain.usecase.GetSearchingCoutriesUseCase
+import com.example.domain.usecase.GetSearchingCountriesUseCase
 import com.example.domain.usecase.GetSearchingHistoryUseCase
 import com.example.domain.usecase.GetWeatherByLatLonUseCase
 import com.example.domain.usecase.GetWeatherUseCase
@@ -17,23 +17,26 @@ import com.example.navi.repo.AppNavigator
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class SearchScreenViewModel @Inject constructor(
+    getNetworkStatusUseCase: GetNetworkStatusUseCase,
+    getFavouriteCountriesUseCase: GetFavouriteCountriesUseCase,
     private val getWeatherUseCase: GetWeatherUseCase,
     private val getWeatherByLatLonUseCase: GetWeatherByLatLonUseCase,
-    private val getSearchingCoutriesUseCase: GetSearchingCoutriesUseCase,
+    private val getSearchingCountriesUseCase: GetSearchingCountriesUseCase,
     private val appNavigator: AppNavigator,
     private val getSearchingHistoryUseCase: GetSearchingHistoryUseCase,
     private val addCountryToFavouriteUseCase: AddCountryToFavouriteUseCase,
-    private val deleteCountryFromFavouriteUseCase: DeleteCountryFromFavouriteUseCase,
-    private val getNetworkStatusUseCase: GetNetworkStatusUseCase
+    private val deleteCountryFromFavouriteUseCase: DeleteCountryFromFavouriteUseCase
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(SearchScreenUiState())
@@ -43,17 +46,22 @@ class SearchScreenViewModel @Inject constructor(
     val errorState = _errorState.asStateFlow()
 
     init {
-        viewModelScope.launch(context = Dispatchers.IO) {
+        combine(
+            getNetworkStatusUseCase.invoke(),
+            getFavouriteCountriesUseCase.invoke()
+        ) { networkStatus, favouriteCountries ->
+            val foundValue =
+                favouriteCountries.find { it.country == uiState.value.countryForSearch.country && it.region == uiState.value.countryForSearch.region && it.name == uiState.value.countryForSearch.name }
             _uiState.update {
                 it.copy(
-                    networkStatus = getNetworkStatusUseCase.invoke().stateIn(
-                        scope = this,
-                        started = SharingStarted.WhileSubscribed(5_000),
-                        initialValue = NetworkStatus.Unknown
-                    ).value
+                    networkStatus = networkStatus,
+                    favouriteCountries = favouriteCountries,
+                    countryForSearch = foundValue ?: it.countryForSearch.copy(id = null)
                 )
             }
-        }
+        }.onStart {
+            _uiState.update { it.copy(isLoading = true) }
+        }.flowOn(context = Dispatchers.IO).launchIn(scope = viewModelScope)
     }
 
     fun reducer(intent: SearchScreenUiAction) {
@@ -62,7 +70,7 @@ class SearchScreenViewModel @Inject constructor(
                 viewModelScope.launch(context = Dispatchers.IO) {
                     _uiState.update { it.copy(isLoading = true) }
 
-                    val countriesList = getSearchingCoutriesUseCase.invoke(
+                    val countriesList = getSearchingCountriesUseCase.invoke(
                         country = _uiState.value.searchingName.toString()
                     )
 
@@ -104,18 +112,21 @@ class SearchScreenViewModel @Inject constructor(
                     val weatherState = getWeatherUseCase.invoke(country = intent.searchingValue)
                     when (weatherState) {
                         is DataResponse.Success -> {
+                            val foundValue =
+                                _uiState.value.favouriteCountries.find { it.country == weatherState.body.location?.country && it.region == weatherState.body.location?.region && it.name == weatherState.body.location?.name }
                             _uiState.update {
                                 it.copy(
                                     searchingHistoryList = getSearchingHistoryUseCase.invoke(),
                                     currentExternalModel = weatherState.body.current
                                         ?: CurrentExternalModel(),
-                                    countryForSearch = CountryItemExternalModel(
-                                        country = weatherState.body.location?.country,
-                                        lat = weatherState.body.location?.lat,
-                                        lon = weatherState.body.location?.lon,
-                                        name = weatherState.body.location?.name,
-                                        region = weatherState.body.location?.region
-                                    )
+                                    countryForSearch = foundValue
+                                        ?: CountryItemExternalModel(
+                                            country = weatherState.body.location?.country,
+                                            lat = weatherState.body.location?.lat,
+                                            lon = weatherState.body.location?.lon,
+                                            name = weatherState.body.location?.name,
+                                            region = weatherState.body.location?.region
+                                        )
                                 )
                             }
                         }
@@ -139,12 +150,14 @@ class SearchScreenViewModel @Inject constructor(
                         getWeatherByLatLonUseCase.invoke(latLon = "${intent.latLon.latitude}, ${intent.latLon.longitude}")
                     when (weatherState) {
                         is DataResponse.Success -> {
+                            val foundValue =
+                                uiState.value.favouriteCountries.find { it.country == weatherState.body.location?.country && it.region == weatherState.body.location?.region && it.name == weatherState.body.location?.name }
                             _uiState.update {
                                 it.copy(
                                     searchingHistoryList = getSearchingHistoryUseCase.invoke(),
                                     currentExternalModel = weatherState.body.current
                                         ?: CurrentExternalModel(),
-                                    countryForSearch = CountryItemExternalModel(
+                                    countryForSearch = foundValue ?: CountryItemExternalModel(
                                         country = weatherState.body.location?.country,
                                         lat = weatherState.body.location?.lat,
                                         lon = weatherState.body.location?.lon,
@@ -172,7 +185,7 @@ class SearchScreenViewModel @Inject constructor(
             is SearchScreenUiAction.UpdateSearchingName -> {
                 viewModelScope.launch(context = Dispatchers.IO) {
                     _uiState.update {
-                        it.copy(searchingName = intent.seachingValue)
+                        it.copy(searchingName = intent.searchingValue)
                     }
                 }
             }
@@ -184,22 +197,12 @@ class SearchScreenViewModel @Inject constructor(
             is SearchScreenUiAction.AddToFavourite -> {
                 viewModelScope.launch(context = Dispatchers.IO) {
                     addCountryToFavouriteUseCase.invoke(countryItemExternalModel = uiState.value.countryForSearch)
-                    _uiState.update { it.copy(countryInFavourite = true) }
                 }
             }
 
             is SearchScreenUiAction.DeleteFromFavourite -> {
                 viewModelScope.launch(context = Dispatchers.IO) {
                     deleteCountryFromFavouriteUseCase.invoke(countryItemExternalModel = uiState.value.countryForSearch)
-                    _uiState.update { it.copy(countryInFavourite = false) }
-                }
-            }
-
-            is SearchScreenUiAction.UpdateCountryInFavouriteValue -> {
-                viewModelScope.launch(context = Dispatchers.IO) {
-                    _uiState.update {
-                        it.copy(countryInFavourite = intent.value)
-                    }
                 }
             }
         }

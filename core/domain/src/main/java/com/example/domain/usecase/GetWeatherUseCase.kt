@@ -12,7 +12,7 @@ class GetWeatherUseCase @Inject constructor(
     suspend operator fun invoke(country: String) =
         weatherDataRemoteRepo.getForecastWeather(
             country = country,
-            days = 7,
+            days = 2,
             aqi = "yes",
             alerts = "yes"
         )

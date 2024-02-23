@@ -3,6 +3,7 @@ package com.example.home
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
@@ -134,19 +135,24 @@ fun HomeScreen(
             floatingActionButtonPosition = FabPosition.End
         ) { padding ->
             if (uiState.value.isLoading) {
-                CircularProgressIndicator(
-                    color = MaterialTheme.colorScheme.primary
-                )
+                Column(
+                    modifier = Modifier.fillMaxSize(),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center
+                ) {
+                    CircularProgressIndicator(
+                        color = MaterialTheme.colorScheme.primary
+                    )
+                }
             } else {
                 HomeScreenMain(
                     isWeatherError = errorState.value.isWeatherError,
                     isWeatherErrorResponse = errorState.value.isWeatherErrorResponse.message,
                     isNewsError = errorState.value.isNewsError,
                     isNewsErrorResponse = errorState.value.isNewsErrorResponse.message,
-                    favouritesCountry = uiState.value.favouritesCountry,
+                    favouritesCountry = uiState.value.favouriteCountries,
                     paddingValues = padding,
-                    onClickNewsRetry = { homeVM.reducer(action = HomeScreenUiAction.UpdateNews) },
-                    onClickWeatherRetry = { homeVM.reducer(action = HomeScreenUiAction.UpdateWeather) }
+                    onClickRetry = { homeVM.reducer(action = HomeScreenUiAction.UpdateWeatherAndNews) }
                 )
             }
         }
@@ -163,8 +169,7 @@ private fun HomeScreenMain(
     isNewsErrorResponse: String,
     favouritesCountry: List<CountryItemExternalModel>,
     paddingValues: PaddingValues,
-    onClickNewsRetry: () -> Unit,
-    onClickWeatherRetry: () -> Unit
+    onClickRetry: () -> Unit
 ) {
     val verticalScrollState = rememberScrollState()
     val pagerState = rememberPagerState {
@@ -198,12 +203,12 @@ private fun HomeScreenMain(
                 isNewsError = isNewsError,
                 isNewsErrorResponse = isNewsErrorResponse,
                 news = newsExternalModel,
-                onClickNewsRetry = onClickNewsRetry
+                onClickNewsRetry = onClickRetry
             )
             Spacer(modifier = Modifier.height(10.dp))
 
             if (isWeatherError) {
-                WeatherScreenError(error = isWeatherErrorResponse, onClick = onClickWeatherRetry)
+                WeatherScreenError(error = isWeatherErrorResponse, onClick = onClickRetry)
             } else {
                 HomeScreen_ForecastCard_Hour(
                     currentWeather = weatherExternalModel.current
