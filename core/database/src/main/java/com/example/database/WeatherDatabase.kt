@@ -16,7 +16,7 @@ import com.example.database.model.SearchingHistoryEntity
     version = 1,
     exportSchema = false
 )
-
+//
 abstract class WeatherDatabase : RoomDatabase() {
 
     abstract fun favouritesCountriesDao(): FavouritesCountriesDao
