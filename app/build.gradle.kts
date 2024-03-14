@@ -30,6 +30,7 @@ android {
 
         buildConfigField("String", "NEWS_API_KEY", "\"${properties.getProperty("NEWS_API_KEY")}\"")
         buildConfigField("String", "WEATHER_API_KEY", "\"${properties.getProperty("WEATHER_API_KEY")}\"")
+        buildConfigField("String", "MAPS_API_KEY", "\"${properties.getProperty("MAPS_API_KEY")}\"")
     }
 
     buildTypes {
@@ -68,6 +69,7 @@ dependencies {
     implementation(project(":feature:home"))
     implementation(project(":feature:search"))
     implementation(project(":feature:settings"))
+    implementation(project(":feature:detail"))
 
     implementation(project(":core:navi"))
     implementation(project(":core:model"))

@@ -67,7 +67,7 @@ import androidx.compose.ui.unit.toSize
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
-import com.example.common.func.work_with_url.Common_URL.convertStringToLink
+import com.example.common.func.work_with_url.CommonURL.convertStringToLink
 import com.example.designsystem.component.WeatherBackground
 import com.example.designsystem.component.WeatherTopAppBar
 import com.example.designsystem.error.WeatherScreenError

@@ -54,9 +54,9 @@ dependencies {
 
     implementation(project(":core:navi"))
     implementation(project(":core:domain"))
+    implementation(project(":core:model"))
     implementation(project(":core:designsystem"))
     implementation(project(":core:common"))
-    implementation(project(":core:datastore"))
 
     //core
     implementation(libs.core.ktx)
@@ -78,6 +78,7 @@ dependencies {
     implementation(libs.material3)
     implementation(libs.androidx.navigation.compose)
     implementation(libs.androidx.icons.extended)
+    implementation(libs.accompanist.pager.indicator)
 
     //lifecycle
     implementation(libs.androidx.lifecycle.runtime.ktx)

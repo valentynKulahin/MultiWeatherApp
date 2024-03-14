@@ -22,9 +22,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
-import com.example.common.func.work_with_date.Common_Date.getCurrentFormattedDate
-import com.example.common.func.work_with_date.Common_Date.getDayOfWeekFromDate
-import com.example.common.func.work_with_url.Common_URL.convertStringToLink
+import com.example.common.func.work_with_date.CommonDate.getCurrentFormattedDate
+import com.example.common.func.work_with_date.CommonDate.getDayOfWeekFromDate
+import com.example.common.func.work_with_url.CommonURL.convertStringToLink
 import com.example.home.R
 import com.example.model.model.weather.CurrentExternalModel
 import com.example.model.model.weather.ForecastExternalModel

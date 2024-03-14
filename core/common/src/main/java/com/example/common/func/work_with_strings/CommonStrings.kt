@@ -1,6 +1,6 @@
 package com.example.common.func.work_with_strings
 
-object Common_Strings {
+object CommonStrings {
 
     fun getDayOfMonthSuffix(day: Int): String {
         return when (day) {

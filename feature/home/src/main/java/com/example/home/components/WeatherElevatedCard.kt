@@ -25,7 +25,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
-import com.example.common.func.work_with_url.Common_URL.convertStringToLink
+import com.example.common.func.work_with_url.CommonURL.convertStringToLink
 import com.example.designsystem.component.WeatherLocationText
 import com.example.home.R
 import com.example.model.model.weather.CurrentExternalModel
