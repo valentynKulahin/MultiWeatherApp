@@ -58,7 +58,7 @@ fun DetailScreen(
                     .fillMaxSize()
                     .padding(padding)
             ) {
-                Text(text = "Detail")
+//                Text(text = "Detail")
             }
         }
     }
